@@ -1,38 +1,658 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>موقع أسامة</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 50px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            min-height: 100vh;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .card {
-            background: rgba(255,255,255,0.1);
-            padding: 40px;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-        }
-        h1 { font-size: 3em; margin: 0; }
-        p { font-size: 1.2em; opacity: 0.9; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+<meta name="theme-color" content="#0a1628">
+<title>كأس العالم 2026 - المحاكي الرسمي</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    background: #0a1628; 
+    color: #e8eaf0; 
+    min-height: 100vh; 
+    direction: rtl;
+    -webkit-tap-highlight-color: transparent;
+  }
+  header { 
+    background: linear-gradient(135deg, #1a237e 0%, #0d47a1 50%, #1565c0 100%); 
+    padding: 12px; 
+    text-align: center; 
+    border-bottom: 3px solid #f9a825;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  header h1 { font-size: 18px; color: #f9a825; }
+  header p { font-size: 10px; color: #90caf9; }
+  
+  .nav-tabs { 
+    display: flex; 
+    background: #0d1b35; 
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: thin;
+  }
+  .nav-tab { 
+    padding: 8px 12px; 
+    font-size: 12px; 
+    cursor: pointer; 
+    color: #90caf9; 
+    border-bottom: 3px solid transparent; 
+    flex-shrink: 0;
+  }
+  .nav-tab.active { color: #f9a825; border-bottom-color: #f9a825; background: #0a1628; }
+  
+  .page { display: none; padding: 12px; }
+  .page.active { display: block; }
+  
+  .group-card { background: #0d1b35; border: 1px solid #1e3a5f; border-radius: 10px; margin-bottom: 12px; overflow: hidden; }
+  .group-header { background: linear-gradient(135deg, #1a237e, #1565c0); padding: 8px 12px; font-size: 14px; color: #f9a825; display: flex; justify-content: space-between; align-items: center; }
+  .group-header span { font-size: 11px; color: #90caf9; }
+  
+  .team-row { 
+    display: flex; 
+    align-items: center; 
+    padding: 8px 12px; 
+    border-bottom: 1px solid #1e3a5f; 
+    gap: 10px; 
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .team-row:last-child { border-bottom: none; }
+  .team-row:hover { background: #1a2744; }
+  .team-row.rank-1 { background: linear-gradient(90deg, #1a237e30, #0d1b35); border-right: 4px solid #f9a825; }
+  .team-row.rank-2 { background: linear-gradient(90deg, #1a237e20, #0d1b35); border-right: 4px solid #42a5f5; }
+  .team-row.rank-3 { background: linear-gradient(90deg, #1a237e10, #0d1b35); border-right: 4px solid #66bb6a; }
+  .team-flag { font-size: 24px; width: 38px; text-align: center; }
+  .team-name { flex: 1; font-size: 13px; }
+  .team-rank-badge { 
+    font-size: 11px; 
+    padding: 3px 8px; 
+    border-radius: 20px; 
+    font-weight: bold;
+    min-width: 45px;
+    text-align: center;
+  }
+  .team-rank-badge.rank1 { background: #f9a825; color: #0a1628; }
+  .team-rank-badge.rank2 { background: #42a5f5; color: #0a1628; }
+  .team-rank-badge.rank3 { background: #66bb6a; color: #0a1628; }
+  .team-rank-badge.rank4 { background: #546e7a; color: white; }
+  
+  .group-info-text { font-size: 10px; color: #90caf9; padding: 5px 12px; background: #0a1628; border-top: 1px solid #1e3a5f; }
+  
+  .btn-primary { background: linear-gradient(135deg, #f9a825, #f57f17); color: #0a1628; border: none; padding: 10px; border-radius: 8px; font-size: 13px; font-weight: bold; width: 100%; margin-top: 10px; cursor: pointer; }
+  .btn-secondary { background: linear-gradient(135deg, #1565c0, #0d47a1); color: white; border: none; padding: 8px; border-radius: 8px; font-size: 12px; cursor: pointer; margin-top: 5px; }
+  .progress-bar { background: #1e3a5f; border-radius: 10px; height: 4px; margin: 8px 0; }
+  .progress-fill { background: #f9a825; height: 100%; border-radius: 10px; transition: width 0.3s; }
+  .progress-text { font-size: 11px; text-align: center; margin-bottom: 5px; }
+  
+  .third-card { background: #0d1b35; border: 1px solid #1e3a5f; border-radius: 8px; padding: 8px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; cursor: pointer; transition: all 0.2s; }
+  .third-card.selected-third { border-color: #f9a825; background: #1a2744; }
+  .third-card .check { width: 20px; height: 20px; border: 2px solid #1565c0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; }
+  .third-card.selected-third .check { background: #f9a825; border-color: #f9a825; }
+  .third-info .t-name { font-size: 12px; }
+  .third-info .t-group { font-size: 9px; color: #90caf9; }
+  
+  .match-card { background: #0d1b35; border: 1px solid #1e3a5f; border-radius: 8px; margin-bottom: 8px; overflow: hidden; }
+  .match-num { background: #1e3a5f; text-align: center; font-size: 9px; padding: 2px; }
+  .match-team { display: flex; align-items: center; gap: 8px; padding: 8px 10px; cursor: pointer; transition: background 0.15s; }
+  .match-team:hover { background: #1a2744; }
+  .match-team.winner { background: linear-gradient(90deg, #1a3a1a, #0d1b35); border-right: 3px solid #66bb6a; }
+  .match-team.loser { opacity: 0.45; }
+  .match-divider { height: 1px; background: #1e3a5f; margin: 0 8px; }
+  .mt-flag { font-size: 18px; width: 28px; text-align: center; }
+  .mt-name { flex: 1; font-size: 11px; }
+  .mt-badge { font-size: 8px; padding: 2px 5px; background: #1b5e20; border-radius: 4px; }
+  
+  .section-info { background: #0d1b35; border: 1px solid #f9a825; border-radius: 8px; padding: 6px 10px; font-size: 11px; color: #ffd54f; text-align: center; margin-bottom: 10px; }
+  .alert { background: #b71c1c; border-radius: 6px; padding: 6px; font-size: 10px; text-align: center; display: none; margin: 8px 0; }
+  
+  .champion-card { background: linear-gradient(135deg, #1a237e, #f57f17); border-radius: 12px; padding: 15px; text-align: center; margin: 10px 0; }
+  .champion-name { font-size: 20px; font-weight: bold; }
+  .podium { display: flex; gap: 5px; justify-content: center; margin: 10px 0; }
+  .podium-item { flex: 1; background: #0d1b35; border-radius: 8px; padding: 8px; text-align: center; min-width: 70px; }
+  .podium-item.gold { border: 1px solid #f9a825; }
+  .podium-flag { font-size: 26px; }
+  .podium-team { font-size: 9px; }
+  
+  .save-buttons-group { display: flex; flex-direction: column; gap: 8px; margin: 12px 0; }
+  .save-btn-single { background: linear-gradient(135deg, #1565c0, #0d47a1); color: white; border: none; padding: 10px; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer; }
+  .reset-btn { background: #b71c1c; color: white; border: none; padding: 10px; border-radius: 8px; width: 100%; margin-top: 8px; cursor: pointer; }
+  .status-msg { background: #1e3a5f; border-radius: 6px; padding: 6px; font-size: 11px; text-align: center; display: none; margin-top: 6px; }
+  
+  /* Snapshot styles */
+  #snap-groups, #snap-champion, #snap-bracket {
+    position: fixed; left: -9999px; top: 0;
+    background: #0a1628; padding: 20px;
+    font-family: 'Segoe UI', Arial, sans-serif;
+  }
+  #snap-groups, #snap-champion { width: 900px; direction: rtl; }
+  #snap-bracket { width: 1300px; direction: ltr; overflow-x: auto; }
+  
+  .bracket-tree { display: flex; justify-content: center; gap: 25px; min-width: 1100px; }
+  .bracket-col { display: flex; flex-direction: column; gap: 15px; }
+  .bracket-col-title { text-align: center; font-size: 12px; font-weight: bold; color: #f9a825; background: linear-gradient(135deg, #1a237e, #0d47a1); padding: 4px 8px; border-radius: 15px; margin-bottom: 10px; }
+  .bracket-match { background: #0d1b35; border: 1px solid #1e3a5f; border-radius: 6px; width: 180px; }
+  .bracket-match-teams { padding: 5px; }
+  .bracket-team { display: flex; align-items: center; gap: 5px; padding: 5px 6px; font-size: 10px; }
+  .bracket-team.winner { background: #1a3a1a; border-right: 2px solid #66bb6a; }
+  .bracket-team.loser { opacity: 0.5; }
+  .bracket-divider { height: 1px; background: #1e3a5f; margin: 3px 0; }
+  .bracket-flag { font-size: 16px; width: 25px; }
+  .bracket-name { flex: 1; }
+  .bracket-winner-badge { font-size: 7px; background: #1b5e20; padding: 1px 4px; border-radius: 8px; }
+  
+  .snap-title { font-size: 22px; font-weight: bold; color: #f9a825; text-align: center; margin-bottom: 15px; border-bottom: 2px solid #f9a825; padding-bottom: 8px; }
+  .snap-groups-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .snap-group-box { background: #0d1b35; border: 1px solid #1e3a5f; border-radius: 8px; }
+  .snap-group-hdr { background: linear-gradient(135deg, #1a237e, #1565c0); padding: 5px; font-size: 12px; font-weight: bold; color: #f9a825; text-align: center; }
+  .snap-team-row { display: flex; align-items: center; gap: 5px; padding: 4px 6px; font-size: 10px; border-bottom: 1px solid #1e3a5f; }
+  .snap-champ-inner { text-align: center; padding: 20px; }
+  .snap-champ-flag { font-size: 70px; }
+  .snap-champ-name { font-size: 30px; color: #f9a825; font-weight: bold; }
+  .snap-podium { display: flex; justify-content: center; gap: 15px; margin-top: 15px; }
+  .snap-podium-item { background: #0d1b35; border-radius: 8px; padding: 10px; text-align: center; min-width: 100px; }
+  .snap-podium-item.g { border: 2px solid #f9a825; }
+  .snap-p-flag { font-size: 30px; }
+</style>
 </head>
 <body>
-    <div class="card">
-        <h1>🌐 مرحباً! أنا أسامة</h1>
-        <p>هذا موقعي الأول على GitHub Pages</p>
-        <p>✨ قيد التطوير...</p>
-    </div>
+
+<header>
+  <h1>🏆 كأس العالم 2026 - المحاكي الرسمي</h1>
+  <p>نظام المجموعات | جدول ثابت | حسب قوانين FIFA</p>
+</header>
+
+<div class="nav-tabs" id="navTabs">
+  <div class="nav-tab active" onclick="showPage('groups')">المجموعات</div>
+  <div class="nav-tab" onclick="showPage('third')">أفضل ثالث</div>
+  <div class="nav-tab" onclick="showPage('r32')">دور 32</div>
+  <div class="nav-tab" onclick="showPage('r16')">دور 16</div>
+  <div class="nav-tab" onclick="showPage('qf')">ربع نهائي</div>
+  <div class="nav-tab" onclick="showPage('sf')">نصف نهائي</div>
+  <div class="nav-tab" onclick="showPage('final')">النهائي</div>
+  <div class="nav-tab" onclick="showPage('result')">النتيجة</div>
+</div>
+
+<div id="page-groups" class="page active">
+  <div class="section-info">👆 اضغط على أي منتخب لترتيب المجموعة (الضغطة الأولى = الأول 🥇، الثانية = الثاني 🥈، الثالثة = الثالث 🥉، الرابع تلقائياً)</div>
+  <div class="progress-text" id="groupProgress">0 / 12 مجموعة مكتملة</div>
+  <div class="progress-bar"><div class="progress-fill" id="groupProgressBar" style="width:0%"></div></div>
+  <div id="groupsContainer"></div>
+  <div class="alert" id="groupAlert">⚠️ يرجى إكمال جميع المجموعات أولاً</div>
+  <button class="btn-primary" onclick="confirmGroups()">التالي: اختيار أفضل 8 أثلاث ←</button>
+</div>
+
+<div id="page-third" class="page">
+  <div class="section-info">🏆 اختر أفضل 8 منتخبات من أصحاب المركز الثالث (يتم ترتيبهم حسب الأداء)</div>
+  <div class="progress-text" id="thirdProgress">0 / 8 تم الاختيار</div>
+  <div class="progress-bar"><div class="progress-fill" id="thirdProgressBar" style="width:0%"></div></div>
+  <div id="thirdContainer"></div>
+  <div class="alert" id="thirdAlert">⚠️ يجب اختيار 8 منتخبات بالضبط</div>
+  <button class="btn-primary" onclick="confirmThird()">التالي: دور الـ 32 ←</button>
+</div>
+
+<div id="page-r32" class="page"><div class="round-title" style="text-align:center;background:#1a237e;padding:6px;border-radius:8px;margin-bottom:10px;">⚔️ دور الـ 32 (ثمن النهائي) - حسب جدول FIFA الثابت</div><div id="r32Container"></div><div class="alert" id="r32Alert">⚠️ يرجى تحديد الفائز في جميع المباريات</div><button class="btn-primary" onclick="confirmRound('r32','r16')">التالي ←</button></div>
+<div id="page-r16" class="page"><div class="round-title" style="text-align:center;background:#1a237e;padding:6px;border-radius:8px;margin-bottom:10px;">⚔️ دور الـ 16</div><div id="r16Container"></div><div class="alert" id="r16Alert">⚠️ يرجى تحديد الفائز في جميع المباريات</div><button class="btn-primary" onclick="confirmRound('r16','qf')">التالي ←</button></div>
+<div id="page-qf" class="page"><div class="round-title" style="text-align:center;background:#1a237e;padding:6px;border-radius:8px;margin-bottom:10px;">⚔️ ربع النهائي</div><div id="qfContainer"></div><div class="alert" id="qfAlert">⚠️ يرجى تحديد الفائز في جميع المباريات</div><button class="btn-primary" onclick="confirmRound('qf','sf')">التالي ←</button></div>
+<div id="page-sf" class="page"><div class="round-title" style="text-align:center;background:#1a237e;padding:6px;border-radius:8px;margin-bottom:10px;">⚔️ نصف النهائي</div><div id="sfContainer"></div><div class="alert" id="sfAlert">⚠️ يرجى تحديد الفائز في جميع المباريات</div><button class="btn-primary" onclick="confirmSF()">التالي ←</button></div>
+<div id="page-final" class="page"><div class="round-title" style="text-align:center;background:#1a237e;padding:6px;border-radius:8px;margin-bottom:10px;">🥉 مباراة المركز الثالث</div><div id="thirdPlaceContainer"></div><div class="round-title" style="text-align:center;background:#1a237e;padding:6px;border-radius:8px;margin:10px 0;">🥇 النهائي</div><div id="finalContainer"></div><div class="alert" id="finalAlert">⚠️ يرجى تحديد الفائز في كلتا المباراتين</div><button class="btn-primary" onclick="confirmFinal()">عرض النتيجة 🏆</button></div>
+
+<div id="page-result" class="page">
+  <div id="championCard"></div>
+  <div id="podiumDiv"></div>
+  <div class="stats-row" style="display:flex;gap:10px;margin:10px 0;"><div class="stat-box" style="flex:1;background:#0d1b35;padding:8px;text-align:center;border-radius:8px;"><div class="stat-num" style="font-size:22px;color:#f9a825;">104</div><div class="stat-label">مباريات</div></div><div class="stat-box" style="flex:1;background:#0d1b35;padding:8px;text-align:center;border-radius:8px;"><div class="stat-num" style="font-size:22px;color:#f9a825;">48</div><div class="stat-label">منتخب</div></div></div>
+  <div class="save-buttons-group"><button class="save-btn-single" id="saveGroupsBtn" onclick="saveImage('groups')">📸 1. حفظ المجموعات</button><button class="save-btn-single" id="saveBracketBtn" onclick="saveImage('bracket')">🌳 2. حفظ شجرة البطولة</button><button class="save-btn-single" id="saveChampionBtn" onclick="saveImage('champion')">🏆 3. حفظ البطل</button></div>
+  <div id="saveStatus" class="status-msg"></div>
+  <button class="reset-btn" onclick="resetAll()">🔄 إعادة البداية</button>
+</div>
+
+<div id="snap-groups"></div><div id="snap-bracket"></div><div id="snap-champion"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+// ============== المنتخبات ==============
+const GROUPS = {
+  'أ': { teams: [{n:'المكسيك',f:'🇲🇽'},{n:'جنوب أفريقيا',f:'🇿🇦'},{n:'كوريا الجنوبية',f:'🇰🇷'},{n:'التشيك',f:'🇨🇿'}] },
+  'ب': { teams: [{n:'كندا',f:'🇨🇦'},{n:'البوسنة',f:'🇧🇦'},{n:'قطر',f:'🇶🇦'},{n:'سويسرا',f:'🇨🇭'}] },
+  'ج': { teams: [{n:'البرازيل',f:'🇧🇷'},{n:'المغرب',f:'🇲🇦'},{n:'هايتي',f:'🇭🇹'},{n:'اسكتلندا',f:'🏴󠁧󠁢󠁳󠁣󠁴󠁿'}] },
+  'د': { teams: [{n:'أمريكا',f:'🇺🇸'},{n:'باراغواي',f:'🇵🇾'},{n:'أستراليا',f:'🇦🇺'},{n:'تركيا',f:'🇹🇷'}] },
+  'هـ': { teams: [{n:'ألمانيا',f:'🇩🇪'},{n:'كوراساو',f:'🇨🇼'},{n:'ساحل العاج',f:'🇨🇮'},{n:'الإكوادور',f:'🇪🇨'}] },
+  'و': { teams: [{n:'هولندا',f:'🇳🇱'},{n:'اليابان',f:'🇯🇵'},{n:'السويد',f:'🇸🇪'},{n:'تونس',f:'🇹🇳'}] },
+  'ز': { teams: [{n:'بلجيكا',f:'🇧🇪'},{n:'مصر',f:'🇪🇬'},{n:'إيران',f:'🇮🇷'},{n:'نيوزيلندا',f:'🇳🇿'}] },
+  'ح': { teams: [{n:'إسبانيا',f:'🇪🇸'},{n:'الرأس الأخضر',f:'🇨🇻'},{n:'السعودية',f:'🇸🇦'},{n:'أوروغواي',f:'🇺🇾'}] },
+  'ط': { teams: [{n:'فرنسا',f:'🇫🇷'},{n:'السنغال',f:'🇸🇳'},{n:'العراق',f:'🇮🇶'},{n:'النرويج',f:'🇳🇴'}] },
+  'ي': { teams: [{n:'الأرجنتين',f:'🇦🇷'},{n:'الجزائر',f:'🇩🇿'},{n:'النمسا',f:'🇦🇹'},{n:'الأردن',f:'🇯🇴'}] },
+  'ك': { teams: [{n:'البرتغال',f:'🇵🇹'},{n:'الكونغو',f:'🇨🇩'},{n:'أوزبكستان',f:'🇺🇿'},{n:'كولومبيا',f:'🇨🇴'}] },
+  'ل': { teams: [{n:'إنجلترا',f:'🏴󠁧󠁢󠁥󠁮󠁧󠁿'},{n:'كرواتيا',f:'🇭🇷'},{n:'غانا',f:'🇬🇭'},{n:'بنما',f:'🇵🇦'}] }
+};
+const groupKeys = ['أ','ب','ج','د','هـ','و','ز','ح','ط','ي','ك','ل'];
+let groupRankings = {}; // { groupKey: { 1: team, 2: team, 3: team, 4: team } }
+let groupClickCounters = {}; // لتتبع عدد النقرات في كل مجموعة
+let selectedThirds = [];
+let rounds = { r32:[], r16:[], qf:[], sf:[], final:[], third:[] };
+
+// ============== نظام الترتيب بالضغط المتتابع ==============
+function initGroupRanking(groupKey) {
+  if(!groupRankings[groupKey]) {
+    groupRankings[groupKey] = {};
+    groupClickCounters[groupKey] = 0;
+  }
+}
+
+function handleTeamClick(groupKey, team) {
+  initGroupRanking(groupKey);
+  const currentRank = getTeamCurrentRank(groupKey, team);
+  
+  // إذا كان المنتخب مرتّباً بالفعل، نزيل ترتيبه
+  if(currentRank) {
+    delete groupRankings[groupKey][currentRank];
+    groupClickCounters[groupKey]--;
+    // إعادة ترتيب العداد
+    let newOrder = {};
+    let counter = 1;
+    for(let i=1; i<=4; i++) {
+      if(groupRankings[groupKey][i]) {
+        newOrder[counter++] = groupRankings[groupKey][i];
+      }
+    }
+    groupRankings[groupKey] = newOrder;
+    groupClickCounters[groupKey] = counter - 1;
+    renderGroups();
+    return;
+  }
+  
+  // إذا لم يكن مرتّباً والعداد أقل من 3، نضيفه بالترتيب التالي
+  if(groupClickCounters[groupKey] < 3) {
+    groupClickCounters[groupKey]++;
+    groupRankings[groupKey][groupClickCounters[groupKey]] = team;
+    renderGroups();
+  }
+}
+
+function getTeamCurrentRank(groupKey, team) {
+  const ranks = groupRankings[groupKey] || {};
+  for(let i=1; i<=4; i++) {
+    if(ranks[i] && ranks[i].n === team.n) return i;
+  }
+  return null;
+}
+
+function getTeamRankDisplay(rank) {
+  if(rank === 1) return '<span class="team-rank-badge rank1">🥇 الأول</span>';
+  if(rank === 2) return '<span class="team-rank-badge rank2">🥈 الثاني</span>';
+  if(rank === 3) return '<span class="team-rank-badge rank3">🥉 الثالث</span>';
+  if(rank === 4) return '<span class="team-rank-badge rank4">4️⃣ الرابع</span>';
+  return '<span class="team-rank-badge" style="background:#1e3a5f;">⚪ لم يحدد</span>';
+}
+
+function renderGroups() {
+  const c = document.getElementById('groupsContainer');
+  c.innerHTML = '';
+  groupKeys.forEach(gk => {
+    const g = GROUPS[gk];
+    initGroupRanking(gk);
+    const ranks = groupRankings[gk] || {};
+    const card = document.createElement('div');
+    card.className = 'group-card';
+    card.innerHTML = `<div class="group-header">المجموعة ${gk} <span>اضغط على المنتخب لترتيبه</span></div>`;
+    
+    g.teams.forEach(team => {
+      const currentRank = getTeamCurrentRank(gk, team);
+      const row = document.createElement('div');
+      row.className = `team-row ${currentRank ? 'rank-' + currentRank : ''}`;
+      row.onclick = () => handleTeamClick(gk, team);
+      row.innerHTML = `
+        <span class="team-flag">${team.f}</span>
+        <span class="team-name">${team.n}</span>
+        ${getTeamRankDisplay(currentRank)}
+      `;
+      card.appendChild(row);
+    });
+    
+    // إضافة الرابع تلقائياً
+    const rankedTeams = [ranks[1], ranks[2], ranks[3]].filter(t => t);
+    const allTeams = g.teams.map(t => t.n);
+    const rankedNames = rankedTeams.map(t => t.n);
+    const unrankedTeam = g.teams.find(t => !rankedNames.includes(t.n));
+    if(unrankedTeam && Object.keys(ranks).length === 3) {
+      if(!ranks[4]) {
+        groupRankings[gk][4] = unrankedTeam;
+      }
+      const infoDiv = document.createElement('div');
+      infoDiv.className = 'group-info-text';
+      infoDiv.innerHTML = `✨ ${unrankedTeam.f} ${unrankedTeam.n} هو المركز الرابع تلقائياً`;
+      card.appendChild(infoDiv);
+    }
+    
+    c.appendChild(card);
+  });
+  updateGroupProgress();
+}
+
+function isGroupComplete(gk) {
+  const ranks = groupRankings[gk] || {};
+  return ranks[1] && ranks[2] && ranks[3];
+}
+
+function updateGroupProgress() {
+  let done = groupKeys.filter(gk => isGroupComplete(gk)).length;
+  document.getElementById('groupProgress').textContent = `${done} / 12 مجموعة مكتملة`;
+  document.getElementById('groupProgressBar').style.width = (done/12*100) + '%';
+}
+
+function confirmGroups() {
+  let allDone = groupKeys.every(gk => isGroupComplete(gk));
+  if(!allDone) { document.getElementById('groupAlert').style.display='block'; setTimeout(()=>document.getElementById('groupAlert').style.display='none',2000); return; }
+  document.getElementById('groupAlert').style.display='none';
+  renderThirdPlace();
+  showPage('third');
+}
+
+function renderThirdPlace() {
+  selectedThirds = [];
+  const c = document.getElementById('thirdContainer');
+  c.innerHTML = '';
+  groupKeys.forEach(gk => {
+    const thirdTeam = groupRankings[gk]?.[3];
+    if(thirdTeam) {
+      const item = { group: gk, team: thirdTeam };
+      const card = document.createElement('div');
+      card.className = 'third-card';
+      card.id = 'third-'+gk;
+      card.onclick = () => toggleThird(item);
+      card.innerHTML = `<div class="check" id="check-${gk}"></div><span style="font-size:22px">${thirdTeam.f}</span><div class="third-info"><div class="t-name">${thirdTeam.n}</div><div class="t-group">المجموعة ${gk}</div></div>`;
+      c.appendChild(card);
+    }
+  });
+  updateThirdProgress();
+}
+
+function toggleThird(item) {
+  const idx = selectedThirds.findIndex(t => t.group === item.group);
+  if(idx >= 0) {
+    selectedThirds.splice(idx,1);
+    document.getElementById('third-'+item.group).classList.remove('selected-third');
+    document.getElementById('check-'+item.group).textContent = '';
+  } else {
+    if(selectedThirds.length >= 8) return;
+    selectedThirds.push(item);
+    document.getElementById('third-'+item.group).classList.add('selected-third');
+    document.getElementById('check-'+item.group).textContent = '✓';
+  }
+  updateThirdProgress();
+}
+
+function updateThirdProgress() {
+  document.getElementById('thirdProgress').textContent = `${selectedThirds.length} / 8 تم الاختيار`;
+  document.getElementById('thirdProgressBar').style.width = (selectedThirds.length/8*100) + '%';
+}
+
+// ============== جدول دور الـ 32 الثابت حسب قوانين FIFA 2026 ==============
+function buildR32() {
+  // جمع المؤهلين
+  const winners = {};
+  const runnersUp = {};
+  groupKeys.forEach(gk => {
+    winners[gk] = groupRankings[gk]?.[1];
+    runnersUp[gk] = groupRankings[gk]?.[2];
+  });
+  const bestThirds = selectedThirds.map(t => t.team);
+  
+  // الجدول الثابت لدور الـ32 (حسب نظام FIFA 2026)
+  const bracketPairs = [
+    { t1: { type: 'winner', group: 'أ' }, t2: { type: 'best_third', fromGroups: ['ب','ج','د','هـ','و'] } },      // م1
+    { t1: { type: 'runner_up', group: 'ب' }, t2: { type: 'runner_up', group: 'و' } },                               // م2
+    { t1: { type: 'winner', group: 'ج' }, t2: { type: 'best_third', fromGroups: ['أ','ب','د','هـ','و'] } },        // م3
+    { t1: { type: 'winner', group: 'د' }, t2: { type: 'runner_up', group: 'هـ' } },                                 // م4
+    { t1: { type: 'winner', group: 'هـ' }, t2: { type: 'runner_up', group: 'د' } },                                 // م5
+    { t1: { type: 'winner', group: 'و' }, t2: { type: 'best_third', fromGroups: ['أ','ب','ج','د','هـ'] } },        // م6
+    { t1: { type: 'runner_up', group: 'أ' }, t2: { type: 'runner_up', group: 'ج' } },                               // م7
+    { t1: { type: 'winner', group: 'ب' }, t2: { type: 'best_third', fromGroups: ['أ','ج','د','هـ','و'] } },        // م8
+    // النصف السفلي (مجموعات ز إلى ل)
+    { t1: { type: 'winner', group: 'ز' }, t2: { type: 'best_third', fromGroups: ['ح','ط','ي','ك','ل'] } },          // م9
+    { t1: { type: 'runner_up', group: 'ح' }, t2: { type: 'runner_up', group: 'ل' } },                               // م10
+    { t1: { type: 'winner', group: 'ط' }, t2: { type: 'best_third', fromGroups: ['ز','ح','ي','ك','ل'] } },         // م11
+    { t1: { type: 'winner', group: 'ي' }, t2: { type: 'runner_up', group: 'ك' } },                                  // م12
+    { t1: { type: 'winner', group: 'ك' }, t2: { type: 'runner_up', group: 'ي' } },                                  // م13
+    { t1: { type: 'winner', group: 'ل' }, t2: { type: 'best_third', fromGroups: ['ز','ح','ط','ي','ك'] } },         // م14
+    { t1: { type: 'runner_up', group: 'ز' }, t2: { type: 'runner_up', group: 'ط' } },                               // م15
+    { t1: { type: 'winner', group: 'ح' }, t2: { type: 'best_third', fromGroups: ['ز','ط','ي','ك','ل'] } }          // م16
+  ];
+  
+  // توزيع أفضل الأثلاث على المواجهات (حسب الترتيب)
+  let thirdIndex = 0;
+  rounds.r32 = bracketPairs.map(pair => {
+    let team1 = null, team2 = null;
+    
+    if(pair.t1.type === 'winner') team1 = winners[pair.t1.group];
+    if(pair.t1.type === 'runner_up') team1 = runnersUp[pair.t1.group];
+    if(pair.t1.type === 'best_third') team1 = bestThirds[thirdIndex++];
+    
+    if(pair.t2.type === 'winner') team2 = winners[pair.t2.group];
+    if(pair.t2.type === 'runner_up') team2 = runnersUp[pair.t2.group];
+    if(pair.t2.type === 'best_third') {
+      if(pair.t2.fromGroups && pair.t2.fromGroups.includes(pair.t1.group)) {
+        // منطق معقد، نبسطه: نأخذ التالي
+        team2 = bestThirds[thirdIndex++];
+      } else {
+        team2 = bestThirds[thirdIndex++];
+      }
+    }
+    
+    return { t1: team1, t2: team2, winner: null };
+  });
+}
+
+function renderRound(rk) {
+  const c = document.getElementById(rk+'Container');
+  if(!c) return;
+  c.innerHTML = '';
+  rounds[rk].forEach((m,i) => c.appendChild(createMatchCard(m,rk,i)));
+}
+
+function createMatchCard(match,rk,idx) {
+  const card = document.createElement('div');
+  card.className = 'match-card';
+  card.innerHTML = `<div class="match-num">مباراة ${idx+1}</div>`;
+  ['t1','t2'].forEach(tk => {
+    const team = match[tk];
+    const row = document.createElement('div');
+    row.className = 'match-team';
+    if(match.winner) row.className += match.winner.n === (team?.n) ? ' winner' : ' loser';
+    row.innerHTML = `<span class="mt-flag">${team?.f || '❓'}</span><span class="mt-name ${team?'':'tbd'}">${team?.n || 'لم يتحدد'}</span>${match.winner && team && match.winner.n === team.n ? '<span class="mt-badge">فائز</span>' : ''}`;
+    if(team) row.onclick = () => selectWinner(rk,idx,tk);
+    card.appendChild(row);
+    if(tk === 't1') { const d = document.createElement('div'); d.className='match-divider'; card.appendChild(d); }
+  });
+  return card;
+}
+
+function selectWinner(rk,idx,tk) {
+  rounds[rk][idx].winner = rounds[rk][idx][tk];
+  if(rk === 'sf') { renderRound('sf'); buildFinalAndThird(); }
+  else if(rk === 'third' || rk === 'final') renderFinalPage();
+  else renderRound(rk);
+}
+
+function confirmRound(cur,nxt) {
+  if(rounds[cur].some(m => !m.winner)) { document.getElementById(cur+'Alert').style.display='block'; setTimeout(()=>document.getElementById(cur+'Alert').style.display='none',2000); return; }
+  document.getElementById(cur+'Alert').style.display='none';
+  buildNextRound(cur, nxt);
+  renderRound(nxt);
+  showPage(nxt);
+}
+
+function buildNextRound(from,to) {
+  const winners = rounds[from].map(m => m.winner);
+  rounds[to] = [];
+  for(let i=0; i<winners.length/2; i++) rounds[to].push({ t1: winners[i*2], t2: winners[i*2+1], winner: null });
+}
+
+function confirmSF() {
+  if(rounds.sf.some(m => !m.winner)) { document.getElementById('sfAlert').style.display='block'; setTimeout(()=>document.getElementById('sfAlert').style.display='none',2000); return; }
+  document.getElementById('sfAlert').style.display='none';
+  buildFinalAndThird();
+  renderFinalPage();
+  showPage('final');
+}
+
+function buildFinalAndThird() {
+  const losers = rounds.sf.filter(m => m.winner).map(m => m.t1.n === m.winner.n ? m.t2 : m.t1).filter(Boolean);
+  const finalists = rounds.sf.filter(m => m.winner).map(m => m.winner);
+  rounds.third = [{ t1: losers[0] || null, t2: losers[1] || null, winner: null }];
+  rounds.final = [{ t1: finalists[0] || null, t2: finalists[1] || null, winner: null }];
+}
+
+function renderFinalPage() {
+  const tp = document.getElementById('thirdPlaceContainer');
+  if(tp) { tp.innerHTML = ''; if(rounds.third[0]) tp.appendChild(createMatchCard(rounds.third[0],'third',0)); }
+  const fc = document.getElementById('finalContainer');
+  if(fc) { fc.innerHTML = ''; if(rounds.final[0]) fc.appendChild(createMatchCard(rounds.final[0],'final',0)); }
+}
+
+function confirmFinal() {
+  if(!rounds.final[0]?.winner || !rounds.third[0]?.winner) { document.getElementById('finalAlert').style.display='block'; setTimeout(()=>document.getElementById('finalAlert').style.display='none',2000); return; }
+  document.getElementById('finalAlert').style.display='none';
+  renderResults();
+  showPage('result');
+}
+
+function renderResults() {
+  const champ = rounds.final[0].winner;
+  const runner = rounds.final[0].t1.n === champ.n ? rounds.final[0].t2 : rounds.final[0].t1;
+  const third = rounds.third[0].winner;
+  document.getElementById('championCard').innerHTML = `<div class="champion-card"><div style="font-size:50px">🏆</div><div style="font-size:11px;color:#ffe082;">بطل كأس العالم 2026</div><div style="font-size:55px">${champ.f}</div><div class="champion-name">${champ.n}</div></div>`;
+  document.getElementById('podiumDiv').innerHTML = `<div class="podium"><div class="podium-item silver"><div class="podium-place">🥈</div><div class="podium-flag">${runner.f}</div><div class="podium-team">${runner.n}</div></div><div class="podium-item gold"><div class="podium-place">🥇</div><div class="podium-flag">${champ.f}</div><div class="podium-team">${champ.n}</div></div><div class="podium-item bronze"><div class="podium-place">🥉</div><div class="podium-flag">${third.f}</div><div class="podium-team">${third.n}</div></div></div>`;
+}
+
+function confirmThird() {
+  if(selectedThirds.length !== 8) { document.getElementById('thirdAlert').style.display='block'; setTimeout(()=>document.getElementById('thirdAlert').style.display='none',2000); return; }
+  document.getElementById('thirdAlert').style.display='none';
+  buildR32();
+  renderRound('r32');
+  showPage('r32');
+}
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  const pm = ['groups','third','r32','r16','qf','sf','final','result'];
+  const idx = pm.indexOf(id);
+  if(idx>=0) document.querySelectorAll('.nav-tab')[idx].classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ============== حفظ الصور ==============
+function buildGroupsSnapshot() {
+  const el = document.getElementById('snap-groups');
+  let html = `<div class="snap-title">🏆 كأس العالم 2026 - ترتيب المجموعات</div><div class="snap-groups-grid">`;
+  groupKeys.forEach(gk => {
+    html += `<div class="snap-group-box"><div class="snap-group-hdr">المجموعة ${gk}</div>`;
+    for(let i=1; i<=4; i++) {
+      const team = groupRankings[gk]?.[i];
+      if(team) html += `<div class="snap-team-row"><span class="snap-pos">${i===1?'🥇':i===2?'🥈':i===3?'🥉':'4️⃣'}</span><span class="snap-flag">${team.f}</span><span class="snap-tname">${team.n}</span></div>`;
+    }
+    html += `</div>`;
+  });
+  html += `</div>`;
+  el.innerHTML = html;
+}
+
+function buildBracketSnapshot() {
+  const el = document.getElementById('snap-bracket');
+  let html = `<div class="snap-title">🏆 كأس العالم 2026 - شجرة البطولة</div><div class="bracket-tree">`;
+  const roundsList = ['r32','r16','qf','sf','final'];
+  roundsList.forEach(r => {
+    if(!rounds[r]?.length) return;
+    html += `<div class="bracket-col"><div class="bracket-col-title">${r==='r32'?'دور 32':r==='r16'?'دور 16':r==='qf'?'ربع النهائي':r==='sf'?'نصف النهائي':'النهائي'}</div>`;
+    rounds[r].forEach(m => {
+      html += `<div class="bracket-match"><div class="bracket-match-teams">`;
+      ['t1','t2'].forEach(tk => {
+        const t = m[tk];
+        const isW = m.winner && t && m.winner.n === t.n;
+        html += `<div class="bracket-team ${isW ? 'winner' : (m.winner ? 'loser' : '')}"><span class="bracket-flag">${t?.f || '❓'}</span><span class="bracket-name">${t?.n || '?'}</span>${isW ? '<span class="bracket-winner-badge">فائز</span>' : ''}</div>`;
+        if(tk === 't1') html += `<div class="bracket-divider"></div>`;
+      });
+      html += `</div></div>`;
+    });
+    html += `</div>`;
+  });
+  if(rounds.third[0]) {
+    const m = rounds.third[0];
+    html += `<div style="margin-top:20px;"><div class="bracket-col-title" style="display:inline-block;">🥉 المركز الثالث</div><div class="bracket-match" style="width:250px;"><div class="bracket-match-teams">`;
+    ['t1','t2'].forEach(tk => {
+      const t = m[tk];
+      const isW = m.winner && t && m.winner.n === t.n;
+      html += `<div class="bracket-team ${isW ? 'winner' : (m.winner ? 'loser' : '')}"><span class="bracket-flag">${t?.f || '❓'}</span><span class="bracket-name">${t?.n || '?'}</span>${isW ? '<span class="bracket-winner-badge">البرونز</span>' : ''}</div>`;
+      if(tk === 't1') html += `<div class="bracket-divider"></div>`;
+    });
+    html += `</div></div></div>`;
+  }
+  html += `</div>`;
+  el.innerHTML = html;
+}
+
+function buildChampionSnapshot() {
+  const champ = rounds.final[0]?.winner;
+  const runner = rounds.final[0]?.t1?.n === champ?.n ? rounds.final[0]?.t2 : rounds.final[0]?.t1;
+  const third = rounds.third[0]?.winner;
+  const el = document.getElementById('snap-champion');
+  el.innerHTML = `<div class="snap-champ-inner"><div class="snap-champ-trophy">🏆</div><div style="font-size:14px;color:#ffe082;">بطل كأس العالم 2026</div><div class="snap-champ-flag">${champ?.f||''}</div><div class="snap-champ-name">${champ?.n||''}</div><div class="snap-podium"><div class="snap-podium-item s"><div class="snap-p-place">🥈</div><div class="snap-p-flag">${runner?.f||''}</div><div class="snap-p-name">${runner?.n||''}</div></div><div class="snap-podium-item g"><div class="snap-p-place">🥇</div><div class="snap-p-flag">${champ?.f||''}</div><div class="snap-p-name">${champ?.n||''}</div></div><div class="snap-podium-item b"><div class="snap-p-place">🥉</div><div class="snap-p-flag">${third?.f||''}</div><div class="snap-p-name">${third?.n||''}</div></div></div></div>`;
+}
+
+async function captureElement(element, filename, btnId) {
+  const btn = document.getElementById(btnId);
+  const original = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = '⏳ جاري...';
+  try {
+    const canvas = await html2canvas(element, { backgroundColor: '#0a1628', scale: 2, useCORS: true });
+    const link = document.createElement('a');
+    link.download = filename;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    btn.textContent = '✓ تم!';
+    setTimeout(() => { btn.textContent = original; btn.disabled = false; }, 1500);
+  } catch(e) { btn.textContent = 'خطأ'; setTimeout(() => { btn.textContent = original; btn.disabled = false; }, 1500); }
+}
+
+async function saveImage(type) {
+  if(type === 'groups') {
+    let complete = groupKeys.every(gk => isGroupComplete(gk));
+    if(!complete) { alert('⚠️ أكمل ترتيب جميع المجموعات أولاً!'); return; }
+    buildGroupsSnapshot();
+    await new Promise(r => setTimeout(r, 100));
+    await captureElement(document.getElementById('snap-groups'), 'wc2026-groups.png', 'saveGroupsBtn');
+  }
+  else if(type === 'bracket') {
+    if(!rounds.final[0]?.winner) { alert('⚠️ أكمل البطولة حتى النهائي أولاً!'); return; }
+    buildBracketSnapshot();
+    await new Promise(r => setTimeout(r, 100));
+    await captureElement(document.getElementById('snap-bracket'), 'wc2026-bracket.png', 'saveBracketBtn');
+  }
+  else if(type === 'champion') {
+    if(!rounds.final[0]?.winner) { alert('⚠️ أكمل البطولة حتى النهائي أولاً!'); return; }
+    buildChampionSnapshot();
+    await new Promise(r => setTimeout(r, 100));
+    await captureElement(document.getElementById('snap-champion'), 'wc2026-champion.png', 'saveChampionBtn');
+  }
+}
+
+function resetAll() {
+  if(!confirm('هل تريد حذف كل التوقعات والبدء من جديد؟')) return;
+  groupRankings = {};
+  groupClickCounters = {};
+  selectedThirds = [];
+  rounds = { r32:[], r16:[], qf:[], sf:[], final:[], third:[] };
+  renderGroups();
+  showPage('groups');
+}
+
+renderGroups();
+</script>
 </body>
 </html>
