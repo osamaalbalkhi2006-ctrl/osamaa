@@ -3,912 +3,328 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>توقعات كأس العالم 2026</title>
+    <title>اختبار الاتصال بـ Supabase</title>
+    <!-- استيراد مكتبة Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
     </script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
         body {
             font-family: 'Segoe UI', Tahoma, sans-serif;
-            background: linear-gradient(145deg, #0a1628, #0d2847);
-            color: #e8f4f8;
-            min-height: 100vh;
+            background: #0d1117;
+            color: #c9d1d9;
             display: flex;
             justify-content: center;
             align-items: center;
+            min-height: 100vh;
+            margin: 0;
             padding: 20px;
+            direction: rtl;
         }
         .container {
-            max-width: 650px;
+            background: #161b22;
+            padding: 35px;
+            border-radius: 20px;
+            max-width: 800px;
             width: 100%;
-            background: rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(100, 200, 255, 0.08);
-            border-radius: 28px;
-            padding: 30px 25px;
-            box-shadow: 0 20px 50px rgba(0, 40, 80, 0.6);
-        }
-        h1,
-        h2,
-        h3 {
-            color: #5dd9ff;
-            text-align: center;
-            margin-bottom: 10px;
+            border: 1px solid #30363d;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
         }
         h1 {
-            font-size: 2rem;
-            text-shadow: 0 0 30px rgba(93, 217, 255, 0.15);
-        }
-        .subtitle {
             text-align: center;
-            color: #8ab4c8;
-            font-size: 0.9rem;
-            margin-bottom: 25px;
+            color: #58a6ff;
+            border-bottom: 1px solid #30363d;
+            padding-bottom: 15px;
         }
-        .role-selector {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 25px;
-            justify-content: center;
+        .status-box {
+            background: #0d1117;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-right: 4px solid #58a6ff;
+            font-family: monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 400px;
+            overflow-y: auto;
         }
-        .role-btn {
+        .success {
+            border-right-color: #2ea043;
+        }
+        .error {
+            border-right-color: #f85149;
+        }
+        .loading {
+            border-right-color: #d29922;
+        }
+        .info-text {
+            color: #8b949e;
+            text-align: center;
+            margin: 10px 0;
+        }
+        .badge {
+            display: inline-block;
+            background: #21262d;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 13px;
+            color: #58a6ff;
+        }
+        button {
+            background: #238636;
+            color: white;
+            border: none;
             padding: 12px 25px;
-            border: 2px solid #2a5a7a;
-            border-radius: 40px;
-            background: transparent;
-            color: #8ab4c8;
+            border-radius: 10px;
+            font-size: 16px;
             font-weight: bold;
             cursor: pointer;
             transition: 0.3s;
-            flex: 1;
-            text-align: center;
-            max-width: 160px;
-            font-size: 16px;
-        }
-        .role-btn.active {
-            border-color: #5dd9ff;
-            background: rgba(93, 217, 255, 0.12);
-            color: #5dd9ff;
-            box-shadow: 0 0 25px rgba(93, 217, 255, 0.1);
-        }
-        .role-btn:hover {
-            border-color: #5dd9ff;
-            background: rgba(93, 217, 255, 0.04);
-        }
-        .role-btn .icon {
-            display: block;
-            font-size: 28px;
-            margin-bottom: 4px;
-        }
-        .form-group {
-            margin-bottom: 16px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 0.85rem;
-            color: #8ab4c8;
-        }
-        input {
-            width: 100%;
-            padding: 14px 16px;
-            border: 1px solid #1a4a6a;
-            border-radius: 14px;
-            background: rgba(255, 255, 255, 0.03);
-            color: #e8f4f8;
-            font-size: 1rem;
-            transition: 0.3s;
-        }
-        input:focus {
-            outline: none;
-            border-color: #5dd9ff;
-            background: rgba(93, 217, 255, 0.04);
-            box-shadow: 0 0 20px rgba(93, 217, 255, 0.04);
-        }
-        input::placeholder {
-            color: #4a7a9a;
-        }
-        .btn-primary {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 14px;
-            background: linear-gradient(135deg, #2a9ad9, #1a7ab9);
-            color: #ffffff;
-            font-weight: 800;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-top: 8px;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-        }
-        .btn-primary:hover {
-            transform: scale(1.02);
-            box-shadow: 0 8px 30px rgba(42, 154, 217, 0.35);
-        }
-        .btn-danger {
-            background: #c0392b;
-            color: white;
-            width: auto;
-            padding: 6px 18px;
-            font-size: 0.8rem;
-            border: none;
-            border-radius: 30px;
-            cursor: pointer;
-        }
-        .btn-danger:hover {
-            background: #e74c3c;
-        }
-        .message {
             margin-top: 15px;
-            padding: 12px;
-            border-radius: 12px;
-            text-align: center;
-            font-size: 0.95rem;
-            display: none;
+            width: 100%;
         }
-        .message.success {
-            display: block;
-            background: rgba(46, 204, 113, 0.10);
-            border: 1px solid #2ecc71;
-            color: #2ecc71;
-        }
-        .message.error {
-            display: block;
-            background: rgba(231, 76, 60, 0.10);
-            border: 1px solid #e74c3c;
-            color: #e74c3c;
-        }
-        .message.loading {
-            display: block;
-            background: rgba(93, 217, 255, 0.08);
-            border: 1px solid #5dd9ff;
-            color: #5dd9ff;
-        }
-        .link-btn {
-            display: block;
-            text-align: center;
-            margin-top: 18px;
-            color: #4a8aaa;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .link-btn:hover {
-            color: #7ac8e8;
-        }
-        .hidden {
-            display: none !important;
-        }
-        .card {
-            background: rgba(255, 255, 255, 0.03);
-            padding: 15px;
-            border-radius: 16px;
-            margin: 12px 0;
-            border-right: 4px solid #5dd9ff;
-        }
-        .flex-space {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        hr {
-            margin: 25px 0;
-            border: none;
-            height: 1px;
-            background: rgba(93, 217, 255, 0.08);
+        button:hover {
+            background: #2ea043;
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 12px 0;
+            margin-top: 15px;
+            font-size: 14px;
         }
         th {
-            color: #5dd9ff;
+            background: #21262d;
+            color: #58a6ff;
             padding: 10px;
-            border-bottom: 1px solid #1a4a6a;
+            text-align: right;
+            border-bottom: 2px solid #30363d;
         }
         td {
-            padding: 10px;
+            padding: 8px 10px;
+            border-bottom: 1px solid #21262d;
+        }
+        tr:hover {
+            background: #161b22;
+        }
+        .footer {
+            margin-top: 20px;
             text-align: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-        }
-        .input-group {
-            display: flex;
-            gap: 8px;
-            margin-top: 8px;
-        }
-        .input-group input {
-            flex: 2;
-            padding: 10px 12px;
-        }
-        .input-group button {
-            flex: 1;
-            padding: 10px 12px;
-            margin: 0;
-            font-size: 0.85rem;
-        }
-        .badge {
-            background: rgba(93, 217, 255, 0.08);
-            color: #5dd9ff;
-            padding: 2px 12px;
-            border-radius: 30px;
-            font-size: 0.75rem;
-        }
-        /* تحسين حجم الأزرار على الشاشات الصغيرة */
-        @media (max-width: 480px) {
-            .role-btn {
-                padding: 10px 15px;
-                font-size: 14px;
-                max-width: 130px;
-            }
-            .role-btn .icon {
-                font-size: 22px;
-            }
+            color: #8b949e;
+            font-size: 13px;
         }
     </style>
 </head>
 <body>
-    <div class="container" id="app">
 
-        <!-- ========================================= -->
-        <!-- 1. صفحة تسجيل الدخول -->
-        <!-- ========================================= -->
-        <div id="loginPage">
-            <h1>⚽ كأس العالم 2026</h1>
-            <p class="subtitle">سجل دخولك للمشاركة في التحدي</p>
+    <div class="container">
+        <h1>🔌 اختبار الاتصال بـ Supabase</h1>
+        <p class="info-text">الهدف: التحقق من أن الموقع يستطيع قراءة البيانات من قاعدة البيانات.</p>
 
-            <div class="role-selector">
-                <div class="role-btn" id="rolePlayer">
-                    <span class="icon">🏃</span>
-                    لاعب
-                </div>
-                <div class="role-btn active" id="roleAdmin">
-                    <span class="icon">👑</span>
-                    مشرف
-                </div>
-            </div>
+        <!-- زر لبدء الاختبار -->
+        <button id="testBtn">🚀 اختبر الاتصال الآن</button>
 
-            <div class="form-group">
-                <label>📧 البريد الإلكتروني</label>
-                <input type="email" id="loginEmail" placeholder="admin@predict.com">
-            </div>
-            <div class="form-group">
-                <label>🔑 كلمة السر</label>
-                <input type="password" id="loginPassword" placeholder="كلمة السر">
-            </div>
-
-            <button class="btn-primary" id="loginBtn">دخول</button>
-            <div id="loginMsg" class="message"></div>
-
-            <span class="link-btn" id="goToRegister">ليس لديك حساب؟ سجل الآن</span>
+        <!-- منطقة عرض النتائج -->
+        <div id="resultArea">
+            <p class="info-text" style="margin-top:20px;">⏳ اضغط على الزر لبدء الاختبار...</p>
         </div>
 
-        <!-- ========================================= -->
-        <!-- 2. صفحة التسجيل -->
-        <!-- ========================================= -->
-        <div id="registerPage" class="hidden">
-            <h2>📝 تسجيل جديد</h2>
-            <div class="form-group">
-                <label>👤 اسمك</label>
-                <input type="text" id="regName" placeholder="الاسم الكامل">
-            </div>
-            <div class="form-group">
-                <label>📧 البريد الإلكتروني</label>
-                <input type="email" id="regEmail" placeholder="بريدك">
-            </div>
-            <div class="form-group">
-                <label>🔑 كلمة السر</label>
-                <input type="password" id="regPassword" placeholder="أدخل 4 أحرف على الأقل">
-            </div>
-            <button class="btn-primary" id="registerBtn">تسجيل</button>
-            <div id="regMsg" class="message"></div>
-            <span class="link-btn" id="goToLogin">🔙 لدي حساب، سجل دخول</span>
+        <div class="footer">
+            <span class="badge">Project: worldcup2026</span>
+            <span class="badge" style="margin-right:8px;">🔑 anon key</span>
         </div>
-
-        <!-- ========================================= -->
-        <!-- 3. صفحة المشرف -->
-        <!-- ========================================= -->
-        <div id="adminPage" class="hidden">
-            <div class="flex-space">
-                <h2 style="margin:0;">👑 المشرف</h2>
-                <button class="btn-danger" id="adminLogout">خروج</button>
-            </div>
-
-            <h3>➕ إضافة مباراة</h3>
-            <div class="form-group"><label>الفريق الأول</label><input type="text" id="aTeam1" placeholder="مصر"></div>
-            <div class="form-group"><label>علم الأول</label><input type="text" id="aFlag1" placeholder="🇪🇬"></div>
-            <div class="form-group"><label>الفريق الثاني</label><input type="text" id="aTeam2" placeholder="السنغال"></div>
-            <div class="form-group"><label>علم الثاني</label><input type="text" id="aFlag2" placeholder="🇸🇳"></div>
-            <div class="form-group"><label>⏰ موعد انتهاء التوقع</label><input type="datetime-local" id="aDeadline"></div>
-            <button class="btn-primary" id="addMatchBtn">➕ إضافة المباراة</button>
-
-            <hr>
-            <h3>📋 المباريات الحالية</h3>
-            <div id="adminMatches"><p style="color:#4a7a9a; text-align:center;">جاري التحميل...</p></div>
-
-            <hr>
-            <h3>🏆 ترتيب اللاعبين</h3>
-            <div id="adminRank"><p style="color:#4a7a9a; text-align:center;">جاري التحميل...</p></div>
-        </div>
-
-        <!-- ========================================= -->
-        <!-- 4. صفحة اللاعب -->
-        <!-- ========================================= -->
-        <div id="playerPage" class="hidden">
-            <div class="flex-space">
-                <h2 style="margin:0;">👤 <span id="playerName">اللاعب</span></h2>
-                <button class="btn-danger" id="playerLogout">خروج</button>
-            </div>
-
-            <h3>🏟️ مباريات اليوم</h3>
-            <div id="playerMatches"><p style="color:#4a7a9a; text-align:center;">جاري التحميل...</p></div>
-
-            <hr>
-            <h3>🏆 ترتيب اللاعبين</h3>
-            <div id="playerRank"><p style="color:#4a7a9a; text-align:center;">جاري التحميل...</p></div>
-        </div>
-
     </div>
 
     <script>
-        // ============================================================
-        //  🔥 بيانات Supabase (تأكد من تطابقها مع مشروعك)
-        // ============================================================
+        // ==========================================
+        //  🔥 بيانات Supabase الخاصة بك
+        // ==========================================
         const SUPABASE_URL = 'https://azjvyntnnertgcmvsfmq.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_FQT6pUUgos4vOgeAqjdQng_stG_DiAi';
 
-        // ============================================================
+        // ==========================================
         //  تهيئة العميل
-        // ============================================================
+        // ==========================================
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // ============================================================
-        //  المتغيرات العامة وعناصر DOM
-        // ============================================================
-        let currentUser = null;
-        let selectedRole = 'admin'; // <-- المشرف هو الوضع الافتراضي
+        // ==========================================
+        //  عناصر الصفحة
+        // ==========================================
+        const resultArea = document.getElementById('resultArea');
+        const testBtn = document.getElementById('testBtn');
 
-        const loginPage = document.getElementById('loginPage');
-        const registerPage = document.getElementById('registerPage');
-        const adminPage = document.getElementById('adminPage');
-        const playerPage = document.getElementById('playerPage');
-
-        const loginEmail = document.getElementById('loginEmail');
-        const loginPassword = document.getElementById('loginPassword');
-        const loginMsg = document.getElementById('loginMsg');
-
-        const regName = document.getElementById('regName');
-        const regEmail = document.getElementById('regEmail');
-        const regPassword = document.getElementById('regPassword');
-        const regMsg = document.getElementById('regMsg');
-
-        const rolePlayer = document.getElementById('rolePlayer');
-        const roleAdmin = document.getElementById('roleAdmin');
-
-        // ============================================================
-        //  1. اختيار الدور (لاعب / مشرف)
-        // ============================================================
-        rolePlayer.onclick = function() {
-            selectedRole = 'player';
-            rolePlayer.classList.add('active');
-            roleAdmin.classList.remove('active');
-            loginEmail.placeholder = 'بريدك الإلكتروني';
-            loginEmail.value = '';
-        };
-
-        roleAdmin.onclick = function() {
-            selectedRole = 'admin';
-            roleAdmin.classList.add('active');
-            rolePlayer.classList.remove('active');
-            loginEmail.placeholder = 'admin@predict.com';
-            loginEmail.value = 'admin@predict.com';
-        };
-
-        // ============================================================
-        //  2. تسجيل الدخول
-        // ============================================================
-        document.getElementById('loginBtn').onclick = async function() {
-            const email = loginEmail.value.trim();
-            const password = loginPassword.value.trim();
-
-            if (!email || !password) {
-                showMsg(loginMsg, '⚠️ يرجى ملء جميع الحقول', 'error');
-                return;
-            }
-
-            showMsg(loginMsg, '⏳ جاري التحقق...', 'loading');
+        // ==========================================
+        //  وظيفة الاختبار الرئيسية
+        // ==========================================
+        async function runTest() {
+            // 1. تغيير مظهر الزر أثناء التحميل
+            testBtn.disabled = true;
+            testBtn.textContent = '⏳ جاري الاتصال...';
+            resultArea.innerHTML = `<div class="status-box loading">⏳ جاري الاتصال بقاعدة البيانات...</div>`;
 
             try {
-                const { data, error } = await supabase
+                // ==========================================
+                //  الاختبار 1: محاولة قراءة جدول "users"
+                // ==========================================
+                const { data: usersData, error: usersError } = await supabase
                     .from('users')
                     .select('*')
-                    .eq('email', email)
-                    .eq('password', password)
-                    .single();
+                    .limit(5); // نجلب فقط 5 سجلات
 
-                if (error || !data) {
-                    showMsg(loginMsg, '❌ البريد الإلكتروني أو كلمة السر غير صحيحة', 'error');
-                    return;
-                }
-
-                // التحقق من الدور
-                if (selectedRole === 'admin' && data.role !== 'admin') {
-                    showMsg(loginMsg, '❌ هذا الحساب ليس مشرفاً. اختر "لاعب"', 'error');
-                    return;
-                }
-                if (selectedRole === 'player' && data.role === 'admin') {
-                    showMsg(loginMsg, '❌ هذا حساب مشرف. اختر "مشرف"', 'error');
-                    return;
-                }
-
-                currentUser = data;
-                showMsg(loginMsg, '✅ تم تسجيل الدخول بنجاح!', 'success');
-
-                if (data.role === 'admin') {
-                    showAdminPage();
-                } else {
-                    showPlayerPage(data.name);
-                }
-
-            } catch (err) {
-                showMsg(loginMsg, '❌ خطأ غير متوقع: ' + err.message, 'error');
-            }
-        };
-
-        // ============================================================
-        //  3. تسجيل مستخدم جديد
-        // ============================================================
-        document.getElementById('registerBtn').onclick = async function() {
-            const name = regName.value.trim();
-            const email = regEmail.value.trim();
-            const password = regPassword.value.trim();
-
-            if (!name || !email || !password) {
-                regMsg.textContent = '⚠️ يرجى ملء جميع الحقول';
-                regMsg.className = 'message error';
-                return;
-            }
-            if (password.length < 4) {
-                regMsg.textContent = '⚠️ كلمة السر يجب أن تكون 4 أحرف على الأقل';
-                regMsg.className = 'message error';
-                return;
-            }
-
-            try {
-                const { data: existing } = await supabase
-                    .from('users')
-                    .select('id')
-                    .eq('email', email)
-                    .maybeSingle();
-
-                if (existing) {
-                    regMsg.textContent = '❌ هذا البريد الإلكتروني مسجل بالفعل';
-                    regMsg.className = 'message error';
-                    return;
-                }
-
-                const { error } = await supabase
-                    .from('users')
-                    .insert({
-                        name: name,
-                        email: email,
-                        password: password,
-                        role: 'player',
-                        total_points: 0
-                    });
-
-                if (error) throw error;
-
-                regMsg.textContent = '✅ تم التسجيل بنجاح! يمكنك الآن تسجيل الدخول.';
-                regMsg.className = 'message success';
-
-                setTimeout(function() {
-                    showLoginPage();
-                }, 1500);
-
-            } catch (err) {
-                regMsg.textContent = '❌ فشل التسجيل: ' + err.message;
-                regMsg.className = 'message error';
-            }
-        };
-
-        // ============================================================
-        //  4. التنقل بين الصفحات
-        // ============================================================
-        function showLoginPage() {
-            loginPage.classList.remove('hidden');
-            registerPage.classList.add('hidden');
-            adminPage.classList.add('hidden');
-            playerPage.classList.add('hidden');
-        }
-
-        function showRegisterPage() {
-            loginPage.classList.add('hidden');
-            registerPage.classList.remove('hidden');
-            adminPage.classList.add('hidden');
-            playerPage.classList.add('hidden');
-        }
-
-        function showAdminPage() {
-            loginPage.classList.add('hidden');
-            registerPage.classList.add('hidden');
-            adminPage.classList.remove('hidden');
-            playerPage.classList.add('hidden');
-            loadAdminMatches();
-            loadRanking('adminRank');
-        }
-
-        function showPlayerPage(name) {
-            document.getElementById('playerName').textContent = name;
-            loginPage.classList.add('hidden');
-            registerPage.classList.add('hidden');
-            adminPage.classList.add('hidden');
-            playerPage.classList.remove('hidden');
-            loadPlayerMatches();
-            loadRanking('playerRank');
-        }
-
-        document.getElementById('goToRegister').onclick = showRegisterPage;
-        document.getElementById('goToLogin').onclick = showLoginPage;
-
-        // ============================================================
-        //  5. تسجيل الخروج
-        // ============================================================
-        function logout() {
-            currentUser = null;
-            loginPage.classList.remove('hidden');
-            registerPage.classList.add('hidden');
-            adminPage.classList.add('hidden');
-            playerPage.classList.add('hidden');
-            loginEmail.value = '';
-            loginPassword.value = '';
-            // إعادة تعيين الدور إلى مشرف
-            selectedRole = 'admin';
-            roleAdmin.classList.add('active');
-            rolePlayer.classList.remove('active');
-            loginEmail.placeholder = 'admin@predict.com';
-            showMsg(loginMsg, 'تم تسجيل الخروج', 'success');
-        }
-        document.getElementById('adminLogout').onclick = logout;
-        document.getElementById('playerLogout').onclick = logout;
-
-        // ============================================================
-        //  6. دوال مساعدة (عرض الرسائل)
-        // ============================================================
-        function showMsg(element, text, type) {
-            element.textContent = text;
-            element.className = 'message ' + type;
-        }
-
-        // ============================================================
-        //  7. وظائف المشرف
-        // ============================================================
-
-        document.getElementById('addMatchBtn').onclick = async function() {
-            const team1 = document.getElementById('aTeam1').value.trim();
-            const flag1 = document.getElementById('aFlag1').value.trim();
-            const team2 = document.getElementById('aTeam2').value.trim();
-            const flag2 = document.getElementById('aFlag2').value.trim();
-            const deadline = document.getElementById('aDeadline').value;
-
-            if (!team1 || !team2 || !deadline) {
-                alert('⚠️ يرجى ملء جميع الحقول (الفريقان والموعد)');
-                return;
-            }
-
-            try {
-                const { error } = await supabase
-                    .from('matches')
-                    .insert({
-                        team1: team1,
-                        team1_flag: flag1 || '🏳️',
-                        team2: team2,
-                        team2_flag: flag2 || '🏳️',
-                        deadline: new Date(deadline).toISOString(),
-                        result: '',
-                        status: 'upcoming'
-                    });
-
-                if (error) throw error;
-
-                alert('✅ تم إضافة المباراة بنجاح!');
-                ['aTeam1', 'aFlag1', 'aTeam2', 'aFlag2', 'aDeadline'].forEach(function(id) {
-                    document.getElementById(id).value = '';
-                });
-                loadAdminMatches();
-
-            } catch (err) {
-                alert('❌ فشل الإضافة: ' + err.message);
-            }
-        };
-
-        async function loadAdminMatches() {
-            const container = document.getElementById('adminMatches');
-            container.innerHTML = '<p style="color:#4a7a9a; text-align:center;">⏳ جاري التحميل...</p>';
-
-            try {
-                const { data, error } = await supabase
-                    .from('matches')
-                    .select('*')
-                    .order('deadline', { ascending: true });
-
-                if (error) throw error;
-
-                if (!data || data.length === 0) {
-                    container.innerHTML = '<p style="color:#4a7a9a; text-align:center;">📭 لا توجد مباريات حالياً</p>';
-                    return;
-                }
-
-                let html = '';
-                data.forEach(function(m) {
-                    const isPast = new Date(m.deadline) < new Date();
-                    html += `
-                        <div class="card">
-                            <div style="font-weight:bold; font-size:1.1rem;">
-                                ${m.team1_flag || '🏳️'} ${m.team1} 🆚 ${m.team2} ${m.team2_flag || '🏳️'}
+                if (usersError) {
+                    // إذا كان الجدول غير موجود، نحاول قراءة جدول "matches"
+                    if (usersError.message.includes('relation "users" does not exist')) {
+                        resultArea.innerHTML += `
+                            <div class="status-box error">
+                                ❌ جدول "users" غير موجود في قاعدة البيانات.
+                                <br>الخطأ: ${usersError.message}
                             </div>
-                            <div style="color:#8ab4c8; font-size:0.85rem; margin:4px 0;">
-                                ⏰ ${new Date(m.deadline).toLocaleString('ar')}
-                                ${m.result ? ` | ✅ النتيجة: ${m.result}` : ''}
-                                ${isPast && !m.result ? ' ⚠️ انتهى الوقت' : ''}
-                            </div>
-                            <div class="input-group">
-                                <input type="text" id="res_${m.id}" placeholder="أدخل النتيجة (مثال: 2-1)">
-                                <button class="btn-primary" style="padding:8px; font-size:0.8rem;" onclick="updateResult('${m.id}')">تحديث</button>
-                            </div>
-                        </div>
-                    `;
-                });
-                container.innerHTML = html;
+                            <div class="status-box loading">⏳ جاري محاولة قراءة جدول "matches"...</div>
+                        `;
 
-            } catch (err) {
-                container.innerHTML = '<p style="color:#e74c3c; text-align:center;">❌ فشل التحميل</p>';
-                console.error(err);
-            }
-        }
+                        // محاولة قراءة جدول "matches"
+                        const { data: matchesData, error: matchesError } = await supabase
+                            .from('matches')
+                            .select('*')
+                            .limit(5);
 
-        window.updateResult = async function(matchId) {
-            const result = document.getElementById('res_' + matchId).value.trim();
-            if (!result) {
-                alert('⚠️ الرجاء إدخال النتيجة أولاً');
-                return;
-            }
+                        if (matchesError) {
+                            resultArea.innerHTML += `
+                                <div class="status-box error">
+                                    ❌ فشل قراءة جدول "matches" أيضاً.
+                                    <br>الخطأ: ${matchesError.message}
+                                </div>
+                                <div class="status-box error">
+                                    ❌ يبدو أن الجداول لم تنشأ بعد في قاعدة البيانات.
+                                    <br>⚠️ رجاءً أنشئ الجداول أولاً باستخدام SQL Editor في Supabase.
+                                </div>
+                            `;
+                        } else {
+                            // نجاح قراءة جدول "matches"
+                            displayData('matches', matchesData);
+                        }
 
-            try {
-                const { error } = await supabase
-                    .from('matches')
-                    .update({ result: result, status: 'finished' })
-                    .eq('id', matchId);
-
-                if (error) throw error;
-
-                const { data: predictions, error: predError } = await supabase
-                    .from('predictions')
-                    .select('*')
-                    .eq('match_id', matchId);
-
-                if (predError) throw predError;
-
-                for (const p of predictions) {
-                    const points = (p.prediction === result) ? 3 : 0;
-                    await supabase
-                        .from('predictions')
-                        .update({ points: points })
-                        .eq('id', p.id);
-
-                    await updatePlayerTotalPoints(p.player_id);
-                }
-
-                alert('✅ تم تحديث النتيجة وحساب النقاط بنجاح!');
-                loadAdminMatches();
-                loadRanking('adminRank');
-
-            } catch (err) {
-                alert('❌ فشل التحديث: ' + err.message);
-            }
-        };
-
-        async function updatePlayerTotalPoints(playerId) {
-            try {
-                const { data, error } = await supabase
-                    .from('predictions')
-                    .select('points')
-                    .eq('player_id', playerId);
-
-                if (error) throw error;
-
-                const total = data.reduce(function(sum, p) {
-                    return sum + (p.points || 0);
-                }, 0);
-
-                await supabase
-                    .from('users')
-                    .update({ total_points: total })
-                    .eq('id', playerId);
-
-            } catch (err) {
-                console.error('خطأ في تحديث نقاط اللاعب:', err);
-            }
-        }
-
-        // ============================================================
-        //  8. وظائف اللاعب
-        // ============================================================
-
-        async function loadPlayerMatches() {
-            const container = document.getElementById('playerMatches');
-            container.innerHTML = '<p style="color:#4a7a9a; text-align:center;">⏳ جاري التحميل...</p>';
-
-            try {
-                const { data, error } = await supabase
-                    .from('matches')
-                    .select('*')
-                    .eq('status', 'upcoming')
-                    .order('deadline', { ascending: true });
-
-                if (error) throw error;
-
-                if (!data || data.length === 0) {
-                    container.innerHTML = '<p style="color:#4a7a9a; text-align:center;">🎉 لا توجد مباريات اليوم</p>';
-                    return;
-                }
-
-                let html = '';
-                for (const m of data) {
-                    const isPast = new Date(m.deadline) < new Date();
-
-                    let hasPrediction = false;
-                    if (currentUser) {
-                        const { data: pred } = await supabase
-                            .from('predictions')
-                            .select('id')
-                            .eq('player_id', currentUser.id)
-                            .eq('match_id', m.id)
-                            .maybeSingle();
-                        hasPrediction = !!pred;
-                    }
-
-                    html += `
-                        <div class="card">
-                            <div style="font-size:1.2rem; font-weight:bold;">
-                                ${m.team1_flag || '🏳️'} ${m.team1} 🆚 ${m.team2} ${m.team2_flag || '🏳️'}
-                            </div>
-                            <div style="color:#8ab4c8; font-size:0.85rem; margin:4px 0;">
-                                ⏰ ${new Date(m.deadline).toLocaleString('ar')}
-                                ${isPast ? ' ⛔ انتهى وقت التوقع' : ''}
-                                ${hasPrediction ? ' ✅ تم التوقع مسبقاً' : ''}
-                            </div>
-                            ${!isPast && !hasPrediction ? `
-                            <div class="input-group">
-                                <input type="text" id="pred_${m.id}" placeholder="توقعك (مثال: 2-1)">
-                                <button class="btn-primary" style="padding:8px; font-size:0.8rem;" onclick="sendPrediction('${m.id}')">أرسل</button>
-                            </div>` : ''}
-                        </div>
-                    `;
-                }
-                container.innerHTML = html;
-
-            } catch (err) {
-                container.innerHTML = '<p style="color:#e74c3c; text-align:center;">❌ فشل التحميل</p>';
-                console.error(err);
-            }
-        }
-
-        window.sendPrediction = async function(matchId) {
-            if (!currentUser) {
-                alert('⚠️ يجب تسجيل الدخول أولاً');
-                return;
-            }
-
-            const prediction = document.getElementById('pred_' + matchId).value.trim();
-            if (!prediction) {
-                alert('⚠️ الرجاء إدخال توقعك');
-                return;
-            }
-
-            try {
-                const { error } = await supabase
-                    .from('predictions')
-                    .insert({
-                        player_id: currentUser.id,
-                        match_id: matchId,
-                        prediction: prediction,
-                        points: 0,
-                        timestamp: new Date().toISOString()
-                    });
-
-                if (error) throw error;
-
-                alert('✅ تم إرسال توقعك بنجاح!');
-                loadPlayerMatches();
-
-            } catch (err) {
-                alert('❌ فشل الإرسال: ' + err.message);
-            }
-        };
-
-        // ============================================================
-        //  9. لوحة الترتيب (للمشرف واللاعب)
-        // ============================================================
-        async function loadRanking(elementId) {
-            const container = document.getElementById(elementId);
-            container.innerHTML = '<p style="color:#4a7a9a; text-align:center;">⏳ جاري التحميل...</p>';
-
-            try {
-                const { data, error } = await supabase
-                    .from('users')
-                    .select('name, total_points')
-                    .eq('role', 'player')
-                    .order('total_points', { ascending: false });
-
-                if (error) throw error;
-
-                if (!data || data.length === 0) {
-                    container.innerHTML = '<p style="color:#4a7a9a; text-align:center;">📭 لا يوجد لاعبون بعد</p>';
-                    return;
-                }
-
-                let html = '<table><tr><th>#</th><th>اللاعب</th><th>⭐ النقاط</th></tr>';
-                data.forEach(function(p, i) {
-                    html += `<tr><td>${i+1}</td><td>${p.name}</td><td>${p.total_points || 0}</td></tr>`;
-                });
-                html += '</table>';
-                container.innerHTML = html;
-
-            } catch (err) {
-                container.innerHTML = '<p style="color:#e74c3c; text-align:center;">❌ فشل التحميل</p>';
-                console.error(err);
-            }
-        }
-
-        // ============================================================
-        //  10. إنشاء حساب المشرف تلقائياً (مرة واحدة)
-        // ============================================================
-        async function createAdminIfNotExists() {
-            try {
-                const { data, error } = await supabase
-                    .from('users')
-                    .select('id')
-                    .eq('email', 'admin@predict.com')
-                    .maybeSingle();
-
-                if (!data) {
-                    const { error: insertError } = await supabase
-                        .from('users')
-                        .insert({
-                            name: 'المشرف',
-                            email: 'admin@predict.com',
-                            password: 'osama2006',
-                            role: 'admin',
-                            total_points: 0
-                        });
-
-                    if (insertError) {
-                        console.error('❌ فشل إنشاء حساب المشرف:', insertError);
                     } else {
-                        console.log('✅ تم إنشاء حساب المشرف بنجاح!');
+                        // خطأ آخر غير متعلق بوجود الجدول
+                        resultArea.innerHTML += `
+                            <div class="status-box error">
+                                ❌ فشل الاتصال بقاعدة البيانات.
+                                <br>الخطأ: ${usersError.message}
+                            </div>
+                            <div class="status-box error">
+                                ⚠️ تأكد من:
+                                1. صحة الرابط (URL) والمفتاح (anon key).
+                                2. أن المشروع نشط على Supabase.
+                                3. أنك تستخدم المفتاح الصحيح (publishable key).
+                            </div>
+                        `;
                     }
+
                 } else {
-                    console.log('✅ حساب المشرف موجود مسبقاً.');
+                    // ✅ نجاح قراءة جدول "users"
+                    displayData('users', usersData);
+
+                    // محاولة قراءة جدول "matches" أيضاً لعرضه
+                    const { data: matchesData, error: matchesError } = await supabase
+                        .from('matches')
+                        .select('*')
+                        .limit(5);
+
+                    if (!matchesError && matchesData) {
+                        displayData('matches', matchesData);
+                    } else {
+                        resultArea.innerHTML += `
+                            <div class="status-box" style="border-right-color:#d29922;">
+                                ℹ️ لم يتم العثور على بيانات في جدول "matches" (قد يكون فارغاً).
+                            </div>
+                        `;
+                    }
                 }
+
+                // ==========================================
+                //  عرض معلومات إضافية عن المشروع
+                // ==========================================
+                resultArea.innerHTML += `
+                    <div class="status-box success" style="border-right-color: #58a6ff;">
+                        ✅ تم الاتصال بنجاح بخادم Supabase.
+                        <br>🔗 الرابط المستخدم: ${SUPABASE_URL}
+                        <br>📊 عدد الجداول التي تم التحقق منها: users, matches
+                    </div>
+                `;
+
             } catch (err) {
-                console.error('❌ خطأ في إنشاء حساب المشرف:', err);
+                // أي خطأ غير متوقع
+                resultArea.innerHTML += `
+                    <div class="status-box error">
+                        ❌ حدث خطأ غير متوقع:
+                        <br>${err.message}
+                    </div>
+                    <div class="status-box error">
+                        ⚠️ تأكد من أن الكود يعمل في بيئة آمنة (متصفح حديث) وأنك تستخدم الإنترنت.
+                    </div>
+                `;
+                console.error('خطأ غير متوقع:', err);
             }
+
+            // إعادة تفعيل الزر
+            testBtn.disabled = false;
+            testBtn.textContent = '🔄 اختبر مجدداً';
         }
 
-        // ============================================================
-        //  🚀 تشغيل التطبيق
-        // ============================================================
-        createAdminIfNotExists();
+        // ==========================================
+        //  دالة عرض البيانات في جدول
+        // ==========================================
+        function displayData(tableName, data) {
+            if (!data || data.length === 0) {
+                resultArea.innerHTML += `
+                    <div class="status-box" style="border-right-color:#d29922;">
+                        📭 جدول "<strong>${tableName}</strong>" موجود لكنه فارغ (لا يحتوي على أي سجلات).
+                    </div>
+                `;
+                return;
+            }
 
-        console.log('🚀 تطبيق كأس العالم 2026 جاهز! (الألوان السماوية)');
-        console.log('👑 بيانات دخول المشرف: admin@predict.com / osama2006');
-        console.log('📊 تأكد من وجود جداول (users, matches, predictions) في Supabase.');
+            // استخراج أسماء الأعمدة من أول عنصر
+            const columns = Object.keys(data[0]);
+
+            // بناء الجدول
+            let tableHTML = `
+                <div class="status-box success" style="border-right-color: #2ea043; overflow-x: auto;">
+                    <strong>✅ جدول "${tableName}" يحتوي على ${data.length} سجل(ات).</strong>
+                    <table>
+                        <thead>
+                            <tr>
+                                ${columns.map(col => `<th>${col}</th>`).join('')}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data.map(row => `
+                                <tr>
+                                    ${columns.map(col => `<td>${row[col] !== null && row[col] !== undefined ? row[col] : '—'}</td>`).join('')}
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            resultArea.innerHTML += tableHTML;
+        }
+
+        // ==========================================
+        //  ربط الزر بوظيفة الاختبار
+        // ==========================================
+        testBtn.addEventListener('click', runTest);
+
+        // ==========================================
+        //  تنفيذ اختبار تلقائي عند تحميل الصفحة (اختياري)
+        // ==========================================
+        // runTest(); // أزل التعليق عن هذا السطر إذا أردت أن يعمل الاختبار تلقائياً
+
+        console.log('✅ صفحة الاختبار جاهزة. اضغط على الزر لبدء الاختبار.');
+        console.log('📌 البيانات المستخدمة:');
+        console.log('URL:', SUPABASE_URL);
+        console.log('ANON KEY:', SUPABASE_ANON_KEY);
     </script>
+
 </body>
 </html>
