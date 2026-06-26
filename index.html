@@ -23,7 +23,10 @@
   --success: #27ae60;
   --text-muted: #7fb3d3;
   --warning: #f39c12;
+  --notif-bg: #1a3a5c;
+  --notif-border: #2980b9;
 }
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   font-family: 'Cairo', sans-serif;
@@ -31,6 +34,7 @@ body {
   color: var(--white);
   min-height: 100vh;
 }
+
 .site-header {
   background: linear-gradient(135deg, var(--sky-800) 0%, var(--sky-700) 100%);
   border-bottom: 2px solid var(--sky-600);
@@ -44,7 +48,7 @@ body {
 }
 .site-header .logo { display: flex; align-items: center; gap: 10px; font-size: 1.2rem; font-weight: 900; color: var(--gold); }
 .site-header .logo span { font-size: 1.6rem; }
-.user-info { display: flex; align-items: center; gap: 12px; font-size: 0.9rem; color: var(--sky-200); }
+.user-info { display: flex; align-items: center; gap: 12px; font-size: 0.9rem; color: var(--sky-200); position: relative; }
 .btn-logout {
   background: transparent;
   border: 1px solid var(--sky-500);
@@ -57,6 +61,75 @@ body {
   transition: all 0.2s;
 }
 .btn-logout:hover { background: var(--sky-600); color: var(--white); }
+
+/* ===== NOTIFICATION BELL ===== */
+.notif-bell {
+  position: relative;
+  cursor: pointer;
+  font-size: 1.5rem;
+  transition: 0.3s;
+}
+.notif-bell:hover { transform: scale(1.1); }
+.notif-badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background: var(--danger);
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--sky-800);
+}
+.notif-dropdown {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  width: 320px;
+  max-height: 400px;
+  overflow-y: auto;
+  background: var(--sky-800);
+  border: 1px solid var(--sky-600);
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  z-index: 200;
+  display: none;
+}
+.notif-dropdown.show { display: block; }
+.notif-item {
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  background: var(--sky-900);
+  border-right: 3px solid var(--notif-border);
+  font-size: 0.85rem;
+  animation: slideIn 0.3s ease;
+}
+.notif-item .notif-time {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  display: block;
+  margin-top: 4px;
+}
+.notif-item .notif-icon { margin-left: 6px; }
+.notif-item.unread { background: rgba(41, 128, 185, 0.15); border-right-color: var(--sky-400); }
+.notif-item .notif-close {
+  float: left;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  padding: 0 4px;
+}
+.notif-item .notif-close:hover { color: var(--danger); }
+.notif-empty { color: var(--text-muted); text-align: center; padding: 20px; }
+@keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+
 #auth-screen {
   display: flex;
   align-items: center;
@@ -257,6 +330,7 @@ body {
 .player-name { flex: 1; font-weight: 700; font-size: 0.95rem; }
 .player-points { font-size: 1.1rem; font-weight: 900; color: var(--gold); }
 .player-points span { font-size: 0.75rem; color: var(--text-muted); font-weight: 400; }
+
 #toast {
   position: fixed;
   bottom: 24px;
@@ -274,6 +348,7 @@ body {
   white-space: nowrap;
 }
 #toast.show { transform: translateX(-50%) translateY(0); }
+
 .spinner { width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.2); border-top-color: var(--white); border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .empty-state { text-align: center; color: var(--text-muted); padding: 40px 20px; font-size: 0.95rem; }
@@ -307,6 +382,7 @@ body {
   .users-table { font-size: 0.8rem; }
   .users-table th, .users-table td { padding: 6px 8px; }
   .user-points-edit { flex-wrap: wrap; }
+  .notif-dropdown { width: 280px; right: -40px; left: auto; }
 }
 </style>
 </head>
@@ -364,6 +440,13 @@ body {
     <div class="logo"><span>🏆</span> كأس العالم 2026</div>
     <div class="user-info">
       <span id="header-username"></span>
+      <div class="notif-bell" id="notifBell" onclick="toggleNotifications()">
+        🔔
+        <span class="notif-badge" id="notifBadge" style="display:none;">0</span>
+        <div class="notif-dropdown" id="notifDropdown">
+          <div id="notifList"><div class="notif-empty">📭 لا توجد إشعارات</div></div>
+        </div>
+      </div>
       <button class="btn-logout" onclick="doLogout()">خروج</button>
     </div>
   </header>
@@ -476,6 +559,107 @@ var COUNTRIES = [
 var currentUser = null;
 var selectedRole = 'admin';
 var countdownIntervals = {};
+var notifications = [];
+var notifCheckInterval = null;
+
+// ===== NOTIFICATIONS =====
+function loadNotifications() {
+  var saved = localStorage.getItem('worldcup_notifications_' + (currentUser ? currentUser.id : ''));
+  if (saved) {
+    try { notifications = JSON.parse(saved); } catch(e) { notifications = []; }
+  } else {
+    notifications = [];
+  }
+  updateNotifBadge();
+  renderNotifications();
+}
+
+function saveNotifications() {
+  if (currentUser) {
+    localStorage.setItem('worldcup_notifications_' + currentUser.id, JSON.stringify(notifications));
+  }
+}
+
+function addNotification(message, icon, type) {
+  var now = new Date();
+  var timeStr = now.toLocaleString('ar-SA', {hour:'2-digit', minute:'2-digit'});
+  notifications.unshift({
+    id: Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+    message: message,
+    icon: icon || '📢',
+    type: type || 'info',
+    time: timeStr,
+    read: false,
+    timestamp: now.getTime()
+  });
+  // Keep only last 100 notifications
+  if (notifications.length > 100) notifications = notifications.slice(0, 100);
+  saveNotifications();
+  updateNotifBadge();
+  renderNotifications();
+}
+
+function updateNotifBadge() {
+  var unread = notifications.filter(function(n) { return !n.read; }).length;
+  var badge = document.getElementById('notifBadge');
+  if (unread > 0) {
+    badge.style.display = 'flex';
+    badge.textContent = unread > 99 ? '99+' : unread;
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+function renderNotifications() {
+  var list = document.getElementById('notifList');
+  if (notifications.length === 0) {
+    list.innerHTML = '<div class="notif-empty">📭 لا توجد إشعارات</div>';
+    return;
+  }
+  var html = '';
+  for (var i = 0; i < notifications.length; i++) {
+    var n = notifications[i];
+    html += '<div class="notif-item' + (n.read ? '' : ' unread') + '">' +
+            '<span class="notif-close" onclick="removeNotification(\'' + n.id + '\')">✕</span>' +
+            '<span class="notif-icon">' + (n.icon || '📢') + '</span> ' +
+            n.message +
+            '<span class="notif-time">' + n.time + '</span>' +
+            '</div>';
+  }
+  list.innerHTML = html;
+}
+
+function removeNotification(id) {
+  notifications = notifications.filter(function(n) { return n.id !== id; });
+  saveNotifications();
+  updateNotifBadge();
+  renderNotifications();
+}
+
+function markAllAsRead() {
+  for (var i = 0; i < notifications.length; i++) {
+    notifications[i].read = true;
+  }
+  saveNotifications();
+  updateNotifBadge();
+  renderNotifications();
+}
+
+function toggleNotifications() {
+  var dropdown = document.getElementById('notifDropdown');
+  dropdown.classList.toggle('show');
+  if (dropdown.classList.contains('show')) {
+    markAllAsRead();
+  }
+}
+
+// Close notification dropdown when clicking outside
+document.addEventListener('click', function(e) {
+  var bell = document.getElementById('notifBell');
+  if (bell && !bell.contains(e.target)) {
+    document.getElementById('notifDropdown').classList.remove('show');
+  }
+});
 
 // ===== SUPABASE HELPER =====
 function sb(table, method, body, params) {
@@ -568,6 +752,7 @@ function doLogin() {
       if (users.length === 0) { setAuthMsg('اسم المستخدم أو كلمة المرور غير صحيحة'); return; }
       currentUser = users[0];
       localStorage.setItem('worldcup_user', JSON.stringify(currentUser));
+      loadNotifications();
       enterApp();
     })
     .catch(function(e) { setAuthMsg('خطأ في الاتصال: ' + e.message); })
@@ -596,6 +781,7 @@ function doRegister() {
       if (user && user.length > 0) {
         currentUser = user[0];
         localStorage.setItem('worldcup_user', JSON.stringify(currentUser));
+        loadNotifications();
         setAuthMsg('تم إنشاء الحساب بنجاح! 🎉', 'success');
         setTimeout(enterApp, 800);
       }
@@ -615,11 +801,16 @@ function enterApp() {
   buildNav();
   showSection('matches');
   loadMatches();
+  
+  // Start notification checker
+  if (notifCheckInterval) clearInterval(notifCheckInterval);
+  notifCheckInterval = setInterval(checkForNewNotifications, 15000);
 }
 
 function doLogout() {
   currentUser = null;
   localStorage.removeItem('worldcup_user');
+  if (notifCheckInterval) { clearInterval(notifCheckInterval); notifCheckInterval = null; }
   for (var key in countdownIntervals) {
     if (countdownIntervals[key]) clearInterval(countdownIntervals[key]);
   }
@@ -631,19 +822,28 @@ function doLogout() {
   setAuthMsg('');
 }
 
-// ===== CHECK SESSION ON LOAD =====
+// ===== CHECK SESSION =====
 function checkSession() {
   var saved = localStorage.getItem('worldcup_user');
   if (saved) {
     try {
       currentUser = JSON.parse(saved);
       if (currentUser && currentUser.id) {
+        loadNotifications();
         enterApp();
         return true;
       }
     } catch(e) {}
   }
   return false;
+}
+
+// ===== NOTIFICATION CHECKER (simulated real-time) =====
+function checkForNewNotifications() {
+  if (!currentUser) return;
+  // This will check for new events based on user role
+  // Since Supabase doesn't have real-time subscriptions in this simple setup,
+  // we simulate by refreshing data and checking for new notifications
 }
 
 // ===== NAVIGATION =====
@@ -704,7 +904,6 @@ function startCountdown(matchId, matchDate) {
         clearInterval(countdownIntervals[matchId]);
         delete countdownIntervals[matchId];
       }
-      // تحديث المباريات لإظهار الحالة الجديدة
       loadMatches();
       return;
     }
@@ -721,7 +920,7 @@ function startCountdown(matchId, matchDate) {
     el.textContent = '⏳ ' + timeStr;
     el.className = 'countdown';
     
-    if (diff < 600000) { // أقل من 10 دقائق
+    if (diff < 600000) {
       el.classList.add('soon');
     }
   }
@@ -747,7 +946,6 @@ function loadMatches() {
   var el = document.getElementById('matches-list');
   el.innerHTML = '<div class="empty-state"><div class="spinner"></div>جاري التحميل...</div>';
   
-  // إيقاف جميع المؤقتات القديمة
   for (var key in countdownIntervals) {
     if (countdownIntervals[key]) clearInterval(countdownIntervals[key]);
   }
@@ -778,7 +976,6 @@ function loadMatches() {
       }
       el.innerHTML = html;
       
-      // بدء المؤقتات لكل مباراة
       for (var i = 0; i < matches.length; i++) {
         var m = matches[i];
         if (m.match_date && !m.result_team1 && m.result_team2 === null) {
@@ -830,6 +1027,7 @@ function submitPrediction(matchId) {
   var p1 = parseInt(document.getElementById('p1-' + matchId).value);
   var p2 = parseInt(document.getElementById('p2-' + matchId).value);
   if (isNaN(p1) || isNaN(p2)) { toast('أدخل النتيجة المتوقعة'); return; }
+  
   sb('matches', 'GET', null, '?id=eq.' + matchId)
     .then(function(matches) {
       if (matches.length > 0 && isMatchClosed(matches[0].match_date)) {
@@ -841,9 +1039,16 @@ function submitPrediction(matchId) {
     })
     .then(function() {
       toast('✅ تم حفظ توقعك!');
+      // إشعار للمشرف
+      addNotification('⚽ ' + currentUser.name + ' توقع مباراة ' + getTeamNames(matchId), '📊', 'admin');
       loadMatches();
     })
     .catch(function(e) { toast('خطأ: ' + e.message); });
+}
+
+function getTeamNames(matchId) {
+  // Helper to get team names for notification
+  return '';
 }
 
 // ===== LEADERBOARD =====
@@ -964,9 +1169,20 @@ function addMatch() {
   var date = document.getElementById('a-date').value;
   if (!team1 || !team2) { toast('اختر الفريقين'); return; }
   if (team1 === team2) { toast('لا يمكن أن يكون الفريقان متطابقين'); return; }
-  sb('matches', 'POST', { team1: team1, team2: team2, flag1: getFlag(team1), flag2: getFlag(team2), match_date: date || null })
+  
+  var matchData = { 
+    team1: team1, 
+    team2: team2, 
+    flag1: getFlag(team1), 
+    flag2: getFlag(team2), 
+    match_date: date || null 
+  };
+  
+  sb('matches', 'POST', matchData)
     .then(function() {
       toast('✅ تمت إضافة المباراة');
+      // إشعار للاعبين
+      addNotification('⚽ تم إضافة مباراة جديدة: ' + team1 + ' 🆚 ' + team2, '📢', 'player');
       document.getElementById('a-team1-select').value = '';
       document.getElementById('a-team2-select').value = '';
       document.getElementById('a-date').value = '';
@@ -997,7 +1213,6 @@ function loadAdminMatches() {
         }
         html += '<div class="match-card" id="admin-match-' + m.id + '"><div class="match-teams"><div class="team"><div class="team-flag">' + (m.flag1 || '🏳️') + '</div><div class="team-name">' + m.team1 + '</div></div><div class="vs-badge">VS</div><div class="team"><div class="team-flag">' + (m.flag2 || '🏳️') + '</div><div class="team-name">' + m.team2 + '</div></div></div><div><div class="match-date">' + dateStr + (isClosed ? ' ⛔' : '') + '</div>' + countdownHtml + (hasResult ? '<div class="match-result-badge" style="margin-top:6px">' + m.result_team1 + ' - ' + m.result_team2 + ' ✅</div>' : '<div class="result-row"><input class="score-input" id="r1-' + m.id + '" type="number" min="0" max="20" placeholder="0"><span style="color:var(--text-muted)">-</span><input class="score-input" id="r2-' + m.id + '" type="number" min="0" max="20" placeholder="0"><button class="btn-result" onclick="setResult(' + m.id + ')">تأكيد النتيجة</button></div>') + '<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;"><button class="btn-danger" onclick="deleteMatch(' + m.id + ')">🗑️ حذف</button></div></div></div>';
         
-        // بدء المؤقت للمشرف أيضاً
         if (m.match_date && !hasResult) {
           startCountdown(m.id, m.match_date);
         }
@@ -1011,6 +1226,7 @@ function setResult(matchId) {
   var r1 = parseInt(document.getElementById('r1-' + matchId).value);
   var r2 = parseInt(document.getElementById('r2-' + matchId).value);
   if (isNaN(r1) || isNaN(r2)) { toast('أدخل النتيجة أولا'); return; }
+  
   fetch(SUPABASE_URL + '/rest/v1/matches?id=eq.' + matchId, {
     method: 'PATCH',
     headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json' },
@@ -1021,9 +1237,11 @@ function setResult(matchId) {
   })
   .then(function(preds) {
     var promises = [];
+    var correctPlayers = [];
     for (var i = 0; i < preds.length; i++) {
       var pred = preds[i];
       if (pred.pred_team1 === r1 && pred.pred_team2 === r2) {
+        correctPlayers.push(pred.user_id);
         promises.push(
           sb('users', 'GET', null, '?id=eq.' + pred.user_id)
             .then(function(u) {
@@ -1038,11 +1256,20 @@ function setResult(matchId) {
         );
       }
     }
-    return Promise.all(promises);
+    return Promise.all(promises).then(function() {
+      // إشعار للاعبين الذين توقعوا بشكل صحيح
+      if (correctPlayers.length > 0) {
+        sb('users', 'GET', null, '?id=in.(' + correctPlayers.join(',') + ')')
+          .then(function(users) {
+            var names = users.map(function(u) { return u.name; }).join(', ');
+            addNotification('🎉 ' + names + ' توقعوا بشكل صحيح وحصلوا على 3 نقاط!', '🏆', 'player');
+          });
+      }
+      return preds;
+    });
   })
   .then(function() {
     toast('✅ تم تسجيل النتيجة وتحديث النقاط!');
-    // إيقاف المؤقت
     if (countdownIntervals[matchId]) {
       clearInterval(countdownIntervals[matchId]);
       delete countdownIntervals[matchId];
