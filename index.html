@@ -23,10 +23,7 @@
   --success: #27ae60;
   --text-muted: #7fb3d3;
   --warning: #f39c12;
-  --notif-bg: #1a3a5c;
-  --notif-border: #2980b9;
 }
-
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   font-family: 'Cairo', sans-serif;
@@ -34,7 +31,6 @@ body {
   color: var(--white);
   min-height: 100vh;
 }
-
 .site-header {
   background: linear-gradient(135deg, var(--sky-800) 0%, var(--sky-700) 100%);
   border-bottom: 2px solid var(--sky-600);
@@ -61,8 +57,6 @@ body {
   transition: all 0.2s;
 }
 .btn-logout:hover { background: var(--sky-600); color: var(--white); }
-
-/* ===== NOTIFICATION BELL ===== */
 .notif-bell {
   position: relative;
   cursor: pointer;
@@ -107,7 +101,7 @@ body {
   border-radius: 8px;
   margin-bottom: 6px;
   background: var(--sky-900);
-  border-right: 3px solid var(--notif-border);
+  border-right: 3px solid var(--sky-500);
   font-size: 0.85rem;
   animation: slideIn 0.3s ease;
 }
@@ -129,7 +123,6 @@ body {
 .notif-item .notif-close:hover { color: var(--danger); }
 .notif-empty { color: var(--text-muted); text-align: center; padding: 20px; }
 @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
-
 #auth-screen {
   display: flex;
   align-items: center;
@@ -330,7 +323,6 @@ body {
 .player-name { flex: 1; font-weight: 700; font-size: 0.95rem; }
 .player-points { font-size: 1.1rem; font-weight: 900; color: var(--gold); }
 .player-points span { font-size: 0.75rem; color: var(--text-muted); font-weight: 400; }
-
 #toast {
   position: fixed;
   bottom: 24px;
@@ -348,7 +340,6 @@ body {
   white-space: nowrap;
 }
 #toast.show { transform: translateX(-50%) translateY(0); }
-
 .spinner { width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.2); border-top-color: var(--white); border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .empty-state { text-align: center; color: var(--text-muted); padding: 40px 20px; font-size: 0.95rem; }
@@ -374,6 +365,18 @@ body {
 .text-muted-small { color: var(--text-muted); font-size: 0.75rem; }
 .table-scroll { overflow-x: auto; }
 .user-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.team-delete-btn {
+  padding: 2px 8px;
+  background: var(--danger);
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.65rem;
+  cursor: pointer;
+  margin-right: 6px;
+}
+.team-delete-btn:hover { background: #c0392b; }
 @media (max-width: 700px) {
   .auth-card { padding: 28px 20px; }
   .match-card { flex-direction: column; align-items: flex-start; }
@@ -493,18 +496,6 @@ body {
         <div class="card-title">➕ إضافة مباراة جديدة</div>
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">القارة</label>
-            <select class="form-select" id="a-continent-select" onchange="updateTeamsByContinent('a-team1-select', this.value); updateTeamsByContinent('a-team2-select', this.value);">
-              <option value="">اختر القارة</option>
-              <option value="آسيا">🌏 آسيا</option>
-              <option value="أفريقيا">🌍 أفريقيا</option>
-              <option value="أوروبا">🌍 أوروبا</option>
-              <option value="أمريكا الشمالية">🌎 أمريكا الشمالية</option>
-              <option value="أمريكا الجنوبية">🌎 أمريكا الجنوبية</option>
-              <option value="أوقيانوسيا">🌏 أوقيانوسيا</option>
-            </select>
-          </div>
-          <div class="form-group">
             <label class="form-label">الفريق الأول</label>
             <select class="form-select" id="a-team1-select"><option value="">اختر الفريق</option></select>
           </div>
@@ -524,6 +515,14 @@ body {
       </div>
 
       <div class="card">
+        <div class="card-title">📋 إدارة المنتخبات</div>
+        <div style="display:flex; flex-wrap:wrap; gap:6px;" id="teams-list-container">
+          <span style="color:var(--text-muted);">جاري التحميل...</span>
+        </div>
+        <div style="margin-top:8px; font-size:0.8rem; color:var(--text-muted);">⚠️ حذف منتخب سيزيل جميع المباريات المرتبطة به</div>
+      </div>
+
+      <div class="card">
         <div class="card-title">⚙️ إدارة المباريات</div>
         <div id="admin-matches-list"><div class="empty-state"><div class="spinner"></div>جاري التحميل...</div></div>
       </div>
@@ -531,7 +530,7 @@ body {
       <div class="card" style="border-color:var(--danger);">
         <div class="card-title" style="color:var(--danger);">⚠️ منطقة الخطر</div>
         <div style="display:flex;gap:12px;flex-wrap:wrap;">
-          <button class="btn-danger" onclick="deleteAllMatches()" style="padding:10px 20px;font-size:0.9rem;">🗑️ حذف جميع المباريات (مع الحفاظ على النقاط)</button>
+          <button class="btn-danger" onclick="deleteAllMatches()" style="padding:10px 20px;font-size:0.9rem;">🗑️ حذف جميع المباريات</button>
           <button class="btn-danger" onclick="deleteFinishedMatches()" style="padding:10px 20px;font-size:0.9rem;background:#c0392b;">🗑️ حذف المباريات المنتهية فقط</button>
         </div>
         <div style="font-size:0.8rem;color:var(--text-muted);margin-top:8px;">⚠️ حذف المباريات لا يؤثر على نقاط اللاعبين</div>
@@ -544,75 +543,60 @@ body {
 <div id="toast"></div>
 
 <script>
-// ===== CONFIG =====
 var SUPABASE_URL = 'https://azjvyntnnertgcmvsfmq.supabase.co';
 var SUPABASE_KEY = 'sb_publishable_FQT6pUUgos4vOgeAqjdQng_stG_DiAi';
 
-// ===== TEAMS BY CONTINENT (كأس العالم 2026 - 48 منتخب) =====
-var TEAMS_BY_CONTINENT = {
-  'آسيا': [
-    { name: 'أستراليا', flag: '🇦🇺' },
-    { name: 'إيران', flag: '🇮🇷' },
-    { name: 'اليابان', flag: '🇯🇵' },
-    { name: 'الأردن', flag: '🇯🇴' },
-    { name: 'كوريا الجنوبية', flag: '🇰🇷' },
-    { name: 'أوزبكستان', flag: '🇺🇿' },
-    { name: 'قطر', flag: '🇶🇦' },
-    { name: 'المملكة العربية السعودية', flag: '🇸🇦' },
-    { name: 'العراق', flag: '🇮🇶' }
-  ],
-  'أفريقيا': [
-    { name: 'الجزائر', flag: '🇩🇿' },
-    { name: 'الرأس الأخضر', flag: '🇨🇻' },
-    { name: 'مصر', flag: '🇪🇬' },
-    { name: 'غانا', flag: '🇬🇭' },
-    { name: 'المغرب', flag: '🇲🇦' },
-    { name: 'تونس', flag: '🇹🇳' },
-    { name: 'ساحل العاج', flag: '🇨🇮' },
-    { name: 'السنغال', flag: '🇸🇳' },
-    { name: 'جنوب أفريقيا', flag: '🇿🇦' },
-    { name: 'جمهورية الكونغو الديمقراطية', flag: '🇨🇩' }
-  ],
-  'أوروبا': [
-    { name: 'النمسا', flag: '🇦🇹' },
-    { name: 'بلجيكا', flag: '🇧🇪' },
-    { name: 'كرواتيا', flag: '🇭🇷' },
-    { name: 'إنجلترا', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿' },
-    { name: 'فرنسا', flag: '🇫🇷' },
-    { name: 'ألمانيا', flag: '🇩🇪' },
-    { name: 'هولندا', flag: '🇳🇱' },
-    { name: 'النرويج', flag: '🇳🇴' },
-    { name: 'البرتغال', flag: '🇵🇹' },
-    { name: 'اسكتلندا', flag: '🏴󠁧󠁢󠁳󠁣󠁴󠁿' },
-    { name: 'إسبانيا', flag: '🇪🇸' },
-    { name: 'سويسرا', flag: '🇨🇭' },
-    { name: 'تركيا', flag: '🇹🇷' },
-    { name: 'السويد', flag: '🇸🇪' },
-    { name: 'البوسنة والهرسك', flag: '🇧🇦' },
-    { name: 'جمهورية التشيك', flag: '🇨🇿' }
-  ],
-  'أمريكا الشمالية': [
-    { name: 'كندا', flag: '🇨🇦' },
-    { name: 'المكسيك', flag: '🇲🇽' },
-    { name: 'الولايات المتحدة الأمريكية', flag: '🇺🇸' },
-    { name: 'بنما', flag: '🇵🇦' },
-    { name: 'هايتي', flag: '🇭🇹' },
-    { name: 'كوراساو', flag: '🇨🇼' }
-  ],
-  'أمريكا الجنوبية': [
-    { name: 'الأرجنتين', flag: '🇦🇷' },
-    { name: 'البرازيل', flag: '🇧🇷' },
-    { name: 'كولومبيا', flag: '🇨🇴' },
-    { name: 'الإكوادور', flag: '🇪🇨' },
-    { name: 'أوروغواي', flag: '🇺🇾' },
-    { name: 'باراغواي', flag: '🇵🇾' }
-  ],
-  'أوقيانوسيا': [
-    { name: 'نيوزيلندا', flag: '🇳🇿' }
-  ]
-};
+var ALL_TEAMS = [
+  { name: 'أستراليا', flag: '🇦🇺' },
+  { name: 'إيران', flag: '🇮🇷' },
+  { name: 'اليابان', flag: '🇯🇵' },
+  { name: 'الأردن', flag: '🇯🇴' },
+  { name: 'كوريا الجنوبية', flag: '🇰🇷' },
+  { name: 'أوزبكستان', flag: '🇺🇿' },
+  { name: 'قطر', flag: '🇶🇦' },
+  { name: 'المملكة العربية السعودية', flag: '🇸🇦' },
+  { name: 'العراق', flag: '🇮🇶' },
+  { name: 'الجزائر', flag: '🇩🇿' },
+  { name: 'الرأس الأخضر', flag: '🇨🇻' },
+  { name: 'مصر', flag: '🇪🇬' },
+  { name: 'غانا', flag: '🇬🇭' },
+  { name: 'المغرب', flag: '🇲🇦' },
+  { name: 'تونس', flag: '🇹🇳' },
+  { name: 'ساحل العاج', flag: '🇨🇮' },
+  { name: 'السنغال', flag: '🇸🇳' },
+  { name: 'جنوب أفريقيا', flag: '🇿🇦' },
+  { name: 'جمهورية الكونغو الديمقراطية', flag: '🇨🇩' },
+  { name: 'النمسا', flag: '🇦🇹' },
+  { name: 'بلجيكا', flag: '🇧🇪' },
+  { name: 'كرواتيا', flag: '🇭🇷' },
+  { name: 'إنجلترا', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿' },
+  { name: 'فرنسا', flag: '🇫🇷' },
+  { name: 'ألمانيا', flag: '🇩🇪' },
+  { name: 'هولندا', flag: '🇳🇱' },
+  { name: 'النرويج', flag: '🇳🇴' },
+  { name: 'البرتغال', flag: '🇵🇹' },
+  { name: 'اسكتلندا', flag: '🏴󠁧󠁢󠁳󠁣󠁴󠁿' },
+  { name: 'إسبانيا', flag: '🇪🇸' },
+  { name: 'سويسرا', flag: '🇨🇭' },
+  { name: 'تركيا', flag: '🇹🇷' },
+  { name: 'السويد', flag: '🇸🇪' },
+  { name: 'البوسنة والهرسك', flag: '🇧🇦' },
+  { name: 'جمهورية التشيك', flag: '🇨🇿' },
+  { name: 'كندا', flag: '🇨🇦' },
+  { name: 'المكسيك', flag: '🇲🇽' },
+  { name: 'الولايات المتحدة الأمريكية', flag: '🇺🇸' },
+  { name: 'بنما', flag: '🇵🇦' },
+  { name: 'هايتي', flag: '🇭🇹' },
+  { name: 'كوراساو', flag: '🇨🇼' },
+  { name: 'الأرجنتين', flag: '🇦🇷' },
+  { name: 'البرازيل', flag: '🇧🇷' },
+  { name: 'كولومبيا', flag: '🇨🇴' },
+  { name: 'الإكوادور', flag: '🇪🇨' },
+  { name: 'أوروغواي', flag: '🇺🇾' },
+  { name: 'باراغواي', flag: '🇵🇾' },
+  { name: 'نيوزيلندا', flag: '🇳🇿' }
+];
 
-// ===== STATE =====
 var currentUser = null;
 var selectedRole = 'admin';
 var countdownIntervals = {};
@@ -637,14 +621,14 @@ function saveNotifications() {
   }
 }
 
-function addNotification(message, icon, type) {
+function addNotification(message, icon, targetRole) {
   var now = new Date();
   var timeStr = now.toLocaleString('ar-SA', {hour:'2-digit', minute:'2-digit'});
   notifications.unshift({
     id: Date.now() + '_' + Math.random().toString(36).substr(2, 4),
     message: message,
     icon: icon || '📢',
-    type: type || 'info',
+    target: targetRole || 'all', // 'all', 'admin', 'player'
     time: timeStr,
     read: false,
     timestamp: now.getTime()
@@ -668,13 +652,19 @@ function updateNotifBadge() {
 
 function renderNotifications() {
   var list = document.getElementById('notifList');
-  if (notifications.length === 0) {
+  var filtered = notifications.filter(function(n) {
+    if (n.target === 'all') return true;
+    if (currentUser.role === 'admin' && n.target === 'admin') return true;
+    if (currentUser.role === 'player' && n.target === 'player') return true;
+    return false;
+  });
+  if (filtered.length === 0) {
     list.innerHTML = '<div class="notif-empty">📭 لا توجد إشعارات</div>';
     return;
   }
   var html = '';
-  for (var i = 0; i < notifications.length; i++) {
-    var n = notifications[i];
+  for (var i = 0; i < filtered.length; i++) {
+    var n = filtered[i];
     html += '<div class="notif-item' + (n.read ? '' : ' unread') + '">' +
             '<span class="notif-close" onclick="removeNotification(\'' + n.id + '\')">✕</span>' +
             '<span class="notif-icon">' + (n.icon || '📢') + '</span> ' +
@@ -753,27 +743,74 @@ function toast(msg, dur) {
   setTimeout(function() { t.classList.remove('show'); }, dur);
 }
 
-// ===== POPULATE TEAMS BY CONTINENT =====
-function updateTeamsByContinent(selectId, continent) {
-  var select = document.getElementById(selectId);
-  if (!select) return;
-  select.innerHTML = '<option value="">اختر الفريق</option>';
-  if (!continent || !TEAMS_BY_CONTINENT[continent]) return;
-  
-  var teams = TEAMS_BY_CONTINENT[continent];
-  for (var i = 0; i < teams.length; i++) {
-    var opt = document.createElement('option');
-    opt.value = teams[i].name;
-    opt.textContent = teams[i].flag + ' ' + teams[i].name;
-    select.appendChild(opt);
+// ===== POPULATE TEAMS =====
+function populateTeamDropdowns() {
+  var ids = ['a-team1-select', 'a-team2-select'];
+  for (var i = 0; i < ids.length; i++) {
+    var select = document.getElementById(ids[i]);
+    if (!select) continue;
+    var currentVal = select.value;
+    select.innerHTML = '<option value="">اختر الفريق</option>';
+    for (var j = 0; j < ALL_TEAMS.length; j++) {
+      var opt = document.createElement('option');
+      opt.value = ALL_TEAMS[j].name;
+      opt.textContent = ALL_TEAMS[j].flag + ' ' + ALL_TEAMS[j].name;
+      select.appendChild(opt);
+    }
+    if (currentVal) select.value = currentVal;
   }
 }
 
-function populateContinentDropdowns() {
-  var continentSelect = document.getElementById('a-continent-select');
-  if (continentSelect) {
-    // Already populated in HTML
+function renderTeamsList() {
+  var container = document.getElementById('teams-list-container');
+  var html = '';
+  for (var i = 0; i < ALL_TEAMS.length; i++) {
+    var t = ALL_TEAMS[i];
+    html += '<span style="background:var(--sky-700);padding:4px 10px;border-radius:8px;display:inline-flex;align-items:center;gap:4px;">' +
+            t.flag + ' ' + t.name +
+            ' <button class="team-delete-btn" onclick="deleteTeam(\'' + t.name + '\')">✕</button>' +
+            '</span>';
   }
+  container.innerHTML = html;
+}
+
+function deleteTeam(teamName) {
+  if (!confirm('هل تريد حذف المنتخب "' + teamName + '" وجميع المباريات المرتبطة به؟')) return;
+  // Find and delete matches containing this team
+  sb('matches', 'GET', null, '?team1=eq.' + encodeURIComponent(teamName))
+    .then(function(matches1) {
+      return sb('matches', 'GET', null, '?team2=eq.' + encodeURIComponent(teamName))
+        .then(function(matches2) {
+          return matches1.concat(matches2);
+        });
+    })
+    .then(function(matches) {
+      var promises = [];
+      for (var i = 0; i < matches.length; i++) {
+        var mid = matches[i].id;
+        promises.push(
+          fetch(SUPABASE_URL + '/rest/v1/predictions?match_id=eq.' + mid, {
+            method: 'DELETE',
+            headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
+          }),
+          fetch(SUPABASE_URL + '/rest/v1/matches?id=eq.' + mid, {
+            method: 'DELETE',
+            headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
+          })
+        );
+      }
+      return Promise.all(promises);
+    })
+    .then(function() {
+      // Remove from ALL_TEAMS array
+      ALL_TEAMS = ALL_TEAMS.filter(function(t) { return t.name !== teamName; });
+      renderTeamsList();
+      populateTeamDropdowns();
+      toast('🗑️ تم حذف المنتخب "' + teamName + '" وجميع مبارياته');
+      loadAdminMatches();
+      loadMatches();
+    })
+    .catch(function(e) { toast('خطأ: ' + e.message); });
 }
 
 // ===== AUTH FUNCTIONS =====
@@ -857,6 +894,8 @@ function enterApp() {
   document.getElementById('auth-screen').style.display = 'none';
   document.getElementById('app-screen').style.display = 'block';
   document.getElementById('header-username').textContent = (currentUser.role === 'admin' ? '👑 ' : '⚽ ') + currentUser.name;
+  populateTeamDropdowns();
+  renderTeamsList();
   buildNav();
   showSection('matches');
   loadMatches();
@@ -933,6 +972,7 @@ function showSection(id) {
   if (id === 'admin') {
     loadUsersTable();
     loadAdminMatches();
+    renderTeamsList();
   }
 }
 
@@ -989,11 +1029,8 @@ function isMatchClosed(matchDate) {
 }
 
 function getFlag(teamName) {
-  for (var continent in TEAMS_BY_CONTINENT) {
-    var teams = TEAMS_BY_CONTINENT[continent];
-    for (var i = 0; i < teams.length; i++) {
-      if (teams[i].name === teamName) return teams[i].flag;
-    }
+  for (var i = 0; i < ALL_TEAMS.length; i++) {
+    if (ALL_TEAMS[i].name === teamName) return ALL_TEAMS[i].flag;
   }
   return '🏳️';
 }
@@ -1095,10 +1132,23 @@ function submitPrediction(matchId) {
     })
     .then(function() {
       toast('✅ تم حفظ توقعك!');
-      addNotification('⚽ ' + currentUser.name + ' توقع مباراة', '📊', 'admin');
+      // إشعار للمشرف فقط
+      addNotification('⚽ ' + currentUser.name + ' توقع مباراة ' + getMatchTeams(matchId), '📊', 'admin');
       loadMatches();
     })
     .catch(function(e) { toast('خطأ: ' + e.message); });
+}
+
+function getMatchTeams(matchId) {
+  // Helper function to get team names for notification
+  var teams = '';
+  sb('matches', 'GET', null, '?id=eq.' + matchId)
+    .then(function(matches) {
+      if (matches.length > 0) {
+        teams = matches[0].team1 + ' vs ' + matches[0].team2;
+      }
+    });
+  return '';
 }
 
 // ===== LEADERBOARD =====
@@ -1231,11 +1281,11 @@ function addMatch() {
   sb('matches', 'POST', matchData)
     .then(function() {
       toast('✅ تمت إضافة المباراة');
+      // إشعار لجميع اللاعبين (وليس المشرف)
       addNotification('⚽ تم إضافة مباراة جديدة: ' + team1 + ' 🆚 ' + team2, '📢', 'player');
       document.getElementById('a-team1-select').value = '';
       document.getElementById('a-team2-select').value = '';
       document.getElementById('a-date').value = '';
-      document.getElementById('a-continent-select').value = '';
       loadAdminMatches();
       loadMatches();
     })
@@ -1307,6 +1357,7 @@ function setResult(matchId) {
       }
     }
     return Promise.all(promises).then(function() {
+      // إشعار للاعبين الذين توقعوا بشكل صحيح
       if (correctPlayers.length > 0) {
         sb('users', 'GET', null, '?id=in.(' + correctPlayers.join(',') + ')')
           .then(function(users) {
