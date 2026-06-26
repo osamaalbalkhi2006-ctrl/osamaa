@@ -56,7 +56,7 @@
             justify-content: center;
         }
         .role-btn {
-            padding: 10px 20px;
+            padding: 12px 25px;
             border: 2px solid #2a5a7a;
             border-radius: 40px;
             background: transparent;
@@ -67,15 +67,22 @@
             flex: 1;
             text-align: center;
             max-width: 160px;
+            font-size: 16px;
         }
         .role-btn.active {
             border-color: #5dd9ff;
-            background: rgba(93, 217, 255, 0.08);
+            background: rgba(93, 217, 255, 0.12);
             color: #5dd9ff;
-            box-shadow: 0 0 25px rgba(93, 217, 255, 0.08);
+            box-shadow: 0 0 25px rgba(93, 217, 255, 0.1);
         }
         .role-btn:hover {
             border-color: #5dd9ff;
+            background: rgba(93, 217, 255, 0.04);
+        }
+        .role-btn .icon {
+            display: block;
+            font-size: 28px;
+            margin-bottom: 4px;
         }
         .form-group {
             margin-bottom: 16px;
@@ -232,6 +239,17 @@
             border-radius: 30px;
             font-size: 0.75rem;
         }
+        /* تحسين حجم الأزرار على الشاشات الصغيرة */
+        @media (max-width: 480px) {
+            .role-btn {
+                padding: 10px 15px;
+                font-size: 14px;
+                max-width: 130px;
+            }
+            .role-btn .icon {
+                font-size: 22px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -245,13 +263,19 @@
             <p class="subtitle">سجل دخولك للمشاركة في التحدي</p>
 
             <div class="role-selector">
-                <div class="role-btn active" id="rolePlayer">🏃 لاعب</div>
-                <div class="role-btn" id="roleAdmin">👑 مشرف</div>
+                <div class="role-btn" id="rolePlayer">
+                    <span class="icon">🏃</span>
+                    لاعب
+                </div>
+                <div class="role-btn active" id="roleAdmin">
+                    <span class="icon">👑</span>
+                    مشرف
+                </div>
             </div>
 
             <div class="form-group">
                 <label>📧 البريد الإلكتروني</label>
-                <input type="email" id="loginEmail" placeholder="بريدك الإلكتروني">
+                <input type="email" id="loginEmail" placeholder="admin@predict.com">
             </div>
             <div class="form-group">
                 <label>🔑 كلمة السر</label>
@@ -347,7 +371,7 @@
         //  المتغيرات العامة وعناصر DOM
         // ============================================================
         let currentUser = null;
-        let selectedRole = 'player';
+        let selectedRole = 'admin'; // <-- المشرف هو الوضع الافتراضي
 
         const loginPage = document.getElementById('loginPage');
         const registerPage = document.getElementById('registerPage');
@@ -369,23 +393,26 @@
         // ============================================================
         //  1. اختيار الدور (لاعب / مشرف)
         // ============================================================
-        rolePlayer.onclick = () => {
+        rolePlayer.onclick = function() {
             selectedRole = 'player';
             rolePlayer.classList.add('active');
             roleAdmin.classList.remove('active');
             loginEmail.placeholder = 'بريدك الإلكتروني';
+            loginEmail.value = '';
         };
-        roleAdmin.onclick = () => {
+
+        roleAdmin.onclick = function() {
             selectedRole = 'admin';
             roleAdmin.classList.add('active');
             rolePlayer.classList.remove('active');
             loginEmail.placeholder = 'admin@predict.com';
+            loginEmail.value = 'admin@predict.com';
         };
 
         // ============================================================
         //  2. تسجيل الدخول
         // ============================================================
-        document.getElementById('loginBtn').onclick = async () => {
+        document.getElementById('loginBtn').onclick = async function() {
             const email = loginEmail.value.trim();
             const password = loginPassword.value.trim();
 
@@ -409,6 +436,7 @@
                     return;
                 }
 
+                // التحقق من الدور
                 if (selectedRole === 'admin' && data.role !== 'admin') {
                     showMsg(loginMsg, '❌ هذا الحساب ليس مشرفاً. اختر "لاعب"', 'error');
                     return;
@@ -435,7 +463,7 @@
         // ============================================================
         //  3. تسجيل مستخدم جديد
         // ============================================================
-        document.getElementById('registerBtn').onclick = async () => {
+        document.getElementById('registerBtn').onclick = async function() {
             const name = regName.value.trim();
             const email = regEmail.value.trim();
             const password = regPassword.value.trim();
@@ -479,7 +507,9 @@
                 regMsg.textContent = '✅ تم التسجيل بنجاح! يمكنك الآن تسجيل الدخول.';
                 regMsg.className = 'message success';
 
-                setTimeout(() => showLoginPage(), 1500);
+                setTimeout(function() {
+                    showLoginPage();
+                }, 1500);
 
             } catch (err) {
                 regMsg.textContent = '❌ فشل التسجيل: ' + err.message;
@@ -537,6 +567,11 @@
             playerPage.classList.add('hidden');
             loginEmail.value = '';
             loginPassword.value = '';
+            // إعادة تعيين الدور إلى مشرف
+            selectedRole = 'admin';
+            roleAdmin.classList.add('active');
+            rolePlayer.classList.remove('active');
+            loginEmail.placeholder = 'admin@predict.com';
             showMsg(loginMsg, 'تم تسجيل الخروج', 'success');
         }
         document.getElementById('adminLogout').onclick = logout;
@@ -554,7 +589,7 @@
         //  7. وظائف المشرف
         // ============================================================
 
-        document.getElementById('addMatchBtn').onclick = async () => {
+        document.getElementById('addMatchBtn').onclick = async function() {
             const team1 = document.getElementById('aTeam1').value.trim();
             const flag1 = document.getElementById('aFlag1').value.trim();
             const team2 = document.getElementById('aTeam2').value.trim();
@@ -582,8 +617,9 @@
                 if (error) throw error;
 
                 alert('✅ تم إضافة المباراة بنجاح!');
-                ['aTeam1', 'aFlag1', 'aTeam2', 'aFlag2', 'aDeadline'].forEach(id => document.getElementById(id).value =
-                '');
+                ['aTeam1', 'aFlag1', 'aTeam2', 'aFlag2', 'aDeadline'].forEach(function(id) {
+                    document.getElementById(id).value = '';
+                });
                 loadAdminMatches();
 
             } catch (err) {
@@ -609,7 +645,7 @@
                 }
 
                 let html = '';
-                data.forEach(m => {
+                data.forEach(function(m) {
                     const isPast = new Date(m.deadline) < new Date();
                     html += `
                         <div class="card">
@@ -686,7 +722,9 @@
 
                 if (error) throw error;
 
-                const total = data.reduce((sum, p) => sum + (p.points || 0), 0);
+                const total = data.reduce(function(sum, p) {
+                    return sum + (p.points || 0);
+                }, 0);
 
                 await supabase
                     .from('users')
@@ -816,7 +854,7 @@
                 }
 
                 let html = '<table><tr><th>#</th><th>اللاعب</th><th>⭐ النقاط</th></tr>';
-                data.forEach((p, i) => {
+                data.forEach(function(p, i) {
                     html += `<tr><td>${i+1}</td><td>${p.name}</td><td>${p.total_points || 0}</td></tr>`;
                 });
                 html += '</table>';
