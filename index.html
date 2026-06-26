@@ -493,6 +493,18 @@ body {
         <div class="card-title">➕ إضافة مباراة جديدة</div>
         <div class="form-row">
           <div class="form-group">
+            <label class="form-label">القارة</label>
+            <select class="form-select" id="a-continent-select" onchange="updateTeamsByContinent('a-team1-select', this.value); updateTeamsByContinent('a-team2-select', this.value);">
+              <option value="">اختر القارة</option>
+              <option value="آسيا">🌏 آسيا</option>
+              <option value="أفريقيا">🌍 أفريقيا</option>
+              <option value="أوروبا">🌍 أوروبا</option>
+              <option value="أمريكا الشمالية">🌎 أمريكا الشمالية</option>
+              <option value="أمريكا الجنوبية">🌎 أمريكا الجنوبية</option>
+              <option value="أوقيانوسيا">🌏 أوقيانوسيا</option>
+            </select>
+          </div>
+          <div class="form-group">
             <label class="form-label">الفريق الأول</label>
             <select class="form-select" id="a-team1-select"><option value="">اختر الفريق</option></select>
           </div>
@@ -536,24 +548,69 @@ body {
 var SUPABASE_URL = 'https://azjvyntnnertgcmvsfmq.supabase.co';
 var SUPABASE_KEY = 'sb_publishable_FQT6pUUgos4vOgeAqjdQng_stG_DiAi';
 
-// ===== COUNTRIES =====
-var COUNTRIES = [
-  {name:'السعودية',flag:'🇸🇦'},{name:'مصر',flag:'🇪🇬'},{name:'المغرب',flag:'🇲🇦'},
-  {name:'الجزائر',flag:'🇩🇿'},{name:'تونس',flag:'🇹🇳'},{name:'قطر',flag:'🇶🇦'},
-  {name:'الإمارات',flag:'🇦🇪'},{name:'الكويت',flag:'🇰🇼'},{name:'عمان',flag:'🇴🇲'},
-  {name:'البحرين',flag:'🇧🇭'},{name:'الأردن',flag:'🇯🇴'},{name:'العراق',flag:'🇮🇶'},
-  {name:'سوريا',flag:'🇸🇾'},{name:'لبنان',flag:'🇱🇧'},{name:'فلسطين',flag:'🇵🇸'},
-  {name:'اليمن',flag:'🇾🇪'},{name:'السودان',flag:'🇸🇩'},{name:'ليبيا',flag:'🇱🇾'},
-  {name:'الصومال',flag:'🇸🇴'},{name:'جيبوتي',flag:'🇩🇯'},{name:'موريتانيا',flag:'🇲🇷'},
-  {name:'البرازيل',flag:'🇧🇷'},{name:'الأرجنتين',flag:'🇦🇷'},{name:'فرنسا',flag:'🇫🇷'},
-  {name:'إسبانيا',flag:'🇪🇸'},{name:'ألمانيا',flag:'🇩🇪'},{name:'إنجلترا',flag:'🏴'},
-  {name:'إيطاليا',flag:'🇮🇹'},{name:'هولندا',flag:'🇳🇱'},{name:'البرتغال',flag:'🇵🇹'},
-  {name:'بلجيكا',flag:'🇧🇪'},{name:'الولايات المتحدة',flag:'🇺🇸'},{name:'المكسيك',flag:'🇲🇽'},
-  {name:'الأوروغواي',flag:'🇺🇾'},{name:'كولومبيا',flag:'🇨🇴'},{name:'السنغال',flag:'🇸🇳'},
-  {name:'نيجيريا',flag:'🇳🇬'},{name:'غانا',flag:'🇬🇭'},{name:'الكاميرون',flag:'🇨🇲'},
-  {name:'أستراليا',flag:'🇦🇺'},{name:'اليابان',flag:'🇯🇵'},{name:'كوريا الجنوبية',flag:'🇰🇷'},
-  {name:'إيران',flag:'🇮🇷'},{name:'تركيا',flag:'🇹🇷'}
-];
+// ===== TEAMS BY CONTINENT (كأس العالم 2026 - 48 منتخب) =====
+var TEAMS_BY_CONTINENT = {
+  'آسيا': [
+    { name: 'أستراليا', flag: '🇦🇺' },
+    { name: 'إيران', flag: '🇮🇷' },
+    { name: 'اليابان', flag: '🇯🇵' },
+    { name: 'الأردن', flag: '🇯🇴' },
+    { name: 'كوريا الجنوبية', flag: '🇰🇷' },
+    { name: 'أوزبكستان', flag: '🇺🇿' },
+    { name: 'قطر', flag: '🇶🇦' },
+    { name: 'المملكة العربية السعودية', flag: '🇸🇦' },
+    { name: 'العراق', flag: '🇮🇶' }
+  ],
+  'أفريقيا': [
+    { name: 'الجزائر', flag: '🇩🇿' },
+    { name: 'الرأس الأخضر', flag: '🇨🇻' },
+    { name: 'مصر', flag: '🇪🇬' },
+    { name: 'غانا', flag: '🇬🇭' },
+    { name: 'المغرب', flag: '🇲🇦' },
+    { name: 'تونس', flag: '🇹🇳' },
+    { name: 'ساحل العاج', flag: '🇨🇮' },
+    { name: 'السنغال', flag: '🇸🇳' },
+    { name: 'جنوب أفريقيا', flag: '🇿🇦' },
+    { name: 'جمهورية الكونغو الديمقراطية', flag: '🇨🇩' }
+  ],
+  'أوروبا': [
+    { name: 'النمسا', flag: '🇦🇹' },
+    { name: 'بلجيكا', flag: '🇧🇪' },
+    { name: 'كرواتيا', flag: '🇭🇷' },
+    { name: 'إنجلترا', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿' },
+    { name: 'فرنسا', flag: '🇫🇷' },
+    { name: 'ألمانيا', flag: '🇩🇪' },
+    { name: 'هولندا', flag: '🇳🇱' },
+    { name: 'النرويج', flag: '🇳🇴' },
+    { name: 'البرتغال', flag: '🇵🇹' },
+    { name: 'اسكتلندا', flag: '🏴󠁧󠁢󠁳󠁣󠁴󠁿' },
+    { name: 'إسبانيا', flag: '🇪🇸' },
+    { name: 'سويسرا', flag: '🇨🇭' },
+    { name: 'تركيا', flag: '🇹🇷' },
+    { name: 'السويد', flag: '🇸🇪' },
+    { name: 'البوسنة والهرسك', flag: '🇧🇦' },
+    { name: 'جمهورية التشيك', flag: '🇨🇿' }
+  ],
+  'أمريكا الشمالية': [
+    { name: 'كندا', flag: '🇨🇦' },
+    { name: 'المكسيك', flag: '🇲🇽' },
+    { name: 'الولايات المتحدة الأمريكية', flag: '🇺🇸' },
+    { name: 'بنما', flag: '🇵🇦' },
+    { name: 'هايتي', flag: '🇭🇹' },
+    { name: 'كوراساو', flag: '🇨🇼' }
+  ],
+  'أمريكا الجنوبية': [
+    { name: 'الأرجنتين', flag: '🇦🇷' },
+    { name: 'البرازيل', flag: '🇧🇷' },
+    { name: 'كولومبيا', flag: '🇨🇴' },
+    { name: 'الإكوادور', flag: '🇪🇨' },
+    { name: 'أوروغواي', flag: '🇺🇾' },
+    { name: 'باراغواي', flag: '🇵🇾' }
+  ],
+  'أوقيانوسيا': [
+    { name: 'نيوزيلندا', flag: '🇳🇿' }
+  ]
+};
 
 // ===== STATE =====
 var currentUser = null;
@@ -592,7 +649,6 @@ function addNotification(message, icon, type) {
     read: false,
     timestamp: now.getTime()
   });
-  // Keep only last 100 notifications
   if (notifications.length > 100) notifications = notifications.slice(0, 100);
   saveNotifications();
   updateNotifBadge();
@@ -653,7 +709,6 @@ function toggleNotifications() {
   }
 }
 
-// Close notification dropdown when clicking outside
 document.addEventListener('click', function(e) {
   var bell = document.getElementById('notifBell');
   if (bell && !bell.contains(e.target)) {
@@ -698,21 +753,26 @@ function toast(msg, dur) {
   setTimeout(function() { t.classList.remove('show'); }, dur);
 }
 
-// ===== POPULATE DROPDOWNS =====
-function populateCountryDropdowns() {
-  var ids = ['a-team1-select', 'a-team2-select'];
-  for (var i = 0; i < ids.length; i++) {
-    var select = document.getElementById(ids[i]);
-    if (!select) continue;
-    var currentVal = select.value;
-    select.innerHTML = '<option value="">اختر الفريق</option>';
-    for (var j = 0; j < COUNTRIES.length; j++) {
-      var opt = document.createElement('option');
-      opt.value = COUNTRIES[j].name;
-      opt.textContent = COUNTRIES[j].flag + ' ' + COUNTRIES[j].name;
-      select.appendChild(opt);
-    }
-    if (currentVal) select.value = currentVal;
+// ===== POPULATE TEAMS BY CONTINENT =====
+function updateTeamsByContinent(selectId, continent) {
+  var select = document.getElementById(selectId);
+  if (!select) return;
+  select.innerHTML = '<option value="">اختر الفريق</option>';
+  if (!continent || !TEAMS_BY_CONTINENT[continent]) return;
+  
+  var teams = TEAMS_BY_CONTINENT[continent];
+  for (var i = 0; i < teams.length; i++) {
+    var opt = document.createElement('option');
+    opt.value = teams[i].name;
+    opt.textContent = teams[i].flag + ' ' + teams[i].name;
+    select.appendChild(opt);
+  }
+}
+
+function populateContinentDropdowns() {
+  var continentSelect = document.getElementById('a-continent-select');
+  if (continentSelect) {
+    // Already populated in HTML
   }
 }
 
@@ -797,12 +857,10 @@ function enterApp() {
   document.getElementById('auth-screen').style.display = 'none';
   document.getElementById('app-screen').style.display = 'block';
   document.getElementById('header-username').textContent = (currentUser.role === 'admin' ? '👑 ' : '⚽ ') + currentUser.name;
-  populateCountryDropdowns();
   buildNav();
   showSection('matches');
   loadMatches();
   
-  // Start notification checker
   if (notifCheckInterval) clearInterval(notifCheckInterval);
   notifCheckInterval = setInterval(checkForNewNotifications, 15000);
 }
@@ -822,7 +880,6 @@ function doLogout() {
   setAuthMsg('');
 }
 
-// ===== CHECK SESSION =====
 function checkSession() {
   var saved = localStorage.getItem('worldcup_user');
   if (saved) {
@@ -838,12 +895,8 @@ function checkSession() {
   return false;
 }
 
-// ===== NOTIFICATION CHECKER (simulated real-time) =====
 function checkForNewNotifications() {
   if (!currentUser) return;
-  // This will check for new events based on user role
-  // Since Supabase doesn't have real-time subscriptions in this simple setup,
-  // we simulate by refreshing data and checking for new notifications
 }
 
 // ===== NAVIGATION =====
@@ -936,8 +989,11 @@ function isMatchClosed(matchDate) {
 }
 
 function getFlag(teamName) {
-  for (var i = 0; i < COUNTRIES.length; i++) {
-    if (COUNTRIES[i].name === teamName) return COUNTRIES[i].flag;
+  for (var continent in TEAMS_BY_CONTINENT) {
+    var teams = TEAMS_BY_CONTINENT[continent];
+    for (var i = 0; i < teams.length; i++) {
+      if (teams[i].name === teamName) return teams[i].flag;
+    }
   }
   return '🏳️';
 }
@@ -1039,16 +1095,10 @@ function submitPrediction(matchId) {
     })
     .then(function() {
       toast('✅ تم حفظ توقعك!');
-      // إشعار للمشرف
-      addNotification('⚽ ' + currentUser.name + ' توقع مباراة ' + getTeamNames(matchId), '📊', 'admin');
+      addNotification('⚽ ' + currentUser.name + ' توقع مباراة', '📊', 'admin');
       loadMatches();
     })
     .catch(function(e) { toast('خطأ: ' + e.message); });
-}
-
-function getTeamNames(matchId) {
-  // Helper to get team names for notification
-  return '';
 }
 
 // ===== LEADERBOARD =====
@@ -1181,11 +1231,11 @@ function addMatch() {
   sb('matches', 'POST', matchData)
     .then(function() {
       toast('✅ تمت إضافة المباراة');
-      // إشعار للاعبين
       addNotification('⚽ تم إضافة مباراة جديدة: ' + team1 + ' 🆚 ' + team2, '📢', 'player');
       document.getElementById('a-team1-select').value = '';
       document.getElementById('a-team2-select').value = '';
       document.getElementById('a-date').value = '';
+      document.getElementById('a-continent-select').value = '';
       loadAdminMatches();
       loadMatches();
     })
@@ -1257,7 +1307,6 @@ function setResult(matchId) {
       }
     }
     return Promise.all(promises).then(function() {
-      // إشعار للاعبين الذين توقعوا بشكل صحيح
       if (correctPlayers.length > 0) {
         sb('users', 'GET', null, '?id=in.(' + correctPlayers.join(',') + ')')
           .then(function(users) {
@@ -1371,7 +1420,6 @@ document.addEventListener('keydown', function(e) {
 });
 
 // ===== INIT =====
-populateCountryDropdowns();
 if (!checkSession()) {
   document.getElementById('auth-screen').style.display = 'flex';
   document.getElementById('app-screen').style.display = 'none';
