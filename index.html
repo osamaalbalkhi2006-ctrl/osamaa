@@ -1,330 +1,992 @@
 <!DOCTYPE html>
-<html dir="rtl" lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>اختبار الاتصال بـ Supabase</title>
-    <!-- استيراد مكتبة Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
-    </script>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            background: #0d1117;
-            color: #c9d1d9;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-            direction: rtl;
-        }
-        .container {
-            background: #161b22;
-            padding: 35px;
-            border-radius: 20px;
-            max-width: 800px;
-            width: 100%;
-            border: 1px solid #30363d;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
-        }
-        h1 {
-            text-align: center;
-            color: #58a6ff;
-            border-bottom: 1px solid #30363d;
-            padding-bottom: 15px;
-        }
-        .status-box {
-            background: #0d1117;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 15px 0;
-            border-right: 4px solid #58a6ff;
-            font-family: monospace;
-            font-size: 14px;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        .success {
-            border-right-color: #2ea043;
-        }
-        .error {
-            border-right-color: #f85149;
-        }
-        .loading {
-            border-right-color: #d29922;
-        }
-        .info-text {
-            color: #8b949e;
-            text-align: center;
-            margin: 10px 0;
-        }
-        .badge {
-            display: inline-block;
-            background: #21262d;
-            padding: 4px 12px;
-            border-radius: 30px;
-            font-size: 13px;
-            color: #58a6ff;
-        }
-        button {
-            background: #238636;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-top: 15px;
-            width: 100%;
-        }
-        button:hover {
-            background: #2ea043;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-            font-size: 14px;
-        }
-        th {
-            background: #21262d;
-            color: #58a6ff;
-            padding: 10px;
-            text-align: right;
-            border-bottom: 2px solid #30363d;
-        }
-        td {
-            padding: 8px 10px;
-            border-bottom: 1px solid #21262d;
-        }
-        tr:hover {
-            background: #161b22;
-        }
-        .footer {
-            margin-top: 20px;
-            text-align: center;
-            color: #8b949e;
-            font-size: 13px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>توقعات كأس العالم 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
+
+  :root {
+    --sky-900: #0c1a2e;
+    --sky-800: #0f2744;
+    --sky-700: #1a3a5c;
+    --sky-600: #1e5799;
+    --sky-500: #2980b9;
+    --sky-400: #3498db;
+    --sky-300: #5dade2;
+    --sky-200: #aed6f1;
+    --sky-100: #d6eaf8;
+    --sky-50:  #eaf4fb;
+    --gold:    #f0c040;
+    --gold-dark: #c89a20;
+    --white:   #ffffff;
+    --danger:  #e74c3c;
+    --success: #27ae60;
+    --text-muted: #7fb3d3;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Cairo', sans-serif;
+    background: var(--sky-900);
+    color: var(--white);
+    min-height: 100vh;
+  }
+
+  /* ===== HEADER ===== */
+  .site-header {
+    background: linear-gradient(135deg, var(--sky-800) 0%, var(--sky-700) 100%);
+    border-bottom: 2px solid var(--sky-600);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .site-header .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: var(--gold);
+  }
+  .site-header .logo span { font-size: 1.6rem; }
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.9rem;
+    color: var(--sky-200);
+  }
+  .btn-logout {
+    background: transparent;
+    border: 1px solid var(--sky-500);
+    color: var(--sky-300);
+    padding: 5px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+  }
+  .btn-logout:hover { background: var(--sky-600); color: var(--white); }
+
+  /* ===== AUTH SCREEN ===== */
+  #auth-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+    background: radial-gradient(ellipse at 50% 0%, var(--sky-700) 0%, var(--sky-900) 60%);
+  }
+  .auth-card {
+    background: var(--sky-800);
+    border: 1px solid var(--sky-600);
+    border-radius: 20px;
+    padding: 40px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .auth-trophy {
+    text-align: center;
+    font-size: 3.5rem;
+    margin-bottom: 8px;
+  }
+  .auth-title {
+    text-align: center;
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+  .auth-subtitle {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 28px;
+  }
+
+  /* Tabs */
+  .auth-tabs {
+    display: flex;
+    background: var(--sky-900);
+    border-radius: 12px;
+    padding: 4px;
+    margin-bottom: 24px;
+  }
+  .auth-tab {
+    flex: 1;
+    padding: 9px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 9px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    transition: all 0.2s;
+  }
+  .auth-tab.active {
+    background: var(--sky-600);
+    color: var(--white);
+  }
+
+  /* Role selector */
+  .role-select {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .role-btn {
+    flex: 1;
+    padding: 10px;
+    border: 2px solid var(--sky-600);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--sky-300);
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .role-btn.active {
+    border-color: var(--gold);
+    background: rgba(240,192,64,0.1);
+    color: var(--gold);
+  }
+
+  /* Form */
+  .form-group { margin-bottom: 16px; }
+  .form-label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--sky-200);
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  .form-input {
+    width: 100%;
+    padding: 11px 14px;
+    background: var(--sky-900);
+    border: 1.5px solid var(--sky-600);
+    border-radius: 10px;
+    color: var(--white);
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-input:focus { border-color: var(--sky-400); }
+  .form-input::placeholder { color: var(--sky-600); }
+
+  .btn-primary {
+    width: 100%;
+    padding: 13px;
+    background: linear-gradient(135deg, var(--sky-500), var(--sky-600));
+    border: none;
+    border-radius: 12px;
+    color: var(--white);
+    font-family: 'Cairo', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 4px;
+  }
+  .btn-primary:hover { background: linear-gradient(135deg, var(--sky-400), var(--sky-500)); transform: translateY(-1px); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .auth-msg {
+    text-align: center;
+    margin-top: 14px;
+    font-size: 0.9rem;
+    min-height: 22px;
+  }
+  .auth-msg.error { color: var(--danger); }
+  .auth-msg.success { color: var(--success); }
+
+  /* ===== MAIN APP ===== */
+  #app-screen { display: none; }
+
+  .app-container { max-width: 900px; margin: 0 auto; padding: 24px 16px; }
+
+  /* Nav tabs */
+  .nav-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+  .nav-tab {
+    padding: 9px 20px;
+    border-radius: 25px;
+    border: 1.5px solid var(--sky-600);
+    background: transparent;
+    color: var(--sky-300);
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .nav-tab.active {
+    background: var(--sky-600);
+    border-color: var(--sky-500);
+    color: var(--white);
+  }
+  .nav-tab:hover:not(.active) { border-color: var(--sky-400); color: var(--sky-200); }
+
+  /* Section */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* Card */
+  .card {
+    background: var(--sky-800);
+    border: 1px solid var(--sky-700);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Match Card */
+  .match-card {
+    background: var(--sky-900);
+    border: 1px solid var(--sky-700);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .match-teams {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 700;
+    font-size: 1rem;
+    flex: 1;
+  }
+  .team { text-align: center; min-width: 90px; }
+  .team-flag { font-size: 1.5rem; }
+  .team-name { font-size: 0.85rem; color: var(--sky-200); margin-top: 2px; }
+  .vs-badge {
+    background: var(--sky-700);
+    color: var(--text-muted);
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 900;
+  }
+  .match-date {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    text-align: left;
+    min-width: 80px;
+  }
+  .match-result-badge {
+    background: var(--sky-700);
+    color: var(--gold);
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-weight: 900;
+    font-size: 0.95rem;
+  }
+
+  /* Prediction form */
+  .predict-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .score-input {
+    width: 52px;
+    padding: 7px 8px;
+    background: var(--sky-800);
+    border: 1.5px solid var(--sky-600);
+    border-radius: 8px;
+    color: var(--white);
+    font-family: 'Cairo', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    text-align: center;
+    outline: none;
+  }
+  .score-input:focus { border-color: var(--sky-400); }
+  .btn-predict {
+    padding: 7px 16px;
+    background: var(--sky-600);
+    border: none;
+    border-radius: 8px;
+    color: var(--white);
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-predict:hover { background: var(--sky-500); }
+  .predicted-badge {
+    font-size: 0.82rem;
+    color: var(--success);
+    font-weight: 700;
+  }
+
+  /* Admin form */
+  .form-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .form-row .form-group { flex: 1; min-width: 140px; margin-bottom: 0; }
+  .btn-add {
+    padding: 11px 22px;
+    background: var(--success);
+    border: none;
+    border-radius: 10px;
+    color: var(--white);
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+  .btn-add:hover { background: #219a52; }
+  .btn-danger {
+    padding: 5px 12px;
+    background: var(--danger);
+    border: none;
+    border-radius: 7px;
+    color: var(--white);
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .btn-result {
+    padding: 5px 12px;
+    background: var(--gold-dark);
+    border: none;
+    border-radius: 7px;
+    color: var(--white);
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  /* Leaderboard */
+  .leaderboard-row {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    gap: 14px;
+    background: var(--sky-900);
+    border: 1px solid var(--sky-700);
+  }
+  .rank-badge {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+  }
+  .rank-1 { background: var(--gold); color: var(--sky-900); }
+  .rank-2 { background: #b0b8c1; color: var(--sky-900); }
+  .rank-3 { background: #cd7f32; color: var(--white); }
+  .rank-other { background: var(--sky-700); color: var(--sky-200); }
+  .player-name { flex: 1; font-weight: 700; font-size: 0.95rem; }
+  .player-points {
+    font-size: 1.1rem;
+    font-weight: 900;
+    color: var(--gold);
+  }
+  .player-points span { font-size: 0.75rem; color: var(--text-muted); font-weight: 400; }
+
+  /* Toast */
+  #toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--sky-700);
+    color: var(--white);
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+    z-index: 999;
+    transition: transform 0.3s;
+    white-space: nowrap;
+  }
+  #toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* Spinner */
+  .spinner {
+    width: 20px; height: 20px;
+    border: 3px solid rgba(255,255,255,0.2);
+    border-top-color: var(--white);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: inline-block;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .empty-state {
+    text-align: center;
+    color: var(--text-muted);
+    padding: 40px 20px;
+    font-size: 0.95rem;
+  }
+  .empty-state div { font-size: 2.5rem; margin-bottom: 10px; }
+
+  .section-badge {
+    display: inline-block;
+    background: var(--sky-700);
+    color: var(--sky-300);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    margin-bottom: 16px;
+  }
+  .divider {
+    border: none;
+    border-top: 1px solid var(--sky-700);
+    margin: 20px 0;
+  }
+
+  /* Result entry modal area */
+  .result-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  
+  @media (max-width: 600px) {
+    .auth-card { padding: 28px 20px; }
+    .match-card { flex-direction: column; align-items: flex-start; }
+    .match-date { text-align: right; }
+    .predict-row { margin-top: 8px; }
+  }
+</style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>🔌 اختبار الاتصال بـ Supabase</h1>
-        <p class="info-text">الهدف: التحقق من أن الموقع يستطيع قراءة البيانات من قاعدة البيانات.</p>
+<!-- ===== AUTH SCREEN ===== -->
+<div id="auth-screen">
+  <div class="auth-card">
+    <div class="auth-trophy">🏆</div>
+    <div class="auth-title">كأس العالم 2026</div>
+    <div class="auth-subtitle">منافسة التوقعات بين الأصدقاء</div>
 
-        <!-- زر لبدء الاختبار -->
-        <button id="testBtn">🚀 اختبر الاتصال الآن</button>
-
-        <!-- منطقة عرض النتائج -->
-        <div id="resultArea">
-            <p class="info-text" style="margin-top:20px;">⏳ اضغط على الزر لبدء الاختبار...</p>
-        </div>
-
-        <div class="footer">
-            <span class="badge">Project: worldcup2026</span>
-            <span class="badge" style="margin-right:8px;">🔑 anon key</span>
-        </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchAuthTab('login')">تسجيل الدخول</button>
+      <button class="auth-tab" onclick="switchAuthTab('register')">حساب جديد</button>
     </div>
 
-    <script>
-        // ==========================================
-        //  🔥 بيانات Supabase الخاصة بك
-        // ==========================================
-        const SUPABASE_URL = 'https://azjvyntnnertgcmvsfmq.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_FQT6pUUgos4vOgeAqjdQng_stG_DiAi';
+    <!-- Login Form -->
+    <div id="login-form">
+      <div class="role-select">
+        <button class="role-btn active" id="role-admin" onclick="selectRole('admin')">👑 مشرف</button>
+        <button class="role-btn" id="role-player" onclick="selectRole('player')">⚽ لاعب</button>
+      </div>
+      <div class="form-group">
+        <label class="form-label">اسم المستخدم</label>
+        <input class="form-input" id="login-username" type="text" placeholder="أدخل اسم المستخدم" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">كلمة المرور</label>
+        <input class="form-input" id="login-password" type="password" placeholder="أدخل كلمة المرور" />
+      </div>
+      <button class="btn-primary" id="btn-login" onclick="doLogin()">دخول</button>
+    </div>
 
-        // ==========================================
-        //  تهيئة العميل
-        // ==========================================
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    <!-- Register Form -->
+    <div id="register-form" style="display:none">
+      <div class="form-group">
+        <label class="form-label">الاسم الكامل</label>
+        <input class="form-input" id="reg-name" type="text" placeholder="اسمك الكامل" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">اسم المستخدم</label>
+        <input class="form-input" id="reg-username" type="text" placeholder="اختر اسم مستخدم" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">كلمة المرور</label>
+        <input class="form-input" id="reg-password" type="password" placeholder="كلمة مرور قوية" />
+      </div>
+      <button class="btn-primary" id="btn-register" onclick="doRegister()">إنشاء الحساب</button>
+    </div>
 
-        // ==========================================
-        //  عناصر الصفحة
-        // ==========================================
-        const resultArea = document.getElementById('resultArea');
-        const testBtn = document.getElementById('testBtn');
+    <div class="auth-msg" id="auth-msg"></div>
+  </div>
+</div>
 
-        // ==========================================
-        //  وظيفة الاختبار الرئيسية
-        // ==========================================
-        async function runTest() {
-            // 1. تغيير مظهر الزر أثناء التحميل
-            testBtn.disabled = true;
-            testBtn.textContent = '⏳ جاري الاتصال...';
-            resultArea.innerHTML = `<div class="status-box loading">⏳ جاري الاتصال بقاعدة البيانات...</div>`;
+<!-- ===== APP SCREEN ===== -->
+<div id="app-screen">
+  <header class="site-header">
+    <div class="logo"><span>🏆</span> كأس العالم 2026</div>
+    <div class="user-info">
+      <span id="header-username"></span>
+      <button class="btn-logout" onclick="doLogout()">خروج</button>
+    </div>
+  </header>
 
-            try {
-                // ==========================================
-                //  الاختبار 1: محاولة قراءة جدول "users"
-                // ==========================================
-                const { data: usersData, error: usersError } = await supabase
-                    .from('users')
-                    .select('*')
-                    .limit(5); // نجلب فقط 5 سجلات
+  <div class="app-container">
+    <div class="nav-tabs" id="nav-tabs"></div>
 
-                if (usersError) {
-                    // إذا كان الجدول غير موجود، نحاول قراءة جدول "matches"
-                    if (usersError.message.includes('relation "users" does not exist')) {
-                        resultArea.innerHTML += `
-                            <div class="status-box error">
-                                ❌ جدول "users" غير موجود في قاعدة البيانات.
-                                <br>الخطأ: ${usersError.message}
-                            </div>
-                            <div class="status-box loading">⏳ جاري محاولة قراءة جدول "matches"...</div>
-                        `;
+    <!-- ===== MATCHES / PREDICTIONS ===== -->
+    <div class="section active" id="section-matches">
+      <div class="card">
+        <div class="card-title">⚽ المباريات والتوقعات</div>
+        <div id="matches-list"><div class="empty-state"><div class="spinner"></div>جاري التحميل...</div></div>
+      </div>
+    </div>
 
-                        // محاولة قراءة جدول "matches"
-                        const { data: matchesData, error: matchesError } = await supabase
-                            .from('matches')
-                            .select('*')
-                            .limit(5);
+    <!-- ===== LEADERBOARD ===== -->
+    <div class="section" id="section-leaderboard">
+      <div class="card">
+        <div class="card-title">🏅 ترتيب اللاعبين</div>
+        <div id="leaderboard-list"><div class="empty-state"><div class="spinner"></div>جاري التحميل...</div></div>
+      </div>
+    </div>
 
-                        if (matchesError) {
-                            resultArea.innerHTML += `
-                                <div class="status-box error">
-                                    ❌ فشل قراءة جدول "matches" أيضاً.
-                                    <br>الخطأ: ${matchesError.message}
-                                </div>
-                                <div class="status-box error">
-                                    ❌ يبدو أن الجداول لم تنشأ بعد في قاعدة البيانات.
-                                    <br>⚠️ رجاءً أنشئ الجداول أولاً باستخدام SQL Editor في Supabase.
-                                </div>
-                            `;
-                        } else {
-                            // نجاح قراءة جدول "matches"
-                            displayData('matches', matchesData);
-                        }
+    <!-- ===== ADMIN PANEL ===== -->
+    <div class="section" id="section-admin">
+      <!-- Add Match -->
+      <div class="card">
+        <div class="card-title">➕ إضافة مباراة جديدة</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">الفريق الأول (اسم)</label>
+            <input class="form-input" id="a-team1" placeholder="مثال: السعودية" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">علم الفريق الأول 🏳️</label>
+            <input class="form-input" id="a-flag1" placeholder="🇸🇦" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">الفريق الثاني (اسم)</label>
+            <input class="form-input" id="a-team2" placeholder="مثال: مصر" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">علم الفريق الثاني 🏳️</label>
+            <input class="form-input" id="a-flag2" placeholder="🇪🇬" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">التاريخ والوقت</label>
+            <input class="form-input" id="a-date" type="datetime-local" />
+          </div>
+          <div class="form-group" style="display:flex;align-items:flex-end">
+            <button class="btn-add" onclick="addMatch()">إضافة المباراة</button>
+          </div>
+        </div>
+      </div>
 
-                    } else {
-                        // خطأ آخر غير متعلق بوجود الجدول
-                        resultArea.innerHTML += `
-                            <div class="status-box error">
-                                ❌ فشل الاتصال بقاعدة البيانات.
-                                <br>الخطأ: ${usersError.message}
-                            </div>
-                            <div class="status-box error">
-                                ⚠️ تأكد من:
-                                1. صحة الرابط (URL) والمفتاح (anon key).
-                                2. أن المشروع نشط على Supabase.
-                                3. أنك تستخدم المفتاح الصحيح (publishable key).
-                            </div>
-                        `;
-                    }
+      <!-- Manage Matches -->
+      <div class="card">
+        <div class="card-title">⚙️ إدارة المباريات وإدخال النتائج</div>
+        <div id="admin-matches-list"><div class="empty-state"><div class="spinner"></div>جاري التحميل...</div></div>
+      </div>
+    </div>
 
-                } else {
-                    // ✅ نجاح قراءة جدول "users"
-                    displayData('users', usersData);
+  </div>
+</div>
 
-                    // محاولة قراءة جدول "matches" أيضاً لعرضه
-                    const { data: matchesData, error: matchesError } = await supabase
-                        .from('matches')
-                        .select('*')
-                        .limit(5);
+<!-- Toast -->
+<div id="toast"></div>
 
-                    if (!matchesError && matchesData) {
-                        displayData('matches', matchesData);
-                    } else {
-                        resultArea.innerHTML += `
-                            <div class="status-box" style="border-right-color:#d29922;">
-                                ℹ️ لم يتم العثور على بيانات في جدول "matches" (قد يكون فارغاً).
-                            </div>
-                        `;
-                    }
-                }
+<script>
+// ===== CONFIG =====
+const SUPABASE_URL = 'https://azjvyntnnertgcmvsfmq.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_FQT6pUUgos4vOgeAqjdQng_stG_DiAi';
 
-                // ==========================================
-                //  عرض معلومات إضافية عن المشروع
-                // ==========================================
-                resultArea.innerHTML += `
-                    <div class="status-box success" style="border-right-color: #58a6ff;">
-                        ✅ تم الاتصال بنجاح بخادم Supabase.
-                        <br>🔗 الرابط المستخدم: ${SUPABASE_URL}
-                        <br>📊 عدد الجداول التي تم التحقق منها: users, matches
-                    </div>
-                `;
+// ===== STATE =====
+let currentUser = null;
+let selectedRole = 'admin';
 
-            } catch (err) {
-                // أي خطأ غير متوقع
-                resultArea.innerHTML += `
-                    <div class="status-box error">
-                        ❌ حدث خطأ غير متوقع:
-                        <br>${err.message}
-                    </div>
-                    <div class="status-box error">
-                        ⚠️ تأكد من أن الكود يعمل في بيئة آمنة (متصفح حديث) وأنك تستخدم الإنترنت.
-                    </div>
-                `;
-                console.error('خطأ غير متوقع:', err);
+// ===== SUPABASE HELPERS =====
+async function sb(table, method = 'GET', body = null, params = '') {
+  const opts = {
+    method,
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': method === 'POST' ? 'return=representation' : 'return=representation'
+    }
+  };
+  if (body) opts.body = JSON.stringify(body);
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}${params}`, opts);
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || err.hint || `HTTP ${res.status}`);
+  }
+  const text = await res.text();
+  return text ? JSON.parse(text) : [];
+}
+
+// ===== TOAST =====
+function toast(msg, dur = 3000) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), dur);
+}
+
+// ===== AUTH =====
+function switchAuthTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach((el, i) => el.classList.toggle('active', (tab==='login') ? i===0 : i===1));
+  document.getElementById('login-form').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('register-form').style.display = tab === 'register' ? 'block' : 'none';
+  document.getElementById('auth-msg').textContent = '';
+}
+
+function selectRole(role) {
+  selectedRole = role;
+  document.getElementById('role-admin').classList.toggle('active', role === 'admin');
+  document.getElementById('role-player').classList.toggle('active', role === 'player');
+}
+
+function setAuthMsg(msg, type = 'error') {
+  const el = document.getElementById('auth-msg');
+  el.textContent = msg;
+  el.className = 'auth-msg ' + type;
+}
+
+async function doLogin() {
+  const username = document.getElementById('login-username').value.trim();
+  const password = document.getElementById('login-password').value;
+  if (!username || !password) { setAuthMsg('أدخل اسم المستخدم وكلمة المرور'); return; }
+
+  const btn = document.getElementById('btn-login');
+  btn.disabled = true; btn.innerHTML = '<div class="spinner"></div>';
+  try {
+    const users = await sb('users', 'GET', null, `?username=eq.${encodeURIComponent(username)}&password=eq.${encodeURIComponent(password)}&role=eq.${selectedRole}`);
+    if (users.length === 0) { setAuthMsg('اسم المستخدم أو كلمة المرور غير صحيحة'); return; }
+    currentUser = users[0];
+    enterApp();
+  } catch(e) {
+    setAuthMsg('خطأ في الاتصال: ' + e.message);
+  } finally {
+    btn.disabled = false; btn.textContent = 'دخول';
+  }
+}
+
+async function doRegister() {
+  const name = document.getElementById('reg-name').value.trim();
+  const username = document.getElementById('reg-username').value.trim();
+  const password = document.getElementById('reg-password').value;
+  if (!name || !username || !password) { setAuthMsg('أكمل جميع الحقول'); return; }
+  if (password.length < 4) { setAuthMsg('كلمة المرور قصيرة جداً'); return; }
+
+  const btn = document.getElementById('btn-register');
+  btn.disabled = true; btn.innerHTML = '<div class="spinner"></div>';
+  try {
+    // Check if username taken
+    const existing = await sb('users', 'GET', null, `?username=eq.${encodeURIComponent(username)}`);
+    if (existing.length > 0) { setAuthMsg('اسم المستخدم مستخدم بالفعل'); return; }
+
+    const [user] = await sb('users', 'POST', { name, username, password, role: 'player', points: 0 });
+    currentUser = user;
+    setAuthMsg('تم إنشاء الحساب بنجاح! 🎉', 'success');
+    setTimeout(enterApp, 800);
+  } catch(e) {
+    setAuthMsg('خطأ: ' + e.message);
+  } finally {
+    btn.disabled = false; btn.textContent = 'إنشاء الحساب';
+  }
+}
+
+function enterApp() {
+  document.getElementById('auth-screen').style.display = 'none';
+  document.getElementById('app-screen').style.display = 'block';
+  document.getElementById('header-username').textContent = (currentUser.role === 'admin' ? '👑 ' : '⚽ ') + currentUser.name;
+  buildNav();
+  showSection('matches');
+  loadMatches();
+}
+
+function doLogout() {
+  currentUser = null;
+  document.getElementById('auth-screen').style.display = 'flex';
+  document.getElementById('app-screen').style.display = 'none';
+  document.getElementById('login-username').value = '';
+  document.getElementById('login-password').value = '';
+  setAuthMsg('');
+}
+
+// ===== NAVIGATION =====
+function buildNav() {
+  const tabs = [
+    { id: 'matches', label: '⚽ المباريات' },
+    { id: 'leaderboard', label: '🏅 الترتيب' },
+  ];
+  if (currentUser.role === 'admin') tabs.push({ id: 'admin', label: '⚙️ لوحة المشرف' });
+
+  const nav = document.getElementById('nav-tabs');
+  nav.innerHTML = tabs.map(t => 
+    `<button class="nav-tab" id="tab-${t.id}" onclick="showSection('${t.id}')">${t.label}</button>`
+  ).join('');
+}
+
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('section-' + id)?.classList.add('active');
+  document.getElementById('tab-' + id)?.classList.add('active');
+
+  if (id === 'leaderboard') loadLeaderboard();
+  if (id === 'admin') loadAdminMatches();
+}
+
+// ===== MATCHES =====
+async function loadMatches() {
+  const el = document.getElementById('matches-list');
+  try {
+    const matches = await sb('matches', 'GET', null, '?order=match_date.asc');
+    if (matches.length === 0) {
+      el.innerHTML = '<div class="empty-state"><div>📅</div>لا توجد مباريات بعد. انتظر المشرف!</div>';
+      return;
+    }
+
+    // Load user predictions
+    let myPredictions = {};
+    if (currentUser.role === 'player') {
+      const preds = await sb('predictions', 'GET', null, `?user_id=eq.${currentUser.id}`);
+      preds.forEach(p => myPredictions[p.match_id] = p);
+    }
+
+    el.innerHTML = matches.map(m => buildMatchCard(m, myPredictions[m.id])).join('');
+  } catch(e) {
+    el.innerHTML = `<div class="empty-state"><div>❌</div>خطأ: ${e.message}</div>`;
+  }
+}
+
+function buildMatchCard(m, pred) {
+  const dateStr = m.match_date ? new Date(m.match_date).toLocaleString('ar-SA', {dateStyle:'short', timeStyle:'short'}) : '';
+  const hasResult = m.result_team1 !== null && m.result_team2 !== null;
+  const resultBadge = hasResult ? `<div class="match-result-badge">${m.result_team1} - ${m.result_team2}</div>` : '';
+
+  let predSection = '';
+  if (currentUser.role === 'player') {
+    if (hasResult) {
+      const correct = pred && pred.pred_team1 === m.result_team1 && pred.pred_team2 === m.result_team2;
+      const myPredText = pred ? `توقعي: ${pred.pred_team1}-${pred.pred_team2}` : 'لم تتوقع';
+      predSection = `<div style="font-size:0.82rem;color:${correct?'#27ae60':'#e74c3c'}">${correct?'✅':'❌'} ${myPredText}</div>`;
+    } else if (pred) {
+      predSection = `<div class="predicted-badge">✅ توقعت: ${pred.pred_team1} - ${pred.pred_team2}</div>`;
+    } else {
+      predSection = `
+        <div class="predict-row">
+          <input class="score-input" id="p1-${m.id}" type="number" min="0" max="20" placeholder="0">
+          <span style="color:var(--text-muted)">-</span>
+          <input class="score-input" id="p2-${m.id}" type="number" min="0" max="20" placeholder="0">
+          <button class="btn-predict" onclick="submitPrediction(${m.id})">توقع</button>
+        </div>`;
+    }
+  }
+
+  return `
+    <div class="match-card" id="match-${m.id}">
+      <div class="match-teams">
+        <div class="team">
+          <div class="team-flag">${m.flag1 || '🏳️'}</div>
+          <div class="team-name">${m.team1}</div>
+        </div>
+        <div class="vs-badge">VS</div>
+        <div class="team">
+          <div class="team-flag">${m.flag2 || '🏳️'}</div>
+          <div class="team-name">${m.team2}</div>
+        </div>
+      </div>
+      <div>
+        ${resultBadge}
+        ${predSection}
+        <div class="match-date">${dateStr}</div>
+      </div>
+    </div>`;
+}
+
+async function submitPrediction(matchId) {
+  const p1 = parseInt(document.getElementById(`p1-${matchId}`)?.value);
+  const p2 = parseInt(document.getElementById(`p2-${matchId}`)?.value);
+  if (isNaN(p1) || isNaN(p2)) { toast('أدخل النتيجة المتوقعة'); return; }
+  try {
+    await sb('predictions', 'POST', { user_id: currentUser.id, match_id: matchId, pred_team1: p1, pred_team2: p2 });
+    toast('✅ تم حفظ توقعك!');
+    loadMatches();
+  } catch(e) {
+    toast('خطأ: ' + e.message);
+  }
+}
+
+// ===== LEADERBOARD =====
+async function loadLeaderboard() {
+  const el = document.getElementById('leaderboard-list');
+  try {
+    const users = await sb('users', 'GET', null, '?role=eq.player&order=points.desc');
+    if (users.length === 0) {
+      el.innerHTML = '<div class="empty-state"><div>👥</div>لا يوجد لاعبون بعد</div>';
+      return;
+    }
+    el.innerHTML = users.map((u, i) => {
+      const rankClass = i === 0 ? 'rank-1' : i === 1 ? 'rank-2' : i === 2 ? 'rank-3' : 'rank-other';
+      const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i+1}`;
+      return `
+        <div class="leaderboard-row">
+          <div class="rank-badge ${rankClass}">${medal}</div>
+          <div class="player-name">${u.name}</div>
+          <div class="player-points">${u.points || 0} <span>نقطة</span></div>
+        </div>`;
+    }).join('');
+  } catch(e) {
+    el.innerHTML = `<div class="empty-state">خطأ: ${e.message}</div>`;
+  }
+}
+
+// ===== ADMIN =====
+async function addMatch() {
+  const team1 = document.getElementById('a-team1').value.trim();
+  const flag1 = document.getElementById('a-flag1').value.trim();
+  const team2 = document.getElementById('a-team2').value.trim();
+  const flag2 = document.getElementById('a-flag2').value.trim();
+  const date  = document.getElementById('a-date').value;
+  if (!team1 || !team2) { toast('أدخل اسمي الفريقين'); return; }
+  try {
+    await sb('matches', 'POST', { team1, flag1, team2, flag2, match_date: date || null });
+    toast('✅ تمت إضافة المباراة');
+    ['a-team1','a-flag1','a-team2','a-flag2','a-date'].forEach(id => document.getElementById(id).value='');
+    loadAdminMatches();
+    loadMatches();
+  } catch(e) { toast('خطأ: ' + e.message); }
+}
+
+async function loadAdminMatches() {
+  const el = document.getElementById('admin-matches-list');
+  try {
+    const matches = await sb('matches', 'GET', null, '?order=match_date.asc');
+    if (matches.length === 0) {
+      el.innerHTML = '<div class="empty-state"><div>📋</div>لا توجد مباريات بعد</div>';
+      return;
+    }
+    el.innerHTML = matches.map(m => {
+      const hasResult = m.result_team1 !== null && m.result_team2 !== null;
+      const dateStr = m.match_date ? new Date(m.match_date).toLocaleString('ar-SA',{dateStyle:'short',timeStyle:'short'}) : '-';
+      return `
+        <div class="match-card" id="admin-match-${m.id}">
+          <div class="match-teams">
+            <div class="team"><div class="team-flag">${m.flag1||'🏳️'}</div><div class="team-name">${m.team1}</div></div>
+            <div class="vs-badge">VS</div>
+            <div class="team"><div class="team-flag">${m.flag2||'🏳️'}</div><div class="team-name">${m.team2}</div></div>
+          </div>
+          <div>
+            <div class="match-date">${dateStr}</div>
+            ${hasResult 
+              ? `<div class="match-result-badge" style="margin-top:6px">${m.result_team1} - ${m.result_team2} ✅</div>`
+              : `<div class="result-row">
+                  <input class="score-input" id="r1-${m.id}" type="number" min="0" max="20" placeholder="0">
+                  <span style="color:var(--text-muted)">-</span>
+                  <input class="score-input" id="r2-${m.id}" type="number" min="0" max="20" placeholder="0">
+                  <button class="btn-result" onclick="setResult(${m.id})">تأكيد</button>
+                </div>`
             }
+            <div style="margin-top:8px">
+              <button class="btn-danger" onclick="deleteMatch(${m.id})">حذف</button>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+  } catch(e) { el.innerHTML = `<div class="empty-state">خطأ: ${e.message}</div>`; }
+}
 
-            // إعادة تفعيل الزر
-            testBtn.disabled = false;
-            testBtn.textContent = '🔄 اختبر مجدداً';
-        }
+async function setResult(matchId) {
+  const r1 = parseInt(document.getElementById(`r1-${matchId}`)?.value);
+  const r2 = parseInt(document.getElementById(`r2-${matchId}`)?.value);
+  if (isNaN(r1) || isNaN(r2)) { toast('أدخل النتيجة أولاً'); return; }
+  try {
+    // Update match
+    await fetch(`${SUPABASE_URL}/rest/v1/matches?id=eq.${matchId}`, {
+      method: 'PATCH',
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ result_team1: r1, result_team2: r2 })
+    });
 
-        // ==========================================
-        //  دالة عرض البيانات في جدول
-        // ==========================================
-        function displayData(tableName, data) {
-            if (!data || data.length === 0) {
-                resultArea.innerHTML += `
-                    <div class="status-box" style="border-right-color:#d29922;">
-                        📭 جدول "<strong>${tableName}</strong>" موجود لكنه فارغ (لا يحتوي على أي سجلات).
-                    </div>
-                `;
-                return;
-            }
+    // Score predictions
+    const preds = await sb('predictions', 'GET', null, `?match_id=eq.${matchId}`);
+    for (const pred of preds) {
+      if (pred.pred_team1 === r1 && pred.pred_team2 === r2) {
+        // Get current points
+        const [u] = await sb('users', 'GET', null, `?id=eq.${pred.user_id}`);
+        await fetch(`${SUPABASE_URL}/rest/v1/users?id=eq.${pred.user_id}`, {
+          method: 'PATCH',
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ points: (u.points || 0) + 3 })
+        });
+      }
+    }
+    toast('✅ تم تسجيل النتيجة وتحديث النقاط!');
+    loadAdminMatches();
+    loadMatches();
+  } catch(e) { toast('خطأ: ' + e.message); }
+}
 
-            // استخراج أسماء الأعمدة من أول عنصر
-            const columns = Object.keys(data[0]);
+async function deleteMatch(matchId) {
+  if (!confirm('هل تريد حذف هذه المباراة؟')) return;
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/matches?id=eq.${matchId}`, {
+      method: 'DELETE',
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
+    });
+    toast('🗑️ تم الحذف');
+    loadAdminMatches();
+    loadMatches();
+  } catch(e) { toast('خطأ: ' + e.message); }
+}
 
-            // بناء الجدول
-            let tableHTML = `
-                <div class="status-box success" style="border-right-color: #2ea043; overflow-x: auto;">
-                    <strong>✅ جدول "${tableName}" يحتوي على ${data.length} سجل(ات).</strong>
-                    <table>
-                        <thead>
-                            <tr>
-                                ${columns.map(col => `<th>${col}</th>`).join('')}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${data.map(row => `
-                                <tr>
-                                    ${columns.map(col => `<td>${row[col] !== null && row[col] !== undefined ? row[col] : '—'}</td>`).join('')}
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-
-            resultArea.innerHTML += tableHTML;
-        }
-
-        // ==========================================
-        //  ربط الزر بوظيفة الاختبار
-        // ==========================================
-        testBtn.addEventListener('click', runTest);
-
-        // ==========================================
-        //  تنفيذ اختبار تلقائي عند تحميل الصفحة (اختياري)
-        // ==========================================
-        // runTest(); // أزل التعليق عن هذا السطر إذا أردت أن يعمل الاختبار تلقائياً
-
-        console.log('✅ صفحة الاختبار جاهزة. اضغط على الزر لبدء الاختبار.');
-        console.log('📌 البيانات المستخدمة:');
-        console.log('URL:', SUPABASE_URL);
-        console.log('ANON KEY:', SUPABASE_ANON_KEY);
-    </script>
-
+// Enter key support
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    if (document.getElementById('login-form').style.display !== 'none') doLogin();
+    else doRegister();
+  }
+});
+</script>
 </body>
 </html>
