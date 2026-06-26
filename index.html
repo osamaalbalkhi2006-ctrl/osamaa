@@ -9,66 +9,154 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Tahoma', Arial, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
             color: white;
             min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             padding: 20px;
         }
         .container {
             max-width: 700px;
+            width: 100%;
             margin: auto;
             background: rgba(255,255,255,0.05);
-            border-radius: 20px;
-            padding: 25px;
-            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 30px;
+            backdrop-filter: blur(15px);
             border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
         }
-        h1, h2, h3 { text-align: center; color: #3ecf8e; margin-bottom: 15px; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; color: #aaa; }
-        input, select, button {
+        h1 {
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 5px;
+            background: linear-gradient(135deg, #f5c842, #f5a842);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle {
+            text-align: center;
+            color: #aaa;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+        .role-selector {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            justify-content: center;
+        }
+        .role-btn {
+            padding: 12px 30px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            background: transparent;
+            color: #aaa;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+            max-width: 200px;
+            text-align: center;
+        }
+        .role-btn:hover {
+            border-color: #f5c842;
+            color: white;
+        }
+        .role-btn.active {
+            border-color: #f5c842;
+            background: rgba(245, 200, 66, 0.15);
+            color: #f5c842;
+            box-shadow: 0 0 25px rgba(245, 200, 66, 0.15);
+        }
+        .role-btn .icon { font-size: 24px; display: block; margin-bottom: 5px; }
+        .form-group { margin-bottom: 18px; }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 14px;
+            color: #ccc;
+        }
+        input {
             width: 100%;
-            padding: 12px;
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 10px;
+            padding: 14px 16px;
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 12px;
             background: rgba(255,255,255,0.05);
             color: white;
             font-size: 16px;
-            transition: 0.3s;
+            transition: all 0.3s;
         }
-        input:focus, select:focus {
+        input:focus {
             outline: none;
-            border-color: #3ecf8e;
-            box-shadow: 0 0 15px rgba(62, 207, 142, 0.2);
+            border-color: #f5c842;
+            box-shadow: 0 0 20px rgba(245, 200, 66, 0.1);
         }
-        select option { background: #1a1a2e; }
+        input::placeholder { color: #666; }
         button {
-            background: #3ecf8e;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #f5c842, #f5a842);
             color: #1a1a2e;
             font-weight: bold;
-            border: none;
+            font-size: 18px;
             cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
         }
-        button:hover { background: #34b87a; transform: translateY(-2px); }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(245, 200, 66, 0.3);
+        }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #aaa;
+            margin-top: 5px;
+        }
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.05);
+            box-shadow: none;
+        }
+        #message {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            display: none;
+        }
+        .success { display: block !important; background: rgba(46,204,113,0.2); border: 1px solid #2ecc71; color: #2ecc71; }
+        .error { display: block !important; background: rgba(231,76,60,0.2); border: 1px solid #e74c3c; color: #e74c3c; }
+        .loading { display: block !important; background: rgba(52,152,219,0.2); border: 1px solid #3498db; color: #3498db; }
+        
         .hidden { display: none; }
-        #message { margin-top: 10px; padding: 10px; border-radius: 10px; text-align: center; }
-        .success { background: rgba(62,207,142,0.3); color: #3ecf8e; }
-        .error { background: rgba(231,76,60,0.3); color: #e74c3c; }
         .match-card {
             background: rgba(255,255,255,0.05);
             padding: 15px;
-            border-radius: 10px;
+            border-radius: 12px;
             margin: 10px 0;
-            border-right: 4px solid #3ecf8e;
+            border-right: 4px solid #f5c842;
         }
         .points-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         .points-table th, .points-table td { padding: 10px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .points-table th { color: #3ecf8e; }
-        .admin-link { display: block; text-align: center; margin-top: 20px; color: #3ecf8e; font-size: 12px; cursor: pointer; }
-        .admin-link:hover { color: #34b87a; }
+        .points-table th { color: #f5c842; }
+        .admin-link { display: block; text-align: center; margin-top: 15px; color: #666; font-size: 12px; cursor: pointer; }
+        .admin-link:hover { color: #aaa; }
         .logout-btn { background: #e74c3c; color: white; margin-bottom: 15px; }
-        .logout-btn:hover { background: #c0392b; }
-        .subtitle { color: #aaa; font-size: 14px; text-align: center; margin-bottom: 20px; }
+        .logout-btn:hover { background: #c0392b; box-shadow: 0 10px 30px rgba(231,76,60,0.3); }
+        h2, h3 { text-align: center; color: #f5c842; margin-bottom: 15px; }
+        hr { margin: 20px 0; border-color: rgba(255,255,255,0.05); }
+        .header-actions { display: flex; gap: 10px; }
+        .header-actions button { width: auto; padding: 8px 20px; font-size: 14px; margin-top: 0; }
     </style>
 </head>
 <body>
@@ -76,7 +164,20 @@
         <!-- شاشة تسجيل الدخول -->
         <div id="loginScreen">
             <h1>⚽ توقعات كأس العالم 2026</h1>
-            <p class="subtitle">سجل دخولك لتشارك في التحدي</p>
+            <p class="subtitle">سجل دخولك للمشاركة في التحدي</p>
+
+            <!-- اختيار الدور -->
+            <div class="role-selector">
+                <div class="role-btn active" id="playerRoleBtn" onclick="selectRole('player')">
+                    <span class="icon">🏃</span>
+                    لاعب
+                </div>
+                <div class="role-btn" id="adminRoleBtn" onclick="selectRole('admin')">
+                    <span class="icon">👑</span>
+                    مشرف
+                </div>
+            </div>
+
             <div class="form-group">
                 <label>البريد الإلكتروني</label>
                 <input type="email" id="loginEmail" placeholder="أدخل بريدك الإلكتروني">
@@ -85,10 +186,12 @@
                 <label>كلمة السر</label>
                 <input type="password" id="loginPassword" placeholder="كلمة السر">
             </div>
-            <button onclick="login()">دخول</button>
+
+            <button onclick="login()" id="loginBtn">دخول</button>
+
             <div id="loginMessage"></div>
-            <a class="admin-link" onclick="showAdminLogin()">🔒 دخول المشرف</a>
-            <a class="admin-link" onclick="showRegister()" style="color:#666;">ليس لديك حساب؟ سجل الآن</a>
+
+            <a class="admin-link" onclick="showRegister()">ليس لديك حساب؟ سجل الآن</a>
         </div>
 
         <!-- شاشة التسجيل -->
@@ -96,7 +199,7 @@
             <h2>📝 تسجيل جديد</h2>
             <div class="form-group">
                 <label>اسم اللاعب</label>
-                <input type="text" id="regName" placeholder="اسمك">
+                <input type="text" id="regName" placeholder="اسمك الكامل">
             </div>
             <div class="form-group">
                 <label>البريد الإلكتروني</label>
@@ -104,17 +207,19 @@
             </div>
             <div class="form-group">
                 <label>كلمة السر</label>
-                <input type="password" id="regPassword" placeholder="كلمة السر">
+                <input type="password" id="regPassword" placeholder="كلمة السر (4 أحرف على الأقل)">
             </div>
             <button onclick="register()">تسجيل</button>
             <div id="registerMessage"></div>
-            <a class="admin-link" onclick="showLogin()" style="color:#666;">🔙 لديك حساب؟ سجل دخول</a>
+            <a class="admin-link" onclick="showLogin()">🔙 لديك حساب؟ سجل دخول</a>
         </div>
 
         <!-- شاشة المشرف -->
         <div id="adminScreen" class="hidden">
-            <h2>👑 لوحة المشرف</h2>
-            <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2 style="margin:0;">👑 لوحة المشرف</h2>
+                <button class="logout-btn" onclick="logout()" style="width:auto; padding:8px 20px; font-size:14px; margin:0;">🚪 خروج</button>
+            </div>
             
             <h3>➕ إضافة مباراة</h3>
             <div class="form-group">
@@ -137,29 +242,31 @@
                 <label>موعد انتهاء التوقع (بتوقيت جرينتش)</label>
                 <input type="datetime-local" id="deadline">
             </div>
-            <button onclick="addMatch()">إضافة المباراة</button>
+            <button onclick="addMatch()">➕ إضافة المباراة</button>
 
-            <hr style="margin:20px 0; border-color:rgba(255,255,255,0.1);">
+            <hr>
 
             <h3>📊 المباريات الحالية</h3>
-            <div id="adminMatchesList"></div>
+            <div id="adminMatchesList"><p style="color:#666; text-align:center;">جاري التحميل...</p></div>
 
-            <hr style="margin:20px 0; border-color:rgba(255,255,255,0.1);">
+            <hr>
 
             <h3>📋 ترتيب اللاعبين</h3>
-            <div id="adminLeaderboard"></div>
+            <div id="adminLeaderboard"><p style="color:#666; text-align:center;">جاري التحميل...</p></div>
         </div>
 
         <!-- شاشة اللاعب -->
         <div id="playerScreen" class="hidden">
-            <h2>👤 مرحباً، <span id="playerName">اللاعب</span></h2>
-            <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2 style="margin:0;">👤 مرحباً، <span id="playerName">اللاعب</span></h2>
+                <button class="logout-btn" onclick="logout()" style="width:auto; padding:8px 20px; font-size:14px; margin:0;">🚪 خروج</button>
+            </div>
 
             <h3>🏆 مباريات اليوم</h3>
-            <div id="todayMatches"></div>
+            <div id="todayMatches"><p style="color:#666; text-align:center;">جاري التحميل...</p></div>
 
             <h3>📊 ترتيب اللاعبين</h3>
-            <div id="playerLeaderboard"></div>
+            <div id="playerLeaderboard"><p style="color:#666; text-align:center;">جاري التحميل...</p></div>
         </div>
     </div>
 
@@ -171,6 +278,7 @@
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let currentUser = null;
+        let selectedRole = 'player';
 
         // عناصر الشاشة
         const loginScreen = document.getElementById('loginScreen');
@@ -179,6 +287,21 @@
         const playerScreen = document.getElementById('playerScreen');
         const loginMessage = document.getElementById('loginMessage');
         const registerMessage = document.getElementById('registerMessage');
+
+        // اختيار الدور
+        window.selectRole = function(role) {
+            selectedRole = role;
+            document.getElementById('playerRoleBtn').classList.toggle('active', role === 'player');
+            document.getElementById('adminRoleBtn').classList.toggle('active', role === 'admin');
+            
+            // تغيير النص التوضيحي
+            const emailField = document.getElementById('loginEmail');
+            if (role === 'admin') {
+                emailField.placeholder = 'admin@predict.com';
+            } else {
+                emailField.placeholder = 'أدخل بريدك الإلكتروني';
+            }
+        };
 
         // 🔐 دوال تسجيل الدخول
         window.login = async function() {
@@ -190,6 +313,9 @@
                 return;
             }
 
+            showLoginMessage('جاري تسجيل الدخول...', 'loading');
+            document.getElementById('loginBtn').disabled = true;
+
             try {
                 const { data, error } = await supabase
                     .from('users')
@@ -200,10 +326,23 @@
 
                 if (error || !data) {
                     showLoginMessage('البريد الإلكتروني أو كلمة السر غير صحيحة', 'error');
+                    document.getElementById('loginBtn').disabled = false;
                     return;
                 }
 
                 currentUser = data;
+
+                // التحقق من تطابق الدور المختار مع دور المستخدم
+                if (selectedRole === 'admin' && data.role !== 'admin') {
+                    showLoginMessage('هذا الحساب ليس مشرفاً. اختر "لاعب"', 'error');
+                    document.getElementById('loginBtn').disabled = false;
+                    return;
+                }
+                if (selectedRole === 'player' && data.role === 'admin') {
+                    showLoginMessage('هذا حساب مشرف. اختر "مشرف"', 'error');
+                    document.getElementById('loginBtn').disabled = false;
+                    return;
+                }
 
                 if (data.role === 'admin') {
                     showAdminPanel();
@@ -214,6 +353,7 @@
             } catch (err) {
                 showLoginMessage('خطأ: ' + err.message, 'error');
             }
+            document.getElementById('loginBtn').disabled = false;
         };
 
         // 📝 تسجيل مستخدم جديد
@@ -224,6 +364,12 @@
 
             if (!name || !email || !password) {
                 registerMessage.textContent = 'يرجى ملء جميع الحقول';
+                registerMessage.className = 'error';
+                return;
+            }
+
+            if (password.length < 4) {
+                registerMessage.textContent = 'كلمة السر يجب أن تكون 4 أحرف على الأقل';
                 registerMessage.className = 'error';
                 return;
             }
@@ -251,7 +397,7 @@
 
                 if (error) throw error;
 
-                registerMessage.textContent = '✅ تم التسجيل بنجاح!';
+                registerMessage.textContent = '✅ تم التسجيل بنجاح! يمكنك الآن تسجيل الدخول';
                 registerMessage.className = 'success';
                 setTimeout(() => {
                     showLogin();
@@ -263,6 +409,7 @@
             }
         };
 
+        // عرض شاشة المشرف
         function showAdminPanel() {
             loginScreen.classList.add('hidden');
             registerScreen.classList.add('hidden');
@@ -272,6 +419,7 @@
             loadLeaderboard('adminLeaderboard');
         }
 
+        // عرض شاشة اللاعب
         function showPlayerPanel(name) {
             document.getElementById('playerName').textContent = name;
             loginScreen.classList.add('hidden');
@@ -282,6 +430,7 @@
             loadLeaderboard('playerLeaderboard');
         }
 
+        // تسجيل الخروج
         window.logout = function() {
             currentUser = null;
             loginScreen.classList.remove('hidden');
@@ -306,12 +455,6 @@
         window.showLogin = function() {
             registerScreen.classList.add('hidden');
             loginScreen.classList.remove('hidden');
-        };
-
-        window.showAdminLogin = function() {
-            document.getElementById('loginEmail').value = 'admin@predict.com';
-            document.getElementById('loginPassword').value = 'osama2006';
-            login();
         };
 
         // 👑 دوال المشرف
@@ -359,7 +502,7 @@
 
         async function loadAdminMatches() {
             const container = document.getElementById('adminMatchesList');
-            container.innerHTML = '<p>جاري التحميل...</p>';
+            container.innerHTML = '<p style="color:#666; text-align:center;">جاري التحميل...</p>';
 
             try {
                 const { data, error } = await supabase
@@ -370,7 +513,7 @@
                 if (error) throw error;
 
                 if (!data || data.length === 0) {
-                    container.innerHTML = '<p>لا توجد مباريات</p>';
+                    container.innerHTML = '<p style="color:#666; text-align:center;">لا توجد مباريات</p>';
                     return;
                 }
 
@@ -387,8 +530,8 @@
                                 ${m.result ? ` | النتيجة: ${m.result}` : ''}
                                 ${isPast && !m.result ? ' ⚠️ انتهى الوقت' : ''}
                                 <br>
-                                <input type="text" id="result_${m.id}" placeholder="النتيجة (2-1)" style="width:60%; margin-top:5px;">
-                                <button onclick="setResult('${m.id}')" style="width:35%; padding:5px;">تحديث</button>
+                                <input type="text" id="result_${m.id}" placeholder="النتيجة (2-1)" style="width:60%; margin-top:5px; padding:8px;">
+                                <button onclick="setResult('${m.id}')" style="width:35%; padding:8px; margin-top:5px;">تحديث</button>
                             </div>
                         </div>
                     `;
@@ -396,7 +539,7 @@
                 container.innerHTML = html;
 
             } catch (err) {
-                container.innerHTML = '<p style="color: #e74c3c;">خطأ في التحميل</p>';
+                container.innerHTML = '<p style="color: #e74c3c; text-align:center;">خطأ في التحميل</p>';
                 console.error(err);
             }
         }
@@ -475,7 +618,6 @@
         // 📊 لوحة المتصدرين
         async function loadLeaderboard(elementId) {
             const container = document.getElementById(elementId);
-            container.innerHTML = '<p>جاري التحميل...</p>';
 
             try {
                 const { data, error } = await supabase
@@ -487,7 +629,7 @@
                 if (error) throw error;
 
                 if (!data || data.length === 0) {
-                    container.innerHTML = '<p>لا يوجد لاعبون بعد</p>';
+                    container.innerHTML = '<p style="color:#666; text-align:center;">لا يوجد لاعبون بعد</p>';
                     return;
                 }
 
@@ -504,7 +646,7 @@
                 container.innerHTML = html;
 
             } catch (err) {
-                container.innerHTML = '<p style="color: #e74c3c;">خطأ في التحميل</p>';
+                container.innerHTML = '<p style="color: #e74c3c; text-align:center;">خطأ في التحميل</p>';
                 console.error(err);
             }
         }
@@ -512,7 +654,7 @@
         // 🏟️ مباريات اليوم للاعب
         async function loadTodayMatches() {
             const container = document.getElementById('todayMatches');
-            container.innerHTML = '<p>جاري التحميل...</p>';
+            container.innerHTML = '<p style="color:#666; text-align:center;">جاري التحميل...</p>';
 
             try {
                 const { data, error } = await supabase
@@ -524,7 +666,7 @@
                 if (error) throw error;
 
                 if (!data || data.length === 0) {
-                    container.innerHTML = '<p>لا توجد مباريات اليوم</p>';
+                    container.innerHTML = '<p style="color:#666; text-align:center;">لا توجد مباريات اليوم</p>';
                     return;
                 }
 
@@ -554,18 +696,18 @@
                                 ${hasPrediction ? ' ✅ تم التوقع مسبقاً' : ''}
                             </div>
                             ${!isDeadlinePassed && !hasPrediction ? `
-                            <div style="margin-top:10px;">
-                                <input type="text" id="pred_${m.id}" placeholder="توقعك (2-1)" style="width:60%;">
-                                <button onclick="submitPrediction('${m.id}')" style="width:35%; padding:8px;">أرسل</button>
+                            <div style="margin-top:10px; display:flex; gap:10px;">
+                                <input type="text" id="pred_${m.id}" placeholder="توقعك (2-1)" style="flex:1; padding:10px;">
+                                <button onclick="submitPrediction('${m.id}')" style="width:auto; padding:10px 20px; margin:0;">أرسل</button>
                             </div>` : ''}
-                            ${m.result ? `<div style="color:#3ecf8e; margin-top:5px;">✅ النتيجة: ${m.result}</div>` : ''}
+                            ${m.result ? `<div style="color:#2ecc71; margin-top:5px;">✅ النتيجة: ${m.result}</div>` : ''}
                         </div>
                     `;
                 }
                 container.innerHTML = html;
 
             } catch (err) {
-                container.innerHTML = '<p style="color: #e74c3c;">خطأ في التحميل</p>';
+                container.innerHTML = '<p style="color: #e74c3c; text-align:center;">خطأ في التحميل</p>';
                 console.error(err);
             }
         }
