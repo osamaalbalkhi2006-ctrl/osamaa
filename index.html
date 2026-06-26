@@ -4,11 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>توقعات كأس العالم 2026</title>
-    <!-- استخدام أحدث إصدار من مكتبة Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
     </script>
     <style>
-        /* --- أنماط التصميم الموحدة --- */
         * {
             margin: 0;
             padding: 0;
@@ -16,8 +14,8 @@
         }
         body {
             font-family: 'Segoe UI', Tahoma, sans-serif;
-            background: linear-gradient(145deg, #0b0b1a, #1a1a2e);
-            color: #eee;
+            background: linear-gradient(145deg, #0a1628, #0d2847);
+            color: #e8f4f8;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -27,26 +25,27 @@
         .container {
             max-width: 650px;
             width: 100%;
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(100, 200, 255, 0.08);
             border-radius: 28px;
             padding: 30px 25px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+            box-shadow: 0 20px 50px rgba(0, 40, 80, 0.6);
         }
         h1,
         h2,
         h3 {
-            color: #f5b042;
+            color: #5dd9ff;
             text-align: center;
             margin-bottom: 10px;
         }
         h1 {
             font-size: 2rem;
+            text-shadow: 0 0 30px rgba(93, 217, 255, 0.15);
         }
         .subtitle {
             text-align: center;
-            color: #aaa;
+            color: #8ab4c8;
             font-size: 0.9rem;
             margin-bottom: 25px;
         }
@@ -58,10 +57,10 @@
         }
         .role-btn {
             padding: 10px 20px;
-            border: 2px solid #444;
+            border: 2px solid #2a5a7a;
             border-radius: 40px;
             background: transparent;
-            color: #aaa;
+            color: #8ab4c8;
             font-weight: bold;
             cursor: pointer;
             transition: 0.3s;
@@ -70,13 +69,13 @@
             max-width: 160px;
         }
         .role-btn.active {
-            border-color: #f5b042;
-            background: rgba(245, 176, 66, 0.1);
-            color: #f5b042;
-            box-shadow: 0 0 15px rgba(245, 176, 66, 0.1);
+            border-color: #5dd9ff;
+            background: rgba(93, 217, 255, 0.08);
+            color: #5dd9ff;
+            box-shadow: 0 0 25px rgba(93, 217, 255, 0.08);
         }
         .role-btn:hover {
-            border-color: #f5b042;
+            border-color: #5dd9ff;
         }
         .form-group {
             margin-bottom: 16px;
@@ -85,39 +84,44 @@
             display: block;
             margin-bottom: 5px;
             font-size: 0.85rem;
-            color: #bbb;
+            color: #8ab4c8;
         }
         input {
             width: 100%;
             padding: 14px 16px;
-            border: 1px solid #333;
+            border: 1px solid #1a4a6a;
             border-radius: 14px;
-            background: rgba(255, 255, 255, 0.04);
-            color: #fff;
+            background: rgba(255, 255, 255, 0.03);
+            color: #e8f4f8;
             font-size: 1rem;
             transition: 0.3s;
         }
         input:focus {
             outline: none;
-            border-color: #f5b042;
-            background: rgba(255, 255, 255, 0.07);
+            border-color: #5dd9ff;
+            background: rgba(93, 217, 255, 0.04);
+            box-shadow: 0 0 20px rgba(93, 217, 255, 0.04);
+        }
+        input::placeholder {
+            color: #4a7a9a;
         }
         .btn-primary {
             width: 100%;
             padding: 14px;
             border: none;
             border-radius: 14px;
-            background: linear-gradient(135deg, #f5b042, #e6952e);
-            color: #12121f;
+            background: linear-gradient(135deg, #2a9ad9, #1a7ab9);
+            color: #ffffff;
             font-weight: 800;
             font-size: 1.1rem;
             cursor: pointer;
             transition: 0.3s;
             margin-top: 8px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
         }
         .btn-primary:hover {
             transform: scale(1.02);
-            box-shadow: 0 8px 25px rgba(245, 176, 66, 0.3);
+            box-shadow: 0 8px 30px rgba(42, 154, 217, 0.35);
         }
         .btn-danger {
             background: #c0392b;
@@ -142,33 +146,33 @@
         }
         .message.success {
             display: block;
-            background: rgba(46, 204, 113, 0.12);
+            background: rgba(46, 204, 113, 0.10);
             border: 1px solid #2ecc71;
             color: #2ecc71;
         }
         .message.error {
             display: block;
-            background: rgba(231, 76, 60, 0.12);
+            background: rgba(231, 76, 60, 0.10);
             border: 1px solid #e74c3c;
             color: #e74c3c;
         }
         .message.loading {
             display: block;
-            background: rgba(52, 152, 219, 0.12);
-            border: 1px solid #3498db;
-            color: #3498db;
+            background: rgba(93, 217, 255, 0.08);
+            border: 1px solid #5dd9ff;
+            color: #5dd9ff;
         }
         .link-btn {
             display: block;
             text-align: center;
             margin-top: 18px;
-            color: #888;
+            color: #4a8aaa;
             font-size: 0.85rem;
             cursor: pointer;
             transition: 0.3s;
         }
         .link-btn:hover {
-            color: #ddd;
+            color: #7ac8e8;
         }
         .hidden {
             display: none !important;
@@ -178,7 +182,7 @@
             padding: 15px;
             border-radius: 16px;
             margin: 12px 0;
-            border-right: 4px solid #f5b042;
+            border-right: 4px solid #5dd9ff;
         }
         .flex-space {
             display: flex;
@@ -189,7 +193,7 @@
             margin: 25px 0;
             border: none;
             height: 1px;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(93, 217, 255, 0.08);
         }
         table {
             width: 100%;
@@ -197,9 +201,9 @@
             margin: 12px 0;
         }
         th {
-            color: #f5b042;
+            color: #5dd9ff;
             padding: 10px;
-            border-bottom: 1px solid #333;
+            border-bottom: 1px solid #1a4a6a;
         }
         td {
             padding: 10px;
@@ -220,6 +224,13 @@
             padding: 10px 12px;
             margin: 0;
             font-size: 0.85rem;
+        }
+        .badge {
+            background: rgba(93, 217, 255, 0.08);
+            color: #5dd9ff;
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-size: 0.75rem;
         }
     </style>
 </head>
@@ -294,11 +305,11 @@
 
             <hr>
             <h3>📋 المباريات الحالية</h3>
-            <div id="adminMatches"><p style="color:#666; text-align:center;">جاري التحميل...</p></div>
+            <div id="adminMatches"><p style="color:#4a7a9a; text-align:center;">جاري التحميل...</p></div>
 
             <hr>
             <h3>🏆 ترتيب اللاعبين</h3>
-            <div id="adminRank"><p style="color:#666; text-align:center;">جاري التحميل...</p></div>
+            <div id="adminRank"><p style="color:#4a7a9a; text-align:center;">جاري التحميل...</p></div>
         </div>
 
         <!-- ========================================= -->
@@ -311,18 +322,18 @@
             </div>
 
             <h3>🏟️ مباريات اليوم</h3>
-            <div id="playerMatches"><p style="color:#666; text-align:center;">جاري التحميل...</p></div>
+            <div id="playerMatches"><p style="color:#4a7a9a; text-align:center;">جاري التحميل...</p></div>
 
             <hr>
             <h3>🏆 ترتيب اللاعبين</h3>
-            <div id="playerRank"><p style="color:#666; text-align:center;">جاري التحميل...</p></div>
+            <div id="playerRank"><p style="color:#4a7a9a; text-align:center;">جاري التحميل...</p></div>
         </div>
 
     </div>
 
     <script>
         // ============================================================
-        //  🔥 بيانات Supabase الصحيحة (تأكد من تطابقها مع مشروعك)
+        //  🔥 بيانات Supabase (تأكد من تطابقها مع مشروعك)
         // ============================================================
         const SUPABASE_URL = 'https://azjvyntnnertgcmvsfmq.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_FQT6pUUgos4vOgeAqjdQng_stG_DiAi';
@@ -386,7 +397,6 @@
             showMsg(loginMsg, '⏳ جاري التحقق...', 'loading');
 
             try {
-                // استعلام مباشر للبحث عن المستخدم
                 const { data, error } = await supabase
                     .from('users')
                     .select('*')
@@ -394,13 +404,11 @@
                     .eq('password', password)
                     .single();
 
-                // إذا لم يتم العثور على مستخدم
                 if (error || !data) {
                     showMsg(loginMsg, '❌ البريد الإلكتروني أو كلمة السر غير صحيحة', 'error');
                     return;
                 }
 
-                // التحقق من تطابق الدور المختار مع دور المستخدم
                 if (selectedRole === 'admin' && data.role !== 'admin') {
                     showMsg(loginMsg, '❌ هذا الحساب ليس مشرفاً. اختر "لاعب"', 'error');
                     return;
@@ -410,11 +418,9 @@
                     return;
                 }
 
-                // --- نجاح تسجيل الدخول ---
                 currentUser = data;
                 showMsg(loginMsg, '✅ تم تسجيل الدخول بنجاح!', 'success');
 
-                // توجيه المستخدم للوحة المناسبة
                 if (data.role === 'admin') {
                     showAdminPage();
                 } else {
@@ -446,7 +452,6 @@
             }
 
             try {
-                // التحقق من عدم وجود البريد مسبقاً
                 const { data: existing } = await supabase
                     .from('users')
                     .select('id')
@@ -459,7 +464,6 @@
                     return;
                 }
 
-                // إدراج المستخدم الجديد
                 const { error } = await supabase
                     .from('users')
                     .insert({
@@ -475,7 +479,6 @@
                 regMsg.textContent = '✅ تم التسجيل بنجاح! يمكنك الآن تسجيل الدخول.';
                 regMsg.className = 'message success';
 
-                // العودة إلى صفحة تسجيل الدخول بعد 1.5 ثانية
                 setTimeout(() => showLoginPage(), 1500);
 
             } catch (err) {
@@ -551,7 +554,6 @@
         //  7. وظائف المشرف
         // ============================================================
 
-        // 7.1 إضافة مباراة
         document.getElementById('addMatchBtn').onclick = async () => {
             const team1 = document.getElementById('aTeam1').value.trim();
             const flag1 = document.getElementById('aFlag1').value.trim();
@@ -580,19 +582,18 @@
                 if (error) throw error;
 
                 alert('✅ تم إضافة المباراة بنجاح!');
-                // تفريغ الحقول
-                ['aTeam1', 'aFlag1', 'aTeam2', 'aFlag2', 'aDeadline'].forEach(id => document.getElementById(id).value = '');
-                loadAdminMatches(); // تحديث القائمة
+                ['aTeam1', 'aFlag1', 'aTeam2', 'aFlag2', 'aDeadline'].forEach(id => document.getElementById(id).value =
+                '');
+                loadAdminMatches();
 
             } catch (err) {
                 alert('❌ فشل الإضافة: ' + err.message);
             }
         };
 
-        // 7.2 تحميل المباريات (للمشرف)
         async function loadAdminMatches() {
             const container = document.getElementById('adminMatches');
-            container.innerHTML = '<p style="color:#666; text-align:center;">⏳ جاري التحميل...</p>';
+            container.innerHTML = '<p style="color:#4a7a9a; text-align:center;">⏳ جاري التحميل...</p>';
 
             try {
                 const { data, error } = await supabase
@@ -603,7 +604,7 @@
                 if (error) throw error;
 
                 if (!data || data.length === 0) {
-                    container.innerHTML = '<p style="color:#666; text-align:center;">📭 لا توجد مباريات حالياً</p>';
+                    container.innerHTML = '<p style="color:#4a7a9a; text-align:center;">📭 لا توجد مباريات حالياً</p>';
                     return;
                 }
 
@@ -615,7 +616,7 @@
                             <div style="font-weight:bold; font-size:1.1rem;">
                                 ${m.team1_flag || '🏳️'} ${m.team1} 🆚 ${m.team2} ${m.team2_flag || '🏳️'}
                             </div>
-                            <div style="color:#aaa; font-size:0.85rem; margin:4px 0;">
+                            <div style="color:#8ab4c8; font-size:0.85rem; margin:4px 0;">
                                 ⏰ ${new Date(m.deadline).toLocaleString('ar')}
                                 ${m.result ? ` | ✅ النتيجة: ${m.result}` : ''}
                                 ${isPast && !m.result ? ' ⚠️ انتهى الوقت' : ''}
@@ -635,7 +636,6 @@
             }
         }
 
-        // 7.3 تحديث النتيجة وحساب النقاط
         window.updateResult = async function(matchId) {
             const result = document.getElementById('res_' + matchId).value.trim();
             if (!result) {
@@ -644,7 +644,6 @@
             }
 
             try {
-                // 1. تحديث حالة المباراة
                 const { error } = await supabase
                     .from('matches')
                     .update({ result: result, status: 'finished' })
@@ -652,7 +651,6 @@
 
                 if (error) throw error;
 
-                // 2. جلب جميع التوقعات لهذه المباراة
                 const { data: predictions, error: predError } = await supabase
                     .from('predictions')
                     .select('*')
@@ -660,7 +658,6 @@
 
                 if (predError) throw predError;
 
-                // 3. حساب النقاط لكل لاعب وتحديثها
                 for (const p of predictions) {
                     const points = (p.prediction === result) ? 3 : 0;
                     await supabase
@@ -680,7 +677,6 @@
             }
         };
 
-        // 7.4 تحديث مجموع نقاط لاعب معين
         async function updatePlayerTotalPoints(playerId) {
             try {
                 const { data, error } = await supabase
@@ -706,10 +702,9 @@
         //  8. وظائف اللاعب
         // ============================================================
 
-        // 8.1 تحميل المباريات للاعب
         async function loadPlayerMatches() {
             const container = document.getElementById('playerMatches');
-            container.innerHTML = '<p style="color:#666; text-align:center;">⏳ جاري التحميل...</p>';
+            container.innerHTML = '<p style="color:#4a7a9a; text-align:center;">⏳ جاري التحميل...</p>';
 
             try {
                 const { data, error } = await supabase
@@ -721,7 +716,7 @@
                 if (error) throw error;
 
                 if (!data || data.length === 0) {
-                    container.innerHTML = '<p style="color:#666; text-align:center;">🎉 لا توجد مباريات اليوم</p>';
+                    container.innerHTML = '<p style="color:#4a7a9a; text-align:center;">🎉 لا توجد مباريات اليوم</p>';
                     return;
                 }
 
@@ -729,7 +724,6 @@
                 for (const m of data) {
                     const isPast = new Date(m.deadline) < new Date();
 
-                    // التحقق من وجود توقع سابق لهذا اللاعب
                     let hasPrediction = false;
                     if (currentUser) {
                         const { data: pred } = await supabase
@@ -746,7 +740,7 @@
                             <div style="font-size:1.2rem; font-weight:bold;">
                                 ${m.team1_flag || '🏳️'} ${m.team1} 🆚 ${m.team2} ${m.team2_flag || '🏳️'}
                             </div>
-                            <div style="color:#aaa; font-size:0.85rem; margin:4px 0;">
+                            <div style="color:#8ab4c8; font-size:0.85rem; margin:4px 0;">
                                 ⏰ ${new Date(m.deadline).toLocaleString('ar')}
                                 ${isPast ? ' ⛔ انتهى وقت التوقع' : ''}
                                 ${hasPrediction ? ' ✅ تم التوقع مسبقاً' : ''}
@@ -767,7 +761,6 @@
             }
         }
 
-        // 8.2 إرسال توقع من اللاعب
         window.sendPrediction = async function(matchId) {
             if (!currentUser) {
                 alert('⚠️ يجب تسجيل الدخول أولاً');
@@ -794,7 +787,7 @@
                 if (error) throw error;
 
                 alert('✅ تم إرسال توقعك بنجاح!');
-                loadPlayerMatches(); // تحديث القائمة
+                loadPlayerMatches();
 
             } catch (err) {
                 alert('❌ فشل الإرسال: ' + err.message);
@@ -806,7 +799,7 @@
         // ============================================================
         async function loadRanking(elementId) {
             const container = document.getElementById(elementId);
-            container.innerHTML = '<p style="color:#666; text-align:center;">⏳ جاري التحميل...</p>';
+            container.innerHTML = '<p style="color:#4a7a9a; text-align:center;">⏳ جاري التحميل...</p>';
 
             try {
                 const { data, error } = await supabase
@@ -818,7 +811,7 @@
                 if (error) throw error;
 
                 if (!data || data.length === 0) {
-                    container.innerHTML = '<p style="color:#666; text-align:center;">📭 لا يوجد لاعبون بعد</p>';
+                    container.innerHTML = '<p style="color:#4a7a9a; text-align:center;">📭 لا يوجد لاعبون بعد</p>';
                     return;
                 }
 
@@ -846,7 +839,6 @@
                     .eq('email', 'admin@predict.com')
                     .maybeSingle();
 
-                // إذا لم يوجد، نقوم بإنشائه
                 if (!data) {
                     const { error: insertError } = await supabase
                         .from('users')
@@ -874,14 +866,11 @@
         // ============================================================
         //  🚀 تشغيل التطبيق
         // ============================================================
-        // ننفذ دالة إنشاء المشرف فور تحميل الصفحة
         createAdminIfNotExists();
 
-        // نطبع رسائل التأكيد في الكونسول لمساعدتك
-        console.log('🚀 تطبيق كأس العالم 2026 جاهز!');
+        console.log('🚀 تطبيق كأس العالم 2026 جاهز! (الألوان السماوية)');
         console.log('👑 بيانات دخول المشرف: admin@predict.com / osama2006');
         console.log('📊 تأكد من وجود جداول (users, matches, predictions) في Supabase.');
     </script>
-
 </body>
 </html>
