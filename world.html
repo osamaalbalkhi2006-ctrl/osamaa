@@ -8,7 +8,7 @@
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* ===== BASE RESET & VARIABLES ===== */
+        /* ===== BASE RESET & VARIABLES (نفس الكود السابق) ===== */
         :root {
             --bg: #0A0F1A;
             --bg-grad: radial-gradient(circle at 50% 0%, #102338 0%, #0A0F1A 55%);
@@ -39,8 +39,7 @@
             --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             --pitch-line: rgba(255, 255, 255, 0.06);
         }
-
-        /* ===== THEMES ===== */
+        /* ===== THEMES (نفس الكود السابق) ===== */
         .theme-charcoal-gold {
             --bg: #0C0C0C;
             --bg-grad: radial-gradient(circle at 50% 0%, #1A1A1A 0%, #0C0C0C 60%);
@@ -1742,10 +1741,7 @@
             return '🏳️';
         }
 
-        function isClosed(date) {
-            if (!date) return false;
-            return new Date(date) <= new Date();
-        }
+        // تم إزالة دالة isClosed لأننا لا نعتمد على التاريخ
 
         function togglePassword(inputId, btn) {
             var inp = document.getElementById(inputId);
@@ -2031,12 +2027,13 @@
         }
 
         // ============================================================
-        //  MATCHES & PREDICTIONS
+        //  MATCHES & PREDICTIONS (تم إزالة كل ما يتعلق بالوقت والتاريخ)
         // ============================================================
         function loadMatches() {
             var el = document.getElementById('matchesList');
             el.innerHTML = '<div class="empty-state"><div class="spinner"></div></div>';
-            sb('matches', 'GET', null, '?order=match_date.asc')
+            // ترتيب حسب id بدلاً من التاريخ
+            sb('matches', 'GET', null, '?order=id.asc')
                 .then(function(matches) {
                     if (matches.length === 0) { el.innerHTML =
                         '<div class="empty-state"><div>📅</div>لا توجد مباريات</div>'; return; }
@@ -2072,29 +2069,23 @@
         }
 
         function buildMatchCard(m) {
-            var dateStr = m.match_date ? new Date(m.match_date).toLocaleString('ar-SA', { dateStyle: 'short',
-                timeStyle: 'short' }) : '';
             var hasResult = m.result_team1 !== null && m.result_team2 !== null;
-            var closed = isClosed(m.match_date);
             var isLocked = lockedMatches[m.id] || false;
-            var statusText = '⏳ قادمة';
+            var statusText = '⏳ مفتوحة';
             var statusClass = 'status-upcoming';
             if (hasResult) { statusText = '✅ منتهية';
-                statusClass = 'status-finished'; } else if (isLocked) { statusText = '🔒 بدأت - توقعات مغلقة';
-                statusClass = 'status-locked'; } else if (closed) { statusText = '⛔ انتهى التصويت';
-                statusClass = 'status-closed'; }
+                statusClass = 'status-finished'; } else if (isLocked) { statusText = '🔒 مغلقة';
+                statusClass = 'status-locked'; }
             var resultBadge = hasResult ? '<div class="result-badge">' + m.result_team1 + ' - ' + m.result_team2 +
                 '</div>' : '';
             var typeText = m.has_penalty ? ' ⚽ مع ركلات' : '';
-            var cardClass = 'match-card' + (isLocked ? ' closed' : '');
+            var cardClass = 'match-card' + (isLocked || hasResult ? ' closed' : '');
             var predHtml = '';
             if (currentUser.role === 'player') {
                 if (hasResult) predHtml =
                     '<div style="font-size:0.85rem;color:var(--text-muted);margin-top:4px;">انتهت المباراة</div>';
                 else if (isLocked) predHtml =
-                    '<div style="color:var(--danger);font-weight:700;margin-top:4px;padding:6px 12px;background:rgba(226,85,85,0.1);border-radius:10px;display:inline-block;">⛔ المباراة بدأت - التوقعات مغلقة</div>';
-                else if (closed) predHtml =
-                    '<div style="font-size:0.85rem;color:var(--danger);margin-top:4px;">⛔ انتهى وقت التصويت</div>';
+                    '<div style="color:var(--danger);font-weight:700;margin-top:4px;padding:6px 12px;background:rgba(226,85,85,0.1);border-radius:10px;display:inline-block;">⛔ المباراة مغلقة - لا يمكن التوقع</div>';
                 else predHtml = '<div id="pred-area-' + m.id + '" style="margin-top:4px;"></div>';
             }
             var lockBtn = '';
@@ -2110,8 +2101,7 @@
                 getFlag(m.team2) + '</div><div class="team-name">' + m.team2 + '</div></div></div><div>' + typeText +
                 '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end;margin-top:4px;">' +
                 resultBadge + '<span class="match-status ' + statusClass + '">' + statusText +
-                '</span></div></div></div>' + predHtml + lockBtn + '<div style="font-size:0.75rem;color:var(--text-muted);margin-top:8px;">📅 ' +
-                dateStr + '</div></div>';
+                '</span></div></div></div>' + predHtml + lockBtn + '</div>';
         }
 
         function unlockMatch(matchId) {
@@ -2133,7 +2123,7 @@
             if (currentUser.role !== 'player') { el.innerHTML = ''; return; }
             if (lockedMatches[matchId]) {
                 el.innerHTML =
-                    '<div style="color:var(--danger);font-weight:700;padding:8px;background:rgba(226,85,85,0.1);border-radius:10px;">⛔ المباراة بدأت - التوقعات مغلقة</div>';
+                    '<div style="color:var(--danger);font-weight:700;padding:8px;background:rgba(226,85,85,0.1);border-radius:10px;">⛔ المباراة مغلقة - لا يمكن التوقع</div>';
                 return;
             }
             checkExistingPrediction(matchId)
@@ -2152,14 +2142,11 @@
                     if (matches.length === 0) { el.innerHTML =
                         '<div style="color:var(--danger);">المباراة غير موجودة</div>'; return; }
                     var m = matches[0];
-                    if (isClosed(m.match_date)) { el.innerHTML =
-                            '<div style="color:var(--danger);font-size:0.85rem;">⛔ انتهى وقت التصويت</div>';
-                        return; }
                     if (m.result_team1 !== null && m.result_team2 !== null) { el.innerHTML =
                             '<div style="color:var(--text-muted);font-size:0.85rem;">انتهت المباراة</div>';
                         return; }
                     if (lockedMatches[matchId]) { el.innerHTML =
-                            '<div style="color:var(--danger);font-weight:700;padding:8px;background:rgba(226,85,85,0.1);border-radius:10px;">⛔ المباراة بدأت - التوقعات مغلقة</div>';
+                            '<div style="color:var(--danger);font-weight:700;padding:8px;background:rgba(226,85,85,0.1);border-radius:10px;">⛔ المباراة مغلقة - لا يمكن التوقع</div>';
                         return; }
                     var html = '<div class="prediction-area">';
                     html += '<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">';
@@ -2195,7 +2182,7 @@
         }
 
         function submitPredictionFix(matchId) {
-            if (lockedMatches[matchId]) { toast('⛔ المباراة بدأت - التوقعات مغلقة', true); return; }
+            if (lockedMatches[matchId]) { toast('⛔ المباراة مغلقة - لا يمكن التوقع', true); return; }
             var p1Input = document.getElementById('p1-' + matchId);
             var p2Input = document.getElementById('p2-' + matchId);
             if (!p1Input || !p2Input) { toast('خطأ في المدخلات', true); return; }
@@ -2219,11 +2206,9 @@
                     if (!matches) return;
                     if (matches.length === 0) { toast('المباراة غير موجودة', true); return; }
                     var m = matches[0];
-                    if (isClosed(m.match_date)) { toast('انتهى وقت التصويت', true);
-                        loadMatches(); return; }
                     if (m.result_team1 !== null && m.result_team2 !== null) { toast('انتهت المباراة بالفعل', true);
                         loadMatches(); return; }
-                    if (lockedMatches[matchId]) { toast('⛔ المباراة بدأت - التوقعات مغلقة', true);
+                    if (lockedMatches[matchId]) { toast('⛔ المباراة مغلقة - لا يمكن التوقع', true);
                         loadMatches(); return; }
                     var data = { user_id: currentUser.id, match_id: matchId, pred_team1: p1, pred_team2: p2 };
                     if (m.has_penalty && penaltyWinner) { data.penalty_winner = penaltyWinner; }
@@ -2256,7 +2241,7 @@
         function loadCurrentPredictions() {
             var el = document.getElementById('currentPredictions');
             el.innerHTML = '<div class="empty-state"><div class="spinner"></div>جاري التحميل...</div>';
-            sb('matches', 'GET', null, '?result_team1=is.null&order=match_date.asc')
+            sb('matches', 'GET', null, '?result_team1=is.null&order=id.asc')
                 .then(function(matches) {
                     if (matches.length === 0) { el.innerHTML =
                         '<div class="empty-state"><div>📊</div>لا توجد مباريات حالية</div>'; return; }
@@ -2291,19 +2276,13 @@
                     for (var i = 0; i < matches.length; i++) {
                         var m = matches[i];
                         var matchPreds = predictions.filter(function(p) { return p.match_id === m.id; });
-                        var isStarted = isClosed(m.match_date);
                         var isLocked = lockedMatches[m.id] || false;
                         html += '<div class="match-card' + (isLocked ? ' closed' : '') +
                             '" style="margin-bottom:12px;">';
                         html += '<div style="font-weight:700;color:var(--text);font-size:1.05rem;margin-bottom:6px;">' +
                             getFlag(m.team1) + ' ' + m.team1 + ' 🆚 ' + m.team2 + ' ' + getFlag(m.team2) + '</div>';
-                        html += '<div style="color:var(--text-muted);font-size:0.8rem;margin-bottom:8px;">📅 ' + (m
-                            .match_date ? new Date(m.match_date).toLocaleString('ar-SA', { dateStyle: 'short',
-                                timeStyle: 'short' }) : '') + '</div>';
                         if (isLocked) html +=
-                            '<div class="lock-overlay">🔒 المباراة بدأت - التوقعات مغلقة</div>';
-                        else if (!isStarted) html +=
-                            '<div style="color:var(--accent);font-size:0.9rem;font-weight:700;">🔒 التوقعات مخفية حتى بداية المباراة</div>';
+                            '<div class="lock-overlay">🔒 المباراة مغلقة - التوقعات غير متاحة</div>';
                         else {
                             if (matchPreds.length === 0) html +=
                                 '<div style="color:var(--text-muted);font-size:0.85rem;">لا توجد توقعات بعد</div>';
@@ -2352,12 +2331,12 @@
         }
 
         // ============================================================
-        //  HISTORY
+        //  HISTORY (تم إزالة التواريخ)
         // ============================================================
         function loadHistory() {
             var el = document.getElementById('historyList');
             el.innerHTML = '<div class="empty-state"><div class="spinner"></div></div>';
-            sb('matches', 'GET', null, '?result_team1=not.is.null&order=match_date.desc')
+            sb('matches', 'GET', null, '?result_team1=not.is.null&order=id.desc')
                 .then(function(matches) {
                     if (matches.length === 0) { el.innerHTML =
                         '<div class="empty-state"><div>📜</div>لا توجد مباريات منتهية</div>'; return; }
@@ -2372,7 +2351,7 @@
                             '<div style="color:var(--accent);font-size:0.85rem;">⚽ مع ركلات ترجيح</div>'; }
                         html += '<div class="correct">✅ اصحاب التوقع الصحيح: ';
                         sb('predictions', 'GET', null, '?match_id=eq.' + m.id + '&points=eq.3').then(function(
-                        preds) {
+                            preds) {
                             if (preds.length === 0) { html +=
                                 '<span style="color:var(--text-muted);">لا يوجد</span>'; } else {
                                 for (var j = 0; j < preds.length; j++) {
@@ -2385,9 +2364,7 @@
                             }
                             html += '</div>';
                         });
-                        html += '<div style="margin-top:8px;font-size:0.8rem;color:var(--text-muted);">📅 ' +
-                            new Date(m.match_date).toLocaleString('ar-SA', { dateStyle: 'short',
-                                timeStyle: 'short' }) + '</div></div>';
+                        html += '</div>';
                     }
                     el.innerHTML = html;
                 })
@@ -2506,11 +2483,9 @@
                 team2))
                 .then(function(existing) {
                     if (existing.length > 0) { toast('المباراة موجودة مسبقاً', true); return; }
-                    var today = new Date();
-                    var dateStr = today.toISOString().split('T')[0];
-                    var matchDateTime = dateStr + 'T12:00:00';
+                    // لا نرسل match_date
                     var data = { team1: team1, team2: team2, flag1: getFlag(team1), flag2: getFlag(team2),
-                        match_date: matchDateTime, has_penalty: type === 'penalty' };
+                        has_penalty: type === 'penalty' };
                     return sb('matches', 'POST', data);
                 })
                 .then(function() {
@@ -2528,7 +2503,7 @@
         function loadAdminMatches() {
             var el = document.getElementById('adminMatches');
             el.innerHTML = '<div class="empty-state"><div class="spinner"></div></div>';
-            sb('matches', 'GET', null, '?order=match_date.asc')
+            sb('matches', 'GET', null, '?order=id.asc')
                 .then(function(matches) {
                     if (matches.length === 0) { el.innerHTML =
                         '<div class="empty-state"><div>📋</div>لا توجد مباريات</div>'; return; }
@@ -2536,19 +2511,15 @@
                     for (var i = 0; i < matches.length; i++) {
                         var m = matches[i];
                         var hasResult = m.result_team1 !== null && m.result_team2 !== null;
-                        var dateStr = m.match_date ? new Date(m.match_date).toLocaleString('ar-SA', { dateStyle: 'short',
-                            timeStyle: 'short' }) : '-';
                         var typeStr = m.has_penalty ? '⚽ مع ركلات' : '⚽ عادي';
                         var isLocked = lockedMatches[m.id] || false;
-                        html += '<div class="match-card' + (isLocked ? ' closed' : '') +
+                        html += '<div class="match-card' + (isLocked || hasResult ? ' closed' : '') +
                         '"><div class="top"><div class="match-teams"><div class="team"><div class="team-flag">' +
                             (m.flag1 || '🏳️') + '</div><div class="team-name">' + m.team1 +
                             '</div></div><div class="vs">VS</div><div class="team"><div class="team-flag">' +
                             (m.flag2 || '🏳️') + '</div><div class="team-name">' + m.team2 +
                             '</div></div></div><div><div style="font-size:0.7rem;color:var(--text-muted);">' +
-                            typeStr +
-                            '</div><div style="font-size:0.78rem;color:var(--text-muted);">' + dateStr +
-                            '</div></div></div>' +
+                            typeStr + '</div></div></div>' +
                             (hasResult ? '<div class="result-badge" style="margin-top:8px;display:inline-block;">' +
                                 m.result_team1 + ' - ' + m.result_team2 + ' ✅</div>' :
                                 '<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center;"><input id="r1-' +
@@ -2683,7 +2654,7 @@
         function loadAdminHistory() {
             var el = document.getElementById('adminHistoryList');
             el.innerHTML = '<div class="empty-state"><div class="spinner"></div></div>';
-            sb('matches', 'GET', null, '?result_team1=not.is.null&order=match_date.desc')
+            sb('matches', 'GET', null, '?result_team1=not.is.null&order=id.desc')
                 .then(function(matches) {
                     if (matches.length === 0) { el.innerHTML =
                         '<div class="empty-state"><div>📜</div>لا توجد مباريات منتهية</div>'; return; }
@@ -2695,9 +2666,7 @@
                             '</span><span style="color:var(--primary-light);font-weight:700;">' + m
                             .result_team1 + ' - ' + m.result_team2 +
                             '</span><button onclick="deleteHistoryMatch(\'' + m.id +
-                            '\')" class="btn btn-danger btn-sm">🗑️ حذف</button></div><div style="font-size:0.8rem;color:var(--text-muted);margin-top:8px;">📅 ' +
-                            new Date(m.match_date).toLocaleString('ar-SA', { dateStyle: 'short',
-                                timeStyle: 'short' }) + '</div></div>';
+                            '\')" class="btn btn-danger btn-sm">🗑️ حذف</button></div></div>';
                     }
                     el.innerHTML = html;
                 })
@@ -2889,8 +2858,9 @@
         }
         console.log('⚽ كأس العالم 2026 - النسخة المحسّنة');
         console.log('👑 المشرف: admin / admin123');
-        console.log('📌 تم استبدال أيقونة الترس بقائمة هامبورجر (☰)');
-        console.log('📌 تم إضافة تبويبات داخلية في صفحة الإعدادات');
+        console.log('📌 تم إزالة جميع عناصر الوقت والتاريخ');
+        console.log('📌 أصبح القفل يعتمد فقط على الزر اليدوي');
+        console.log('📌 استبدلت أيقونة الترس بقائمة هامبورجر (☰)');
     </script>
 </body>
 </html>
