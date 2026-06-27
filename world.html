@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>❄️ توقعات كأس العالم 2026</title>
+<title>⚽ توقعات كأس العالم 2026</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
 </script>
 <style>
@@ -26,7 +26,6 @@ body {
 /* ============================================
    THEMES
    ============================================ */
-/* Theme 1: Black & Gold */
 .theme-black-gold {
   --bg-primary: #0a0a0a;
   --bg-secondary: #1a1a1a;
@@ -41,7 +40,6 @@ body {
   --input-bg: #1a1a1a;
 }
 
-/* Theme 2: White & Red */
 .theme-white-red {
   --bg-primary: #f5f5f5;
   --bg-secondary: #ffffff;
@@ -56,7 +54,6 @@ body {
   --input-bg: #ffffff;
 }
 
-/* Theme 3: Purple & Pink */
 .theme-purple-pink {
   --bg-primary: #1a0a2e;
   --bg-secondary: #2a1a3e;
@@ -121,7 +118,7 @@ body {
   border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 8px 0;
-  min-width: 220px;
+  min-width: 250px;
   box-shadow: 0 8px 32px var(--shadow-color);
   opacity: 0;
   visibility: hidden;
@@ -161,7 +158,13 @@ body {
   font-size: 1.2rem;
 }
 
-/* Theme toggle in menu */
+.menu-dropdown .menu-divider {
+  border: none;
+  border-top: 1px solid var(--border-color);
+  margin: 6px 16px;
+  opacity: 0.3;
+}
+
 .theme-option {
   display: flex;
   align-items: center;
@@ -170,22 +173,11 @@ body {
   cursor: pointer;
   transition: background 0.2s ease;
   border-radius: 8px;
+  margin: 2px 8px;
 }
 
 .theme-option:hover {
   background: rgba(255, 255, 255, 0.05);
-}
-
-.theme-option .color-preview {
-  display: flex;
-  gap: 4px;
-}
-
-.theme-option .color-preview span {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
 .theme-option.active-theme {
@@ -231,6 +223,24 @@ body {
   color: var(--text-primary);
 }
 
+.header-user .role-badge {
+  font-size: 0.7rem;
+  padding: 2px 10px;
+  border-radius: 30px;
+  background: var(--border-color);
+  color: var(--bg-primary);
+  font-weight: 700;
+}
+
+.role-badge-subadmin {
+  background: #651fff;
+  color: white;
+  padding: 2px 10px;
+  border-radius: 30px;
+  font-size: 0.65rem;
+  font-weight: 600;
+}
+
 .btn-logout {
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid var(--border-color);
@@ -245,6 +255,70 @@ body {
 .btn-logout:hover {
   background: var(--border-color);
   color: var(--bg-primary);
+}
+
+/* ============================================
+   MODAL
+   ============================================ */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+}
+
+.modal-overlay.active {
+  display: flex;
+}
+
+.modal-content {
+  background: var(--bg-card);
+  border: 2px solid var(--border-color);
+  border-radius: 20px;
+  padding: 32px;
+  max-width: 480px;
+  width: 90%;
+  box-shadow: 0 16px 64px var(--shadow-color);
+  animation: slideUp 0.3s ease;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-content h2 {
+  margin-bottom: 16px;
+  color: var(--text-primary);
+}
+
+.modal-content .close-modal {
+  float: left;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.modal-content .close-modal:hover {
+  color: var(--text-primary);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 /* ============================================
@@ -310,9 +384,6 @@ body {
   color: var(--bg-primary);
 }
 
-/* ============================================
-   SUB TABS
-   ============================================ */
 .sub-tabs {
   display: flex;
   gap: 6px;
@@ -522,15 +593,9 @@ body {
   border-color: #7c4dff;
 }
 
-.btn-lock.active {
-  background: #ff1744;
-  border-color: #ff1744;
-}
-
-.btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none !important;
+.btn-sm {
+  padding: 4px 12px;
+  font-size: 0.8rem;
 }
 
 /* ============================================
@@ -554,12 +619,6 @@ input:focus, select:focus {
   box-shadow: 0 0 0 4px var(--shadow-color);
 }
 
-input::placeholder {
-  color: var(--text-secondary);
-  opacity: 0.6;
-}
-
-/* Password toggle */
 .password-wrapper {
   position: relative;
   width: 100%;
@@ -688,10 +747,6 @@ input::placeholder {
   text-align: center;
   font-size: 1rem;
   font-weight: 700;
-}
-
-.prediction-area .score-input:focus {
-  border-color: var(--text-secondary);
 }
 
 .my-prediction {
@@ -929,11 +984,13 @@ input::placeholder {
     left: auto;
     right: 0;
   }
+  
+  .modal-content {
+    padding: 24px;
+    margin: 16px;
+  }
 }
 
-/* ============================================
-   ANIMATIONS
-   ============================================ */
 @keyframes fadeSlide {
   from {
     opacity: 0;
@@ -945,9 +1002,6 @@ input::placeholder {
   }
 }
 
-/* ============================================
-   TEAM TAGS
-   ============================================ */
 .team-tag {
   background: var(--border-color);
   color: var(--bg-primary);
@@ -970,9 +1024,6 @@ input::placeholder {
   font-size: 0.7rem;
 }
 
-/* ============================================
-   PENALTY BUTTONS
-   ============================================ */
 .penalty-btns {
   display: flex;
   gap: 8px;
@@ -1002,9 +1053,6 @@ input::placeholder {
   color: var(--bg-primary);
 }
 
-/* ============================================
-   TABLE
-   ============================================ */
 .table-scroll {
   overflow-x: auto;
 }
@@ -1028,9 +1076,6 @@ td {
   border-bottom: 1px solid var(--border-color);
 }
 
-/* ============================================
-   LOCK OVERLAY
-   ============================================ */
 .lock-overlay {
   display: inline-block;
   background: #ff6d00;
@@ -1045,9 +1090,38 @@ td {
 .hidden {
   display: none !important;
 }
+
+.settings-section {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.settings-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.settings-section h3 {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin-bottom: 12px;
+}
 </style>
 </head>
 <body>
+
+<!-- ============================================
+     MODAL FOR SETTINGS
+     ============================================ -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal-content">
+    <button class="close-modal" onclick="closeSettings()">✕</button>
+    <h2>⚙️ الإعدادات</h2>
+    <div id="settingsContent"></div>
+  </div>
+</div>
 
 <!-- ============================================
      AUTH SCREEN
@@ -1114,10 +1188,10 @@ td {
     <div class="header-left">
       <div class="header-user">
         <span id="headerUser"></span>
+        <span class="role-badge" id="headerRole"></span>
         <button class="btn-logout" onclick="doLogout()">🚪 خروج</button>
       </div>
       
-      <!-- Three Dots Menu -->
       <div class="menu-container">
         <button class="menu-trigger" onclick="toggleMenu()">
           <span class="dot"></span>
@@ -1125,7 +1199,6 @@ td {
           <span class="dot"></span>
         </button>
         <div class="menu-dropdown" id="menuDropdown">
-          <!-- Theme options -->
           <div class="theme-option active-theme" onclick="changeTheme('black-gold')">
             <span>⚫</span> <span>🟡</span> أسود & ذهبي
           </div>
@@ -1135,7 +1208,9 @@ td {
           <div class="theme-option" onclick="changeTheme('purple-pink')">
             <span>🟣</span> <span>🩷</span> بنفسجي & زهري
           </div>
-          <hr style="border-color:var(--border-color);margin:8px 16px;">
+          
+          <hr class="menu-divider">
+          
           <button class="menu-item" onclick="showSection('matches'); toggleMenu();">
             <span class="icon">⚽</span> المباريات
           </button>
@@ -1145,8 +1220,15 @@ td {
           <button class="menu-item" onclick="showSection('history'); toggleMenu();">
             <span class="icon">📜</span> التاريخ
           </button>
+          
+          <hr class="menu-divider">
+          
+          <button class="menu-item" onclick="openSettings(); toggleMenu();" id="settingsMenuBtn" style="display:none;">
+            <span class="icon">⚙️</span> الإعدادات
+          </button>
+          
           <button class="menu-item" onclick="showSection('admin'); toggleMenu();" id="adminMenuBtn" style="display:none;">
-            <span class="icon">⚙️</span> لوحة المشرف
+            <span class="icon">👑</span> لوحة المشرف
           </button>
         </div>
       </div>
@@ -1156,7 +1238,6 @@ td {
   <div class="container">
     <div class="tabs" id="mainTabs"></div>
     
-    <!-- ========== MATCHES ========== -->
     <div class="section" id="section-matches" style="display:block;">
       <div class="glass-card">
         <h2 style="margin-bottom:16px;">⚽ المباريات والتوقعات</h2>
@@ -1164,7 +1245,6 @@ td {
       </div>
     </div>
     
-    <!-- ========== LEADERBOARD ========== -->
     <div class="section" id="section-leaderboard" style="display:none;">
       <div class="glass-card">
         <h2 style="margin-bottom:16px;">🏅 ترتيب اللاعبين</h2>
@@ -1172,7 +1252,6 @@ td {
       </div>
     </div>
     
-    <!-- ========== HISTORY ========== -->
     <div class="section" id="section-history" style="display:none;">
       <div class="glass-card">
         <h2 style="margin-bottom:16px;">📜 صفحة التاريخ</h2>
@@ -1180,11 +1259,9 @@ td {
       </div>
     </div>
     
-    <!-- ========== ADMIN ========== -->
     <div class="section" id="section-admin" style="display:none;">
       <div class="sub-tabs" id="subTabs"></div>
       
-      <!-- Current Predictions -->
       <div class="sub-section active" id="sub-predictions">
         <div class="glass-card">
           <h2 style="margin-bottom:16px;">📊 التوقعات الحالية</h2>
@@ -1192,7 +1269,6 @@ td {
         </div>
       </div>
       
-      <!-- Manage Matches -->
       <div class="sub-section" id="sub-matches">
         <div class="glass-card">
           <h2 style="margin-bottom:16px;">➕ اضافة مباراة جديدة</h2>
@@ -1232,7 +1308,6 @@ td {
         </div>
       </div>
       
-      <!-- Players -->
       <div class="sub-section" id="sub-players">
         <div class="glass-card">
           <h2 style="margin-bottom:16px;">👥 ادارة اللاعبين</h2>
@@ -1253,7 +1328,6 @@ td {
         </div>
       </div>
       
-      <!-- Teams -->
       <div class="sub-section" id="sub-teams">
         <div class="glass-card">
           <h2 style="margin-bottom:16px;">🏳️ ادارة المنتخبات</h2>
@@ -1261,7 +1335,6 @@ td {
         </div>
       </div>
       
-      <!-- Admin History -->
       <div class="sub-section" id="sub-history">
         <div class="glass-card">
           <h2 style="margin-bottom:16px;">📜 ادارة التاريخ</h2>
@@ -1272,9 +1345,6 @@ td {
   </div>
 </div>
 
-<!-- ============================================
-     TOAST
-     ============================================ -->
 <div id="toast" class="toast"></div>
 
 <script>
@@ -1316,7 +1386,6 @@ function changeTheme(theme) {
   else if (theme === 'white-red') body.classList.add('theme-white-red');
   else if (theme === 'purple-pink') body.classList.add('theme-purple-pink');
   
-  // Update active theme in menu
   document.querySelectorAll('.theme-option').forEach(function(el) {
     el.classList.remove('active-theme');
   });
@@ -1327,27 +1396,22 @@ function changeTheme(theme) {
   
   localStorage.setItem('wc_theme', theme);
   toggleMenu();
-  toast('🎨 تم تغيير المظهر إلى: ' + (theme === 'black-gold' ? 'أسود & ذهبي' : theme === 'white-red' ? 'أبيض & أحمر' : 'بنفسجي & زهري'));
+  toast('🎨 تم تغيير المظهر');
 }
 
 function loadTheme() {
   var saved = localStorage.getItem('wc_theme');
-  if (saved) {
-    changeTheme(saved);
-  } else {
-    changeTheme('black-gold');
-  }
+  if (saved) changeTheme(saved);
+  else changeTheme('black-gold');
 }
 
 // =====================================================
 //  THREE DOTS MENU
 // =====================================================
 function toggleMenu() {
-  var dropdown = document.getElementById('menuDropdown');
-  dropdown.classList.toggle('active');
+  document.getElementById('menuDropdown').classList.toggle('active');
 }
 
-// Close menu when clicking outside
 document.addEventListener('click', function(e) {
   var container = document.querySelector('.menu-container');
   if (container && !container.contains(e.target)) {
@@ -1491,26 +1555,33 @@ function doRegister() {
 function enterApp() {
   document.getElementById('authScreen').style.display = 'none';
   document.getElementById('appScreen').style.display = 'block';
-  document.getElementById('headerUser').textContent = (currentUser.role === 'admin' ? '👑 ' : '⚽ ') + currentUser.name;
   
-  // Show admin menu item if admin
-  if (currentUser.role === 'admin') {
-    document.getElementById('adminMenuBtn').style.display = 'flex';
-  }
+  var roleDisplay = currentUser.role === 'admin' ? '👑 مشرف' : 
+                    currentUser.role === 'subadmin' ? '🛡️ نائب مشرف' : '⚽ لاعب';
+  document.getElementById('headerUser').textContent = currentUser.name;
+  document.getElementById('headerRole').textContent = roleDisplay;
+  
+  // Show menu items based on role
+  var isAdmin = currentUser.role === 'admin';
+  var isSubAdmin = currentUser.role === 'subadmin';
+  var canAccessAdmin = isAdmin || isSubAdmin;
+  
+  document.getElementById('settingsMenuBtn').style.display = canAccessAdmin ? 'flex' : 'none';
+  document.getElementById('adminMenuBtn').style.display = isAdmin ? 'flex' : 'none';
   
   populateTeams();
   buildTabs();
   showSection('matches');
   loadMatches();
   loadHistory();
-  if (currentUser.role === 'admin') {
+  if (canAccessAdmin) {
     loadCurrentPredictions();
   }
   if (refreshInterval) clearInterval(refreshInterval);
   refreshInterval = setInterval(function() {
     loadMatches();
     loadLeaderboard();
-    if (currentUser.role === 'admin') {
+    if (canAccessAdmin) {
       loadCurrentPredictions();
     }
   }, 30000);
@@ -1536,6 +1607,190 @@ function checkSession() {
 }
 
 // =====================================================
+//  SETTINGS FUNCTIONS
+// =====================================================
+function openSettings() {
+  var modal = document.getElementById('settingsModal');
+  var content = document.getElementById('settingsContent');
+  var isAdmin = currentUser.role === 'admin';
+  var isSubAdmin = currentUser.role === 'subadmin';
+  
+  var html = '';
+  
+  // Change username
+  html += '<div class="settings-section">';
+  html += '<h3>👤 تغيير اسم المستخدم</h3>';
+  html += '<div class="form-group">';
+  html += '<input id="settingsNewUsername" type="text" placeholder="اسم المستخدم الجديد" value="' + currentUser.username + '">';
+  html += '</div>';
+  html += '<button class="btn btn-primary" onclick="changeUsername()">تحديث اسم المستخدم</button>';
+  html += '</div>';
+  
+  // Change password
+  html += '<div class="settings-section">';
+  html += '<h3>🔑 تغيير كلمة المرور</h3>';
+  html += '<div class="form-group">';
+  html += '<div class="password-wrapper">';
+  html += '<input id="settingsNewPassword" type="password" placeholder="كلمة المرور الجديدة">';
+  html += '<button class="password-toggle" onclick="togglePassword(\'settingsNewPassword\', this)" type="button">👁️</button>';
+  html += '</div>';
+  html += '</div>';
+  html += '<button class="btn btn-primary" onclick="changePassword()">تحديث كلمة المرور</button>';
+  html += '</div>';
+  
+  // Add subadmin - only for main admin
+  if (isAdmin) {
+    html += '<div class="settings-section">';
+    html += '<h3>🛡️ إضافة نائب مشرف</h3>';
+    html += '<p style="color:var(--text-secondary);font-size:0.85rem;margin-bottom:12px;">النائب يملك جميع صلاحيات المشرف عدا حذف وإضافة المشرفين</p>';
+    html += '<div class="flex">';
+    html += '<div class="form-group"><input id="subAdminName" type="text" placeholder="الاسم الكامل"></div>';
+    html += '<div class="form-group"><input id="subAdminUser" type="text" placeholder="اسم المستخدم"></div>';
+    html += '</div>';
+    html += '<div class="form-group">';
+    html += '<div class="password-wrapper">';
+    html += '<input id="subAdminPass" type="password" placeholder="كلمة المرور">';
+    html += '<button class="password-toggle" onclick="togglePassword(\'subAdminPass\', this)" type="button">👁️</button>';
+    html += '</div>';
+    html += '</div>';
+    html += '<button class="btn btn-success" onclick="addSubAdmin()">➕ إضافة نائب مشرف</button>';
+    html += '</div>';
+    
+    // List subadmins
+    html += '<div class="settings-section">';
+    html += '<h3>📋 المشرفين والنواب</h3>';
+    html += '<div id="subAdminList">جاري التحميل...</div>';
+    html += '</div>';
+    
+    // Load subadmins
+    setTimeout(loadSubAdmins, 100);
+  }
+  
+  content.innerHTML = html;
+  modal.classList.add('active');
+}
+
+function closeSettings() {
+  document.getElementById('settingsModal').classList.remove('active');
+}
+
+function changeUsername() {
+  var newUsername = document.getElementById('settingsNewUsername').value.trim();
+  if (!newUsername) { toast('ادخل اسم مستخدم جديد', true); return; }
+  if (newUsername === currentUser.username) { toast('نفس اسم المستخدم الحالي', true); return; }
+  
+  sb('users', 'GET', null, '?username=eq.' + encodeURIComponent(newUsername))
+    .then(function(existing) {
+      if (existing.length > 0 && existing[0].id !== currentUser.id) {
+        toast('اسم المستخدم موجود بالفعل', true);
+        return;
+      }
+      return fetch(SUPABASE_URL + '/rest/v1/users?id=eq.' + currentUser.id, {
+        method: 'PATCH',
+        headers: {'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json'},
+        body: JSON.stringify({username: newUsername})
+      });
+    })
+    .then(function() {
+      currentUser.username = newUsername;
+      localStorage.setItem('wc_user', JSON.stringify(currentUser));
+      toast('✅ تم تحديث اسم المستخدم');
+      closeSettings();
+    })
+    .catch(function(e) { toast('خطأ: ' + e.message, true); });
+}
+
+function changePassword() {
+  var newPassword = document.getElementById('settingsNewPassword').value.trim();
+  if (!newPassword) { toast('ادخل كلمة مرور جديدة', true); return; }
+  if (newPassword.length < 4) { toast('كلمة المرور قصيرة جدا (4 أحرف على الأقل)', true); return; }
+  
+  fetch(SUPABASE_URL + '/rest/v1/users?id=eq.' + currentUser.id, {
+    method: 'PATCH',
+    headers: {'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json'},
+    body: JSON.stringify({password: newPassword})
+  })
+  .then(function() {
+    currentUser.password = newPassword;
+    localStorage.setItem('wc_user', JSON.stringify(currentUser));
+    toast('✅ تم تحديث كلمة المرور');
+    closeSettings();
+  })
+  .catch(function(e) { toast('خطأ: ' + e.message, true); });
+}
+
+function addSubAdmin() {
+  var name = document.getElementById('subAdminName').value.trim();
+  var username = document.getElementById('subAdminUser').value.trim();
+  var password = document.getElementById('subAdminPass').value.trim();
+  
+  if (!name || !username || !password) { toast('اكمل جميع الحقول', true); return; }
+  if (password.length < 4) { toast('كلمة المرور قصيرة جدا', true); return; }
+  
+  sb('users', 'GET', null, '?username=eq.' + encodeURIComponent(username))
+    .then(function(existing) {
+      if (existing.length > 0) { toast('اسم المستخدم موجود بالفعل', true); return; }
+      return sb('users', 'POST', { name: name, username: username, password: password, role: 'subadmin', points: 0 });
+    })
+    .then(function() {
+      toast('✅ تم إضافة نائب المشرف');
+      document.getElementById('subAdminName').value = '';
+      document.getElementById('subAdminUser').value = '';
+      document.getElementById('subAdminPass').value = '';
+      loadSubAdmins();
+      loadUsers();
+    })
+    .catch(function(e) { toast('خطأ: ' + e.message, true); });
+}
+
+function loadSubAdmins() {
+  var el = document.getElementById('subAdminList');
+  if (!el) return;
+  el.innerHTML = '<span style="color:var(--text-secondary);">جاري التحميل...</span>';
+  
+  sb('users', 'GET', null, '?role=in.(admin,subadmin)')
+    .then(function(users) {
+      if (users.length === 0) {
+        el.innerHTML = '<span style="color:var(--text-secondary);">لا يوجد مشرفين</span>';
+        return;
+      }
+      var html = '';
+      for (var i = 0; i < users.length; i++) {
+        var u = users[i];
+        var isMainAdmin = u.role === 'admin';
+        var isCurrent = u.id === currentUser.id;
+        html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-color);">';
+        html += '<div><strong>' + u.name + '</strong> <span style="font-size:0.7rem;color:var(--text-secondary);">@' + u.username + '</span> ';
+        html += '<span style="' + (isMainAdmin ? 'background:var(--border-color);color:var(--bg-primary);' : 'background:#651fff;color:white;') + 'padding:2px 10px;border-radius:30px;font-size:0.6rem;font-weight:600;">' + (isMainAdmin ? '👑 مشرف' : '🛡️ نائب') + '</span>';
+        html += '</div>';
+        // Only main admin can delete other admins/subadmins
+        if (currentUser.role === 'admin' && !isCurrent && !isMainAdmin) {
+          html += '<button class="btn btn-danger btn-sm" onclick="deleteSubAdmin(' + u.id + ')">🗑️</button>';
+        } else if (currentUser.role === 'admin' && !isCurrent && isMainAdmin) {
+          html += '<span style="color:var(--text-secondary);font-size:0.7rem;">لا يمكن حذف المشرف الرئيسي</span>';
+        }
+        html += '</div>';
+      }
+      el.innerHTML = html;
+    })
+    .catch(function(e) { el.innerHTML = '<span style="color:#ff1744;">خطأ في التحميل</span>'; });
+}
+
+function deleteSubAdmin(userId) {
+  if (!confirm('هل أنت متأكد من حذف هذا النائب؟')) return;
+  fetch(SUPABASE_URL + '/rest/v1/users?id=eq.' + userId, {
+    method: 'DELETE',
+    headers: {'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY}
+  })
+  .then(function() {
+    toast('✅ تم حذف النائب');
+    loadSubAdmins();
+    loadUsers();
+  })
+  .catch(function(e) { toast('خطأ: ' + e.message, true); });
+}
+
+// =====================================================
 //  NAVIGATION
 // =====================================================
 function buildTabs() {
@@ -1544,14 +1799,17 @@ function buildTabs() {
     {id:'leaderboard', label:'🏅 الترتيب'},
     {id:'history', label:'📜 التاريخ'}
   ];
-  if (currentUser.role === 'admin') tabs.push({id:'admin', label:'⚙️ المشرف'});
+  var isAdmin = currentUser.role === 'admin';
+  var isSubAdmin = currentUser.role === 'subadmin';
+  if (isAdmin || isSubAdmin) tabs.push({id:'admin', label:'⚙️ المشرف'});
+  
   var html = '';
   for (var i = 0; i < tabs.length; i++) {
     html += '<button class="tab" onclick="showSection(\'' + tabs[i].id + '\')">' + tabs[i].label + '</button>';
   }
   document.getElementById('mainTabs').innerHTML = html;
   
-  if (currentUser.role === 'admin') {
+  if (isAdmin || isSubAdmin) {
     var subTabs = [
       {id:'sub-predictions', label:'📊 التوقعات الحالية'},
       {id:'sub-matches', label:'⚙️ المباريات'},
@@ -1776,7 +2034,6 @@ function renderPredictionArea(matchId) {
     return;
   }
   
-  // Check if match is locked
   if (lockedMatches[matchId]) {
     el.innerHTML = '<div style="color:#ff1744;font-weight:700;padding:8px;background:rgba(255,23,68,0.1);border-radius:10px;border:1px solid #ff1744;">⛔ المباراة بدأت - التوقعات مغلقة</div>';
     return;
@@ -1815,7 +2072,6 @@ function renderPredictionArea(matchId) {
         return;
       }
       
-      // Check again if locked
       if (lockedMatches[matchId]) {
         el.innerHTML = '<div style="color:#ff1744;font-weight:700;padding:8px;background:rgba(255,23,68,0.1);border-radius:10px;border:1px solid #ff1744;">⛔ المباراة بدأت - التوقعات مغلقة</div>';
         return;
@@ -1856,7 +2112,6 @@ function selectPenalty(matchId, team) {
 }
 
 function submitPredictionFix(matchId) {
-  // Check if locked
   if (lockedMatches[matchId]) {
     toast('⛔ المباراة بدأت - التوقعات مغلقة', true);
     return;
@@ -1944,7 +2199,7 @@ function submitPredictionFix(matchId) {
       if (arguments.length === 0) return;
       toast('✅ تم حفظ توقعك');
       renderPredictionArea(matchId);
-      if (currentUser.role === 'admin') {
+      if (currentUser.role === 'admin' || currentUser.role === 'subadmin') {
         loadCurrentPredictions();
       }
     })
@@ -2038,9 +2293,11 @@ function buildMatchCard(m) {
   }
   
   var lockBtn = '';
-  if (currentUser.role === 'admin' && !hasResult && !isLocked) {
+  var isAdmin = currentUser.role === 'admin';
+  var isSubAdmin = currentUser.role === 'subadmin';
+  if ((isAdmin || isSubAdmin) && !hasResult && !isLocked) {
     lockBtn = '<button class="btn btn-lock" onclick="toggleLockMatch(' + m.id + ')" style="padding:4px 12px;font-size:0.8rem;margin-top:4px;">🔒 قفل التوقعات</button>';
-  } else if (currentUser.role === 'admin' && isLocked) {
+  } else if ((isAdmin || isSubAdmin) && isLocked) {
     lockBtn = '<span class="lock-overlay" style="display:inline-block;margin-top:4px;">🔒 مقفلة</span>';
   }
 
@@ -2114,7 +2371,16 @@ function loadUsers() {
       for (var i = 0; i < users.length; i++) {
         var u = users[i];
         var isAdmin = u.role === 'admin';
-        html += '<tr><td>' + (i+1) + '</td><td><strong>' + u.name + '</strong></td><td><span style="color:var(--text-secondary);">@' + u.username + '</span></td><td><span style="' + (isAdmin ? 'background:var(--border-color);color:var(--bg-primary);padding:2px 12px;border-radius:30px;font-size:0.7rem;font-weight:600;' : 'background:var(--card-bg);color:var(--text-secondary);padding:2px 12px;border-radius:30px;font-size:0.7rem;font-weight:600;border:1px solid var(--border-color);') + '">' + (isAdmin ? '👑 مشرف' : '⚽ لاعب') + '</span></td><td><strong style="color:var(--text-primary);">' + (u.points || 0) + '</strong></td><td>' + (!isAdmin ? '<div style="display:flex;gap:4px;flex-wrap:wrap;"><input type="number" id="pts-' + u.id + '" value="' + (u.points || 0) + '" min="0" step="1" style="width:50px;padding:4px;border:2px solid var(--border-color);border-radius:6px;background:var(--input-bg);color:var(--text-primary);text-align:center;"><button onclick="updatePoints(' + u.id + ',\'add\')" class="btn btn-success" style="padding:2px 8px;font-size:0.7rem;">+3</button><button onclick="updatePoints(' + u.id + ',\'sub\')" class="btn btn-danger" style="padding:2px 8px;font-size:0.7rem;">-3</button><button onclick="updatePoints(' + u.id + ',\'set\')" class="btn btn-warning" style="padding:2px 8px;font-size:0.7rem;">تعيين</button><button onclick="deleteUser(' + u.id + ')" class="btn btn-danger" style="padding:2px 8px;font-size:0.7rem;">🗑️</button></div>' : '<span style="color:var(--text-secondary);font-size:0.75rem;">لا يمكن التعديل</span>') + '</td></tr>';
+        var isSubAdmin = u.role === 'subadmin';
+        var roleLabel = isAdmin ? '👑 مشرف' : isSubAdmin ? '🛡️ نائب' : '⚽ لاعب';
+        var roleStyle = isAdmin ? 'background:var(--border-color);color:var(--bg-primary);' : 
+                        isSubAdmin ? 'background:#651fff;color:white;' : 
+                        'background:var(--card-bg);color:var(--text-secondary);border:1px solid var(--border-color);';
+        var canDelete = currentUser.role === 'admin' && !isAdmin && u.id !== currentUser.id;
+        html += '<tr><td>' + (i+1) + '</td><td><strong>' + u.name + '</strong></td><td><span style="color:var(--text-secondary);">@' + u.username + '</span></td><td><span style="' + roleStyle + 'padding:2px 12px;border-radius:30px;font-size:0.7rem;font-weight:600;">' + roleLabel + '</span></td><td><strong style="color:var(--text-primary);">' + (u.points || 0) + '</strong></td><td>' + 
+        (u.role === 'player' ? '<div style="display:flex;gap:4px;flex-wrap:wrap;"><input type="number" id="pts-' + u.id + '" value="' + (u.points || 0) + '" min="0" step="1" style="width:50px;padding:4px;border:2px solid var(--border-color);border-radius:6px;background:var(--input-bg);color:var(--text-primary);text-align:center;"><button onclick="updatePoints(' + u.id + ',\'add\')" class="btn btn-success btn-sm">+3</button><button onclick="updatePoints(' + u.id + ',\'sub\')" class="btn btn-danger btn-sm">-3</button><button onclick="updatePoints(' + u.id + ',\'set\')" class="btn btn-warning btn-sm">تعيين</button>' + 
+        (canDelete ? '<button onclick="deleteUser(' + u.id + ')" class="btn btn-danger btn-sm">🗑️</button>' : '') + '</div>' : 
+        '<span style="color:var(--text-secondary);font-size:0.75rem;">' + (isAdmin ? 'المشرف الرئيسي' : 'نائب مشرف') + '</span>') + '</td></tr>';
       }
       tbody.innerHTML = html;
     })
@@ -2211,12 +2477,13 @@ function loadAdminMatches() {
         var dateStr = m.match_date ? new Date(m.match_date).toLocaleString('ar-SA', {dateStyle:'short', timeStyle:'short'}) : '-';
         var typeStr = m.has_penalty ? '⚽ مع ركلات' : '⚽ عادي';
         var isLocked = lockedMatches[m.id] || false;
+        var isAdmin = currentUser.role === 'admin';
         
         html += '<div class="match-card' + (isLocked ? ' closed' : '') + '"><div class="top"><div class="match-teams"><div class="team"><div class="team-flag">' + (m.flag1 || '🏳️') + '</div><div class="team-name">' + m.team1 + '</div></div><div class="vs">VS</div><div class="team"><div class="team-flag">' + (m.flag2 || '🏳️') + '</div><div class="team-name">' + m.team2 + '</div></div></div><div><div style="font-size:0.7rem;color:var(--text-secondary);">' + typeStr + '</div><div style="font-size:0.78rem;color:var(--text-secondary);">' + dateStr + '</div></div></div>' + 
         (hasResult ? '<div style="background:rgba(0,200,0,0.15);color:#00c853;padding:5px 12px;border-radius:8px;font-weight:700;margin-top:4px;display:inline-block;">' + m.result_team1 + ' - ' + m.result_team2 + ' ✅</div>' : 
         '<div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;align-items:center;"><input id="r1-' + m.id + '" type="number" min="0" max="20" placeholder="0" style="width:52px;padding:7px;border:2px solid var(--border-color);border-radius:8px;background:var(--input-bg);color:var(--text-primary);text-align:center;"> <span style="font-weight:700;">-</span> <input id="r2-' + m.id + '" type="number" min="0" max="20" placeholder="0" style="width:52px;padding:7px;border:2px solid var(--border-color);border-radius:8px;background:var(--input-bg);color:var(--text-primary);text-align:center;"> <button onclick="setResult(' + m.id + ')" class="btn btn-primary" style="padding:5px 12px;font-size:0.85rem;">تأكيد النتيجة</button>' +
         (isLocked ? ' <span class="lock-overlay">🔒 مقفلة</span>' : ' <button class="btn btn-lock" onclick="toggleLockMatch(' + m.id + ')" style="padding:4px 12px;font-size:0.8rem;">🔒 قفل</button>') + '</div>') + 
-        '<div style="margin-top:6px;"><button onclick="deleteMatch(' + m.id + ')" class="btn btn-danger" style="padding:4px 12px;font-size:0.8rem;">🗑️ حذف</button></div></div>';
+        '<div style="margin-top:6px;">' + (isAdmin ? '<button onclick="deleteMatch(' + m.id + ')" class="btn btn-danger" style="padding:4px 12px;font-size:0.8rem;">🗑️ حذف</button>' : '') + '</div></div>';
       }
       el.innerHTML = html;
     })
@@ -2258,6 +2525,7 @@ function setResult(matchId) {
 }
 
 function deleteMatch(matchId) {
+  if (currentUser.role !== 'admin') { toast('ليس لديك صلاحية', true); return; }
   sb('predictions', 'GET', null, '?match_id=eq.' + matchId)
     .then(function(preds) {
       if (preds.length > 0) {
@@ -2284,6 +2552,7 @@ function deleteMatch(matchId) {
 }
 
 function deleteAllMatches() {
+  if (currentUser.role !== 'admin') { toast('ليس لديك صلاحية', true); return; }
   if (!confirm('حذف جميع المباريات وجميع التوقعات المرتبطة بها؟')) return;
   lockedMatches = {};
   fetch(SUPABASE_URL + '/rest/v1/predictions?match_id=not.is.null', {method:'DELETE', headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}})
@@ -2293,6 +2562,7 @@ function deleteAllMatches() {
 }
 
 function deleteFinishedMatches() {
+  if (currentUser.role !== 'admin') { toast('ليس لديك صلاحية', true); return; }
   if (!confirm('حذف المباريات المنتهية فقط وجميع التوقعات المرتبطة بها؟')) return;
   sb('matches', 'GET', null, '?result_team1=not.is.null')
     .then(function(matches) {
@@ -2321,7 +2591,8 @@ function loadAdminHistory() {
       var html = '';
       for (var i = 0; i < matches.length; i++) {
         var m = matches[i];
-        html += '<div class="history-item"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;align-items:center;"><span class="title">' + getFlag(m.team1) + ' ' + m.team1 + ' 🆚 ' + m.team2 + ' ' + getFlag(m.team2) + '</span><span style="font-weight:700;">' + m.result_team1 + ' - ' + m.result_team2 + '</span><button onclick="deleteHistoryMatch(\'' + m.id + '\')" class="btn btn-danger" style="padding:4px 12px;font-size:0.8rem;">🗑️ حذف</button></div><div style="font-size:0.8rem;color:var(--text-secondary);">📅 ' + new Date(m.match_date).toLocaleString('ar-SA', {dateStyle:'short', timeStyle:'short'}) + '</div></div>';
+        html += '<div class="history-item"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;align-items:center;"><span class="title">' + getFlag(m.team1) + ' ' + m.team1 + ' 🆚 ' + m.team2 + ' ' + getFlag(m.team2) + '</span><span style="font-weight:700;">' + m.result_team1 + ' - ' + m.result_team2 + '</span>' + 
+        (currentUser.role === 'admin' ? '<button onclick="deleteHistoryMatch(\'' + m.id + '\')" class="btn btn-danger" style="padding:4px 12px;font-size:0.8rem;">🗑️ حذف</button>' : '') + '</div><div style="font-size:0.8rem;color:var(--text-secondary);">📅 ' + new Date(m.match_date).toLocaleString('ar-SA', {dateStyle:'short', timeStyle:'short'}) + '</div></div>';
       }
       el.innerHTML = html;
     })
@@ -2329,6 +2600,7 @@ function loadAdminHistory() {
 }
 
 function deleteHistoryMatch(matchId) {
+  if (currentUser.role !== 'admin') { toast('ليس لديك صلاحية', true); return; }
   if (!confirm('حذف هذه المباراة من التاريخ؟')) return;
   fetch(SUPABASE_URL + '/rest/v1/predictions?match_id=eq.' + matchId, {method:'DELETE', headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}})
     .then(function() { return fetch(SUPABASE_URL + '/rest/v1/matches?id=eq.' + matchId, {method:'DELETE', headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}}); })
@@ -2346,7 +2618,6 @@ document.addEventListener('keydown', function(e) {
   }
 });
 
-// Load theme
 loadTheme();
 
 if (!checkSession()) {
@@ -2354,10 +2625,9 @@ if (!checkSession()) {
   document.getElementById('appScreen').style.display = 'none';
 }
 console.log('⚽ تطبيق كأس العالم 2026 - النسخة المحسنة');
-console.log('👑 بيانات المشرف: admin / admin123');
+console.log('👑 المشرف الرئيسي: admin / admin123');
+console.log('🛡️ يمكن إضافة نواب مشرف من الإعدادات');
 console.log('🎨 ثلاثة أنماط ألوان: أسود-ذهبي، أبيض-أحمر، بنفسجي-زهري');
-console.log('👁️ زر إظهار/إخفاء كلمة المرور');
-console.log('📌 ثلاث نقاط في الزاوية اليمنى مع قائمة منسدلة');
 </script>
 </body>
 </html>
