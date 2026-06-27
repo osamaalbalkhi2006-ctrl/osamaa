@@ -3,88 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>❄️ توقعات كأس العالم 2026</title>
+<title>⚽ كأس العالم 2026 - 8 ثيمات</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
 </script>
 <style>
 /* ============================================
-   CSS VARIABLES & RESET
+   RESET & BASE
    ============================================ */
-:root {
-  --primary: #0077b6;
-  --primary-light: #00b4d8;
-  --primary-dark: #023e8a;
-  --snow: #f0f8ff;
-  --ice: #e3f2fd;
-  --glass: rgba(255, 255, 255, 0.15);
-  --glass-border: rgba(255, 255, 255, 0.2);
-  --shadow: 0 8px 32px rgba(0, 119, 182, 0.15);
-  --radius: 20px;
-  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --bg-primary: #f0f8ff;
-  --bg-card: rgba(255, 255, 255, 0.85);
-  --text-primary: #1a2a3a;
-  --text-secondary: #4a6a7a;
-  --border-color: #00b4d8;
-  --card-bg: white;
-  --input-bg: white;
-}
-
-/* THEMES */
-.theme-black-gold {
-  --bg-primary: #0a0a0a;
-  --bg-card: rgba(26, 26, 26, 0.95);
-  --text-primary: #ffd700;
-  --text-secondary: #ffed4a;
-  --border-color: #ffd700;
-  --shadow: 0 8px 32px rgba(255, 215, 0, 0.15);
-  --card-bg: rgba(26, 26, 26, 0.9);
-  --input-bg: #1a1a1a;
-  --primary: #ffd700;
-  --primary-light: #ffed4a;
-  --primary-dark: #b8860b;
-  --snow: #0a0a0a;
-  --ice: #1a1a1a;
-  --glass: rgba(26, 26, 26, 0.8);
-  --glass-border: rgba(255, 215, 0, 0.2);
-}
-
-.theme-white-red {
-  --bg-primary: #f5f5f5;
-  --bg-card: rgba(255, 255, 255, 0.95);
-  --text-primary: #c62828;
-  --text-secondary: #e53935;
-  --border-color: #c62828;
-  --shadow: 0 8px 32px rgba(198, 40, 40, 0.15);
-  --card-bg: #ffffff;
-  --input-bg: #ffffff;
-  --primary: #c62828;
-  --primary-light: #e53935;
-  --primary-dark: #b71c1c;
-  --snow: #f5f5f5;
-  --ice: #ffffff;
-  --glass: rgba(255, 255, 255, 0.8);
-  --glass-border: rgba(198, 40, 40, 0.2);
-}
-
-.theme-purple-pink {
-  --bg-primary: #1a0a2e;
-  --bg-card: rgba(42, 26, 62, 0.95);
-  --text-primary: #d4a0ff;
-  --text-secondary: #ff6bcd;
-  --border-color: #d4a0ff;
-  --shadow: 0 8px 32px rgba(212, 160, 255, 0.15);
-  --card-bg: rgba(42, 26, 62, 0.9);
-  --input-bg: #1a0a2e;
-  --primary: #d4a0ff;
-  --primary-light: #ff6bcd;
-  --primary-dark: #7c3aed;
-  --snow: #1a0a2e;
-  --ice: #2a1a3e;
-  --glass: rgba(42, 26, 62, 0.8);
-  --glass-border: rgba(212, 160, 255, 0.2);
-}
-
 * {
   margin: 0;
   padding: 0;
@@ -93,12 +18,170 @@
 
 body {
   font-family: 'Segoe UI', Tahoma, sans-serif;
+  min-height: 100vh;
+  transition: background 0.5s ease, color 0.5s ease;
+  position: relative;
+}
+
+/* ============================================
+   THEMES - 8 أنماط ألوان
+   ============================================ */
+
+/* 1) أسود فحمي + ذهبي */
+.theme-black-gold {
+  --bg-primary: #0D0D0D;
+  --bg-secondary: #1a1a1a;
+  --bg-card: rgba(26, 26, 26, 0.95);
+  --text-primary: #D4AF37;
+  --text-secondary: #e8c84a;
+  --border-color: #D4AF37;
+  --shadow-color: rgba(212, 175, 55, 0.3);
+  --gradient: linear-gradient(135deg, #0D0D0D, #1a1a1a);
+  --accent: #D4AF37;
+  --card-bg: rgba(26, 26, 26, 0.9);
+  --input-bg: #1a1a1a;
+  --header-gradient: linear-gradient(135deg, #0D0D0D, #1a1a1a);
+  --white: #1a1a1a;
+  --glass: rgba(26, 26, 26, 0.8);
+  --glass-border: rgba(212, 175, 55, 0.2);
+}
+
+/* 2) أبيض ثلجي + أزرق سماوي */
+.theme-white-blue {
+  --bg-primary: #F8FAFC;
+  --bg-secondary: #ffffff;
+  --bg-card: rgba(255, 255, 255, 0.95);
+  --text-primary: #1a2a3a;
+  --text-secondary: #4a6a8a;
+  --border-color: #3A8DFF;
+  --shadow-color: rgba(58, 141, 255, 0.2);
+  --gradient: linear-gradient(135deg, #F8FAFC, #ffffff);
+  --accent: #3A8DFF;
+  --card-bg: #ffffff;
+  --input-bg: #ffffff;
+  --header-gradient: linear-gradient(135deg, #1a4a8a, #3A8DFF);
+  --white: #ffffff;
+  --glass: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(58, 141, 255, 0.2);
+}
+
+/* 3) رمادي غامق + أخضر زمردي */
+.theme-dark-green {
+  --bg-primary: #1A1A1A;
+  --bg-secondary: #2d2d2d;
+  --bg-card: rgba(26, 26, 26, 0.95);
+  --text-primary: #2ECC71;
+  --text-secondary: #58d68d;
+  --border-color: #2ECC71;
+  --shadow-color: rgba(46, 204, 113, 0.3);
+  --gradient: linear-gradient(135deg, #1A1A1A, #2d2d2d);
+  --accent: #2ECC71;
+  --card-bg: rgba(26, 26, 26, 0.9);
+  --input-bg: #1a1a1a;
+  --header-gradient: linear-gradient(135deg, #1A1A1A, #2d2d2d);
+  --white: #1a1a1a;
+  --glass: rgba(26, 26, 26, 0.8);
+  --glass-border: rgba(46, 204, 113, 0.2);
+}
+
+/* 4) كحلي داكن + برتقالي دافئ */
+.theme-navy-orange {
+  --bg-primary: #0A1A2F;
+  --bg-secondary: #1a2a4a;
+  --bg-card: rgba(10, 26, 47, 0.95);
+  --text-primary: #FF7A00;
+  --text-secondary: #ff9944;
+  --border-color: #FF7A00;
+  --shadow-color: rgba(255, 122, 0, 0.3);
+  --gradient: linear-gradient(135deg, #0A1A2F, #1a2a4a);
+  --accent: #FF7A00;
+  --card-bg: rgba(10, 26, 47, 0.9);
+  --input-bg: #0a1a2f;
+  --header-gradient: linear-gradient(135deg, #0A1A2F, #1a2a4a);
+  --white: #0a1a2f;
+  --glass: rgba(10, 26, 47, 0.8);
+  --glass-border: rgba(255, 122, 0, 0.2);
+}
+
+/* 5) بنفسجي غامق + وردي فاتح */
+.theme-purple-pink {
+  --bg-primary: #1a0a2e;
+  --bg-secondary: #2a1a4a;
+  --bg-card: rgba(42, 26, 62, 0.95);
+  --text-primary: #FF66CC;
+  --text-secondary: #ff99dd;
+  --border-color: #FF66CC;
+  --shadow-color: rgba(255, 102, 204, 0.3);
+  --gradient: linear-gradient(135deg, #1a0a2e, #2a1a4a);
+  --accent: #FF66CC;
+  --card-bg: rgba(42, 26, 62, 0.9);
+  --input-bg: #1a0a2e;
+  --header-gradient: linear-gradient(135deg, #1a0a2e, #4B0082);
+  --white: #1a0a2e;
+  --glass: rgba(42, 26, 62, 0.8);
+  --glass-border: rgba(255, 102, 204, 0.2);
+}
+
+/* 6) رمادي فاتح + أسود */
+.theme-light-gray {
+  --bg-primary: #F2F2F2;
+  --bg-secondary: #e8e8e8;
+  --bg-card: rgba(255, 255, 255, 0.95);
+  --text-primary: #1a1a1a;
+  --text-secondary: #4a4a4a;
+  --border-color: #2d2d2d;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --gradient: linear-gradient(135deg, #F2F2F2, #e8e8e8);
+  --accent: #1a1a1a;
+  --card-bg: #ffffff;
+  --input-bg: #ffffff;
+  --header-gradient: linear-gradient(135deg, #2d2d2d, #1a1a1a);
+  --white: #ffffff;
+  --glass: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(0, 0, 0, 0.2);
+}
+
+/* 7) أزرق داكن + أخضر تركواز */
+.theme-dark-teal {
+  --bg-primary: #0B3C5D;
+  --bg-secondary: #1a4a6a;
+  --bg-card: rgba(11, 60, 93, 0.95);
+  --text-primary: #00C9A7;
+  --text-secondary: #33ddbb;
+  --border-color: #00C9A7;
+  --shadow-color: rgba(0, 201, 167, 0.3);
+  --gradient: linear-gradient(135deg, #0B3C5D, #1a4a6a);
+  --accent: #00C9A7;
+  --card-bg: rgba(11, 60, 93, 0.9);
+  --input-bg: #0b3c5d;
+  --header-gradient: linear-gradient(135deg, #0B3C5D, #1a4a6a);
+  --white: #0b3c5d;
+  --glass: rgba(11, 60, 93, 0.8);
+  --glass-border: rgba(0, 201, 167, 0.2);
+}
+
+/* 8) بيج دافئ + بني شوكولاتة */
+.theme-warm-beige {
+  --bg-primary: #F5E6CC;
+  --bg-secondary: #e8d5b8;
+  --bg-card: rgba(245, 230, 204, 0.95);
+  --text-primary: #5A3E2B;
+  --text-secondary: #7a5a44;
+  --border-color: #5A3E2B;
+  --shadow-color: rgba(90, 62, 43, 0.2);
+  --gradient: linear-gradient(135deg, #F5E6CC, #e8d5b8);
+  --accent: #5A3E2B;
+  --card-bg: #f5e6cc;
+  --input-bg: #f5e6cc;
+  --header-gradient: linear-gradient(135deg, #5A3E2B, #7a5a44);
+  --white: #f5e6cc;
+  --glass: rgba(245, 230, 204, 0.8);
+  --glass-border: rgba(90, 62, 43, 0.2);
+}
+
+body {
   background: var(--bg-primary);
   color: var(--text-primary);
-  min-height: 100vh;
-  position: relative;
-  overflow-x: hidden;
-  transition: background 0.5s ease, color 0.5s ease;
 }
 
 /* ============================================
@@ -180,13 +263,15 @@ body {
   border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 8px 0;
-  min-width: 250px;
-  box-shadow: 0 8px 32px var(--shadow);
+  min-width: 280px;
+  box-shadow: 0 8px 32px var(--shadow-color);
   opacity: 0;
   visibility: hidden;
   transform: translateY(-10px) scale(0.95);
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   z-index: 1000;
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
 .menu-dropdown.active {
@@ -227,6 +312,15 @@ body {
   opacity: 0.3;
 }
 
+.menu-dropdown .theme-section-title {
+  padding: 6px 16px;
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  opacity: 0.7;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
 .theme-option {
   display: flex;
   align-items: center;
@@ -247,6 +341,23 @@ body {
   border-right: 3px solid var(--border-color);
 }
 
+.theme-option .color-preview {
+  display: flex;
+  gap: 4px;
+}
+
+.theme-option .color-preview span {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.theme-option .color-preview span:hover {
+  transform: scale(1.1);
+}
+
 /* ============================================
    GLASS CARD
    ============================================ */
@@ -255,32 +366,32 @@ body {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--glass-border);
-  border-radius: var(--radius);
+  border-radius: 20px;
   padding: 24px;
-  box-shadow: var(--shadow);
+  box-shadow: 0 8px 32px var(--shadow-color);
   position: relative;
   z-index: 1;
-  transition: var(--transition);
+  transition: all 0.3s ease;
 }
 
 .glass-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 48px var(--shadow);
+  box-shadow: 0 12px 48px var(--shadow-color);
 }
 
 /* ============================================
    HEADER
    ============================================ */
 .header {
-  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+  background: var(--header-gradient);
   padding: 16px 32px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 3px solid var(--primary-light);
+  border-bottom: 2px solid var(--border-color);
   position: relative;
   z-index: 10;
-  box-shadow: 0 4px 20px var(--shadow);
+  box-shadow: 0 4px 20px var(--shadow-color);
 }
 
 .header .logo {
@@ -292,7 +403,7 @@ body {
 }
 
 .header .logo span {
-  color: var(--primary-light);
+  color: var(--border-color);
 }
 
 .header-left {
@@ -324,7 +435,7 @@ body {
   padding: 6px 18px;
   border-radius: 30px;
   cursor: pointer;
-  transition: var(--transition);
+  transition: all 0.3s ease;
   font-weight: 600;
 }
 
@@ -361,7 +472,7 @@ body {
   padding: 32px;
   max-width: 480px;
   width: 90%;
-  box-shadow: 0 16px 64px var(--shadow);
+  box-shadow: 0 16px 64px var(--shadow-color);
   max-height: 90vh;
   overflow-y: auto;
 }
@@ -414,7 +525,7 @@ body {
   color: var(--text-primary);
   cursor: pointer;
   font-weight: 700;
-  transition: var(--transition);
+  transition: all 0.3s ease;
   font-size: 0.95rem;
 }
 
@@ -443,7 +554,7 @@ body {
   background: transparent;
   color: var(--text-primary);
   cursor: pointer;
-  transition: var(--transition);
+  transition: all 0.3s ease;
   font-weight: 600;
   font-size: 0.85rem;
 }
@@ -475,18 +586,18 @@ body {
   border-radius: 16px;
   padding: 20px;
   margin-bottom: 16px;
-  box-shadow: 0 2px 12px var(--shadow);
+  box-shadow: 0 2px 12px var(--shadow-color);
   border-right: 4px solid var(--border-color);
-  transition: var(--transition);
+  transition: all 0.3s ease;
   border: 1px solid var(--border-color);
 }
 
 .match-card:hover {
-  box-shadow: 0 4px 20px var(--shadow);
+  box-shadow: 0 4px 20px var(--shadow-color);
 }
 
 .match-card.closed {
-  border-right-color: #e74c3c;
+  border-right-color: #ff4444;
   background: rgba(255, 68, 68, 0.08);
 }
 
@@ -569,7 +680,7 @@ body {
   border: 2px solid var(--border-color);
   font-weight: 700;
   cursor: pointer;
-  transition: var(--transition);
+  transition: all 0.3s ease;
   font-size: 0.95rem;
   display: inline-flex;
   align-items: center;
@@ -654,14 +765,14 @@ input, select {
   color: var(--text-primary);
   font-size: 0.95rem;
   font-family: inherit;
-  transition: var(--transition);
+  transition: all 0.3s ease;
   width: 100%;
 }
 
 input:focus, select:focus {
   outline: none;
-  border-color: var(--primary-light);
-  box-shadow: 0 0 0 4px var(--shadow);
+  border-color: var(--border-color);
+  box-shadow: 0 0 0 4px var(--shadow-color);
 }
 
 .password-wrapper {
@@ -726,12 +837,12 @@ input:focus, select:focus {
   margin-bottom: 8px;
   gap: 16px;
   border: 1px solid var(--border-color);
-  transition: var(--transition);
+  transition: all 0.3s ease;
 }
 
 .leaderboard-row:hover {
   transform: translateX(4px);
-  box-shadow: 0 4px 16px var(--shadow);
+  box-shadow: 0 4px 16px var(--shadow-color);
 }
 
 .rank {
@@ -818,7 +929,7 @@ input:focus, select:focus {
   font-weight: 700;
   z-index: 999;
   border: 2px solid var(--border-color);
-  box-shadow: 0 8px 40px var(--shadow);
+  box-shadow: 0 8px 40px var(--shadow-color);
   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   opacity: 0;
   pointer-events: none;
@@ -925,7 +1036,7 @@ input:focus, select:focus {
   border-radius: 20px;
   padding: 48px 40px;
   border: 2px solid var(--border-color);
-  box-shadow: 0 8px 48px var(--shadow);
+  box-shadow: 0 8px 48px var(--shadow-color);
 }
 
 .auth-container .auth-icon {
@@ -1082,6 +1193,7 @@ input:focus, select:focus {
   .menu-dropdown {
     left: auto;
     right: 0;
+    min-width: 220px;
   }
   
   .modal-content {
@@ -1137,7 +1249,7 @@ input:focus, select:focus {
   background: transparent;
   color: var(--text-primary);
   cursor: pointer;
-  transition: var(--transition);
+  transition: all 0.3s ease;
   font-weight: 600;
   width: auto;
 }
@@ -1233,7 +1345,7 @@ td {
 <div id="authScreen">
   <div class="auth-container">
     <div class="auth-icon">🏆</div>
-    <h1>❄️ كأس العالم 2026</h1>
+    <h1>⚽ كأس العالم 2026</h1>
     <p>منافسة التوقعات بين الأصدقاء</p>
     
     <div class="auth-tabs">
@@ -1288,7 +1400,7 @@ td {
      ============================================ -->
 <div id="appScreen" class="hidden">
   <div class="header">
-    <div class="logo">❄️ كأس العالم <span>2026</span></div>
+    <div class="logo">⚽ كأس العالم <span>2026</span></div>
     <div class="header-left">
       <div class="header-user">
         <span id="headerUser"></span>
@@ -1303,14 +1415,70 @@ td {
           <span class="dot"></span>
         </button>
         <div class="menu-dropdown" id="menuDropdown">
+          <div class="theme-section-title">🎨 اختر الثيم</div>
+          
           <div class="theme-option active-theme" onclick="changeTheme('black-gold')">
-            <span>⚫</span> <span>🟡</span> أسود & ذهبي
+            <div class="color-preview">
+              <span style="background:#0D0D0D;"></span>
+              <span style="background:#D4AF37;"></span>
+            </div>
+            أسود & ذهبي
           </div>
-          <div class="theme-option" onclick="changeTheme('white-red')">
-            <span>⬜</span> <span>🔴</span> أبيض & أحمر
+          
+          <div class="theme-option" onclick="changeTheme('white-blue')">
+            <div class="color-preview">
+              <span style="background:#FFFFFF;border-color:#ccc;"></span>
+              <span style="background:#3A8DFF;"></span>
+            </div>
+            أبيض & أزرق
           </div>
+          
+          <div class="theme-option" onclick="changeTheme('dark-green')">
+            <div class="color-preview">
+              <span style="background:#1F1F1F;"></span>
+              <span style="background:#2ECC71;"></span>
+            </div>
+            رمادي & أخضر
+          </div>
+          
+          <div class="theme-option" onclick="changeTheme('navy-orange')">
+            <div class="color-preview">
+              <span style="background:#0A1A2F;"></span>
+              <span style="background:#FF7A00;"></span>
+            </div>
+            كحلي & برتقالي
+          </div>
+          
           <div class="theme-option" onclick="changeTheme('purple-pink')">
-            <span>🟣</span> <span>🩷</span> بنفسجي & زهري
+            <div class="color-preview">
+              <span style="background:#4B0082;"></span>
+              <span style="background:#FF66CC;"></span>
+            </div>
+            بنفسجي & وردي
+          </div>
+          
+          <div class="theme-option" onclick="changeTheme('light-gray')">
+            <div class="color-preview">
+              <span style="background:#F2F2F2;border-color:#ccc;"></span>
+              <span style="background:#000000;"></span>
+            </div>
+            رمادي & أسود
+          </div>
+          
+          <div class="theme-option" onclick="changeTheme('dark-teal')">
+            <div class="color-preview">
+              <span style="background:#0B3C5D;"></span>
+              <span style="background:#00C9A7;"></span>
+            </div>
+            أزرق & تركواز
+          </div>
+          
+          <div class="theme-option" onclick="changeTheme('warm-beige')">
+            <div class="color-preview">
+              <span style="background:#F5E6CC;border-color:#ccc;"></span>
+              <span style="background:#5A3E2B;"></span>
+            </div>
+            بيج & بني
           </div>
           
           <hr class="menu-divider">
@@ -1340,7 +1508,6 @@ td {
   </div>
   
   <div class="container">
-    <!-- Player Summary (for players) -->
     <div id="playerSummary" style="display:none;"></div>
     
     <div class="tabs" id="mainTabs"></div>
@@ -1464,7 +1631,8 @@ td {
 
 <script>
 // =====================================================
-//  CONFIG
+//  CONFIG - تنبيه أمني: هذا المفتاح للاستخدام في الواجهة الأمامية فقط
+//  يجب تفعيل RLS في Supabase لحماية البيانات
 // =====================================================
 var SUPABASE_URL = 'https://azjvyntnnertgcmvsfmq.supabase.co';
 var SUPABASE_KEY = 'sb_publishable_FQT6pUUgos4vOgeAqjdQng_stG_DiAi';
@@ -1489,7 +1657,6 @@ var selectedRole = 'admin';
 var refreshInterval = null;
 var lockedMatches = {};
 var currentTheme = 'black-gold';
-var countdownIntervals = {};
 
 // =====================================================
 //  SNOWFALL
@@ -1517,17 +1684,27 @@ function changeTheme(theme, closeMenu) {
   currentTheme = theme;
   var body = document.body;
   body.className = '';
+  
   if (theme === 'black-gold') body.classList.add('theme-black-gold');
-  else if (theme === 'white-red') body.classList.add('theme-white-red');
+  else if (theme === 'white-blue') body.classList.add('theme-white-blue');
+  else if (theme === 'dark-green') body.classList.add('theme-dark-green');
+  else if (theme === 'navy-orange') body.classList.add('theme-navy-orange');
   else if (theme === 'purple-pink') body.classList.add('theme-purple-pink');
+  else if (theme === 'light-gray') body.classList.add('theme-light-gray');
+  else if (theme === 'dark-teal') body.classList.add('theme-dark-teal');
+  else if (theme === 'warm-beige') body.classList.add('theme-warm-beige');
   
   document.querySelectorAll('.theme-option').forEach(function(el) {
     el.classList.remove('active-theme');
   });
   var options = document.querySelectorAll('.theme-option');
-  if (theme === 'black-gold' && options[0]) options[0].classList.add('active-theme');
-  else if (theme === 'white-red' && options[1]) options[1].classList.add('active-theme');
-  else if (theme === 'purple-pink' && options[2]) options[2].classList.add('active-theme');
+  var themeMap = {
+    'black-gold': 0, 'white-blue': 1, 'dark-green': 2, 'navy-orange': 3,
+    'purple-pink': 4, 'light-gray': 5, 'dark-teal': 6, 'warm-beige': 7
+  };
+  if (themeMap[theme] !== undefined && options[themeMap[theme]]) {
+    options[themeMap[theme]].classList.add('active-theme');
+  }
   
   localStorage.setItem('wc_theme', theme);
   
@@ -1629,19 +1806,6 @@ function getFlag(name) {
 function isClosed(date) {
   if (!date) return false;
   return new Date(date) <= new Date();
-}
-
-function formatTimeLeft(date) {
-  var diff = new Date(date).getTime() - new Date().getTime();
-  if (diff <= 0) return 'انتهى';
-  var hours = Math.floor(diff / (1000 * 60 * 60));
-  var minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-  var seconds = Math.floor((diff % (1000 * 60)) / 1000);
-  var parts = [];
-  if (hours > 0) parts.push(hours + 'س');
-  if (minutes > 0 || hours > 0) parts.push(minutes + 'د');
-  parts.push(seconds + 'ث');
-  return parts.join(' ');
 }
 
 // =====================================================
@@ -1763,10 +1927,6 @@ function doLogout() {
   currentUser = null;
   localStorage.removeItem('wc_user');
   if (refreshInterval) { clearInterval(refreshInterval); refreshInterval = null; }
-  for (var key in countdownIntervals) {
-    if (countdownIntervals[key]) clearInterval(countdownIntervals[key]);
-  }
-  countdownIntervals = {};
   document.getElementById('authScreen').style.display = 'block';
   document.getElementById('appScreen').style.display = 'none';
 }
@@ -2486,11 +2646,6 @@ function loadMatches() {
   if (!el) return;
   el.innerHTML = '<div class="empty-state"><div class="spinner"></div></div>';
   
-  for (var key in countdownIntervals) {
-    if (countdownIntervals[key]) clearInterval(countdownIntervals[key]);
-  }
-  countdownIntervals = {};
-  
   sb('matches', 'GET', null, '?order=match_date.asc')
     .then(function(matches) {
       if (matches.length === 0) {
@@ -2518,13 +2673,6 @@ function loadMatches() {
       }
       el.innerHTML = html;
       
-      for (var i = 0; i < matches.length; i++) {
-        var m = matches[i];
-        if (m.match_date && m.result_team1 === null && m.result_team2 === null && !lockedMatches[m.id]) {
-          startCountdown(m.id, m.match_date);
-        }
-      }
-      
       if (currentUser.role === 'player') {
         setTimeout(function() {
           var areas = document.querySelectorAll('[id^="pred-area-"]');
@@ -2538,31 +2686,6 @@ function loadMatches() {
     .catch(function(e) {
       el.innerHTML = '<div class="empty-state"><div>❌</div>خطأ في تحميل المباريات: ' + e.message + '</div>';
     });
-}
-
-function startCountdown(matchId, matchDate) {
-  if (countdownIntervals[matchId]) clearInterval(countdownIntervals[matchId]);
-  
-  function updateCountdown() {
-    var el = document.getElementById('countdown-' + matchId);
-    if (!el) {
-      if (countdownIntervals[matchId]) clearInterval(countdownIntervals[matchId]);
-      return;
-    }
-    var diff = new Date(matchDate).getTime() - new Date().getTime();
-    if (diff <= 0) {
-      el.textContent = '⏳ انتهى الوقت';
-      el.className = 'countdown ended';
-      if (countdownIntervals[matchId]) clearInterval(countdownIntervals[matchId]);
-      return;
-    }
-    var timeLeft = formatTimeLeft(matchDate);
-    el.textContent = '⏳ ' + timeLeft;
-    el.className = 'countdown' + (diff < 600000 ? ' urgent' : '');
-  }
-  
-  updateCountdown();
-  countdownIntervals[matchId] = setInterval(updateCountdown, 1000);
 }
 
 function buildMatchCard(m) {
@@ -2582,18 +2705,6 @@ function buildMatchCard(m) {
   
   var cardClass = 'match-card';
   if (isLocked) cardClass += ' closed';
-  
-  var countdownHtml = '';
-  if (!hasResult && !isLocked && m.match_date) {
-    var diff = new Date(m.match_date).getTime() - new Date().getTime();
-    if (diff > 0) {
-      countdownHtml = '<div class="countdown" id="countdown-' + m.id + '">⏳ ' + formatTimeLeft(m.match_date) + '</div>';
-    } else {
-      countdownHtml = '<div class="countdown ended">⏳ انتهى الوقت</div>';
-    }
-  } else if (isLocked) {
-    countdownHtml = '<div class="countdown ended">🔒 مقفلة</div>';
-  }
   
   var predHtml = '';
   if (currentUser.role === 'player') {
@@ -2619,7 +2730,7 @@ function buildMatchCard(m) {
     }
   }
 
-  return '<div class="' + cardClass + '"><div class="top"><div class="match-teams"><div class="team"><div class="team-flag">' + getFlag(m.team1) + '</div><div class="team-name">' + m.team1 + '</div></div><div class="vs">VS</div><div class="team"><div class="team-flag">' + getFlag(m.team2) + '</div><div class="team-name">' + m.team2 + '</div></div></div><div>' + typeText + '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end;margin-top:4px;">' + resultBadge + '<span class="match-status ' + statusClass + '">' + statusText + '</span></div></div></div>' + countdownHtml + predHtml + lockBtn + '<div style="font-size:0.75rem;color:var(--text-secondary);margin-top:4px;">📅 ' + dateStr + '</div></div>';
+  return '<div class="' + cardClass + '"><div class="top"><div class="match-teams"><div class="team"><div class="team-flag">' + getFlag(m.team1) + '</div><div class="team-name">' + m.team1 + '</div></div><div class="vs">VS</div><div class="team"><div class="team-flag">' + getFlag(m.team2) + '</div><div class="team-name">' + m.team2 + '</div></div></div><div>' + typeText + '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end;margin-top:4px;">' + resultBadge + '<span class="match-status ' + statusClass + '">' + statusText + '</span></div></div></div>' + predHtml + lockBtn + '<div style="font-size:0.75rem;color:var(--text-secondary);margin-top:4px;">📅 ' + dateStr + '</div></div>';
 }
 
 // =====================================================
@@ -2788,7 +2899,7 @@ function updatePoints(userId, action) {
 }
 
 // =====================================================
-//  ADMIN - MATCHES
+//  ADMIN - MATCHES (تم إصلاح الخطأ البرمجي)
 // =====================================================
 function addMatch() {
   var team1 = document.getElementById('aTeam1');
@@ -2855,13 +2966,103 @@ function loadAdminMatches() {
         '<div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;align-items:center;"><input id="r1-' + m.id + '" type="number" min="0" max="20" placeholder="0" style="width:52px;padding:7px;border:2px solid var(--border-color);border-radius:8px;background:var(--input-bg);color:var(--text-primary);text-align:center;"> <span style="font-weight:700;">-</span> <input id="r2-' + m.id + '" type="number" min="0" max="20" placeholder="0" style="width:52px;padding:7px;border:2px solid var(--border-color);border-radius:8px;background:var(--input-bg);color:var(--text-primary);text-align:center;"> <button onclick="setResult(' + m.id + ')" class="btn btn-primary" style="padding:5px 12px;font-size:0.85rem;">تأكيد النتيجة</button>' +
         (isLocked ? ' <span class="lock-overlay">🔒 مقفلة</span>' : ' <button class="btn btn-lock" onclick="toggleLockMatch(' + m.id + ')" style="padding:4px 12px;font-size:0.8rem;">🔒 قفل</button>') + 
         (isLocked ? ' <button class="btn btn-warning" onclick="toggleUnlockMatch(' + m.id + ')" style="padding:4px 12px;font-size:0.8rem;">🔓 فتح</button>' : '') + '</div>') + 
-        '<div style="margin-top:6px;">' + (isAdmin ? '<button onclick="deleteMatch(' + m.id + ')" class="btn btn-danger" style="padding:4px 12px;font-size:0.8rem;">🗑️ حذف</button>' : '') + '</div></div>';
+        '<div style="margin-top:6px;">' + (isAdmin ? '<button onclick="deleteMatch(' + m.id + ')" class="btn btn-danger btn-sm">🗑️ حذف</button>' : '') + '</div></div>';
       }
       el.innerHTML = html;
     })
-    .catch(function(e) { el.innerHTML = '<div class="empty-state">خطأ في تحميل المباريات</div>'; });
+    .catch(function(e) { el.innerHTML = '<div class="empty-state">خطأ في تحميل البيانات</div>'; });
 }
 
+// =====================================================
+//  ADMIN - DELETE FUNCTIONS
+// =====================================================
+function deleteMatch(matchId) {
+  if (currentUser.role !== 'admin') { toast('ليس لديك صلاحية', true); return; }
+  
+  if (!confirm('هل أنت متأكد من حذف هذه المباراة؟')) return;
+  
+  // First delete predictions, then delete match
+  fetch(SUPABASE_URL + '/rest/v1/predictions?match_id=eq.' + matchId, {
+    method: 'DELETE',
+    headers: {'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY}
+  })
+  .then(function() {
+    return fetch(SUPABASE_URL + '/rest/v1/matches?id=eq.' + matchId, {
+      method: 'DELETE',
+      headers: {'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY}
+    });
+  })
+  .then(function() {
+    delete lockedMatches[matchId];
+    toast('✅ تم حذف المباراة');
+    loadAdminMatches();
+    loadMatches();
+    loadHistory();
+    loadCurrentPredictions();
+  })
+  .catch(function(e) { toast('خطأ في الحذف: ' + e.message, true); });
+}
+
+function deleteAllMatches() {
+  if (currentUser.role !== 'admin') { toast('ليس لديك صلاحية', true); return; }
+  if (!confirm('⚠️ هل أنت متأكد من حذف جميع المباريات وجميع التوقعات المرتبطة بها؟')) return;
+  
+  lockedMatches = {};
+  
+  fetch(SUPABASE_URL + '/rest/v1/predictions?match_id=not.is.null', {
+    method: 'DELETE',
+    headers: {'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY}
+  })
+  .then(function() {
+    return fetch(SUPABASE_URL + '/rest/v1/matches?match_date=not.is.null', {
+      method: 'DELETE',
+      headers: {'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY}
+    });
+  })
+  .then(function() {
+    toast('✅ تم حذف جميع المباريات');
+    loadAdminMatches();
+    loadMatches();
+    loadHistory();
+    loadCurrentPredictions();
+  })
+  .catch(function(e) { toast('خطأ في الحذف: ' + e.message, true); });
+}
+
+function deleteFinishedMatches() {
+  if (currentUser.role !== 'admin') { toast('ليس لديك صلاحية', true); return; }
+  if (!confirm('⚠️ هل أنت متأكد من حذف المباريات المنتهية فقط؟')) return;
+  
+  sb('matches', 'GET', null, '?result_team1=not.is.null')
+    .then(function(matches) {
+      var promises = [];
+      for (var i = 0; i < matches.length; i++) {
+        var mid = matches[i].id;
+        delete lockedMatches[mid];
+        promises.push(fetch(SUPABASE_URL + '/rest/v1/predictions?match_id=eq.' + mid, {
+          method: 'DELETE',
+          headers: {'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY}
+        }));
+        promises.push(fetch(SUPABASE_URL + '/rest/v1/matches?id=eq.' + mid, {
+          method: 'DELETE',
+          headers: {'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY}
+        }));
+      }
+      return Promise.all(promises);
+    })
+    .then(function() {
+      toast('✅ تم حذف المباريات المنتهية');
+      loadAdminMatches();
+      loadMatches();
+      loadHistory();
+      loadCurrentPredictions();
+    })
+    .catch(function(e) { toast('خطأ في الحذف: ' + e.message, true); });
+}
+
+// =====================================================
+//  SET RESULT FUNCTION
+// =====================================================
 function setResult(matchId) {
   var r1Input = document.getElementById('r1-' + matchId);
   var r2Input = document.getElementById('r2-' + matchId);
@@ -2871,89 +3072,42 @@ function setResult(matchId) {
   var r2 = parseInt(r2Input.value);
   if (isNaN(r1) || isNaN(r2)) { toast('ادخل النتيجة اولا', true); return; }
   
-  fetch(SUPABASE_URL + '/rest/v1/matches?id=eq.' + matchId, {method:'PATCH', headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json'}, body:JSON.stringify({result_team1:r1, result_team2:r2})})
-    .then(function() { return sb('predictions', 'GET', null, '?match_id=eq.' + matchId); })
-    .then(function(preds) {
-      var promises = [];
-      for (var i = 0; i < preds.length; i++) {
-        var p = preds[i];
-        var isCorrect = (p.pred_team1 === r1 && p.pred_team2 === r2);
-        if (isCorrect) {
-          promises.push(sb('users', 'GET', null, '?id=eq.' + p.user_id).then(function(u) {
-            if (u.length > 0) {
-              return fetch(SUPABASE_URL + '/rest/v1/users?id=eq.' + p.user_id, {method:'PATCH', headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json'}, body:JSON.stringify({points: (u[0].points || 0) + 3})});
-            }
-          }));
-        }
+  fetch(SUPABASE_URL + '/rest/v1/matches?id=eq.' + matchId, {
+    method: 'PATCH',
+    headers: {'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json'},
+    body: JSON.stringify({result_team1: r1, result_team2: r2})
+  })
+  .then(function() { return sb('predictions', 'GET', null, '?match_id=eq.' + matchId); })
+  .then(function(preds) {
+    var promises = [];
+    for (var i = 0; i < preds.length; i++) {
+      var p = preds[i];
+      var isCorrect = (p.pred_team1 === r1 && p.pred_team2 === r2);
+      if (isCorrect) {
+        promises.push(sb('users', 'GET', null, '?id=eq.' + p.user_id).then(function(u) {
+          if (u.length > 0) {
+            return fetch(SUPABASE_URL + '/rest/v1/users?id=eq.' + p.user_id, {
+              method: 'PATCH',
+              headers: {'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json'},
+              body: JSON.stringify({points: (u[0].points || 0) + 3})
+            });
+          }
+        }));
       }
-      return Promise.all(promises);
-    })
-    .then(function() {
-      toast('تم تسجيل النتيجة وتحديث النقاط');
-      delete lockedMatches[matchId];
-      loadAdminMatches();
-      loadMatches();
-      loadLeaderboard();
-      loadUsers();
-      loadHistory();
-      loadCurrentPredictions();
-    })
-    .catch(function(e) { toast('خطأ في حفظ النتيجة', true); });
-}
-
-function deleteMatch(matchId) {
-  if (currentUser.role !== 'admin') { toast('ليس لديك صلاحية', true); return; }
-  sb('predictions', 'GET', null, '?match_id=eq.' + matchId)
-    .then(function(preds) {
-      if (preds.length > 0) {
-        if (!confirm('هذه المباراة لها ' + preds.length + ' توقع/توقعات. هل تريد حذفها مع التوقعات؟')) {
-          return;
-        }
-        return fetch(SUPABASE_URL + '/rest/v1/predictions?match_id=eq.' + matchId, {method:'DELETE', headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}})
-          .then(function() {
-            return fetch(SUPABASE_URL + '/rest/v1/matches?id=eq.' + matchId, {method:'DELETE', headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}});
-          });
-      } else {
-        return fetch(SUPABASE_URL + '/rest/v1/matches?id=eq.' + matchId, {method:'DELETE', headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}});
-      }
-    })
-    .then(function() {
-      delete lockedMatches[matchId];
-      toast('تم حذف المباراة');
-      loadAdminMatches();
-      loadMatches();
-      loadHistory();
-      loadCurrentPredictions();
-    })
-    .catch(function(e) { toast('خطأ في حذف المباراة', true); });
-}
-
-function deleteAllMatches() {
-  if (currentUser.role !== 'admin') { toast('ليس لديك صلاحية', true); return; }
-  if (!confirm('حذف جميع المباريات وجميع التوقعات المرتبطة بها؟')) return;
-  lockedMatches = {};
-  fetch(SUPABASE_URL + '/rest/v1/predictions?match_id=not.is.null', {method:'DELETE', headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}})
-    .then(function() { return fetch(SUPABASE_URL + '/rest/v1/matches?match_date=not.is.null', {method:'DELETE', headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}}); })
-    .then(function() { toast('تم حذف جميع المباريات'); loadAdminMatches(); loadMatches(); loadHistory(); loadCurrentPredictions(); })
-    .catch(function(e) { toast('خطأ في حذف المباريات', true); });
-}
-
-function deleteFinishedMatches() {
-  if (currentUser.role !== 'admin') { toast('ليس لديك صلاحية', true); return; }
-  if (!confirm('حذف المباريات المنتهية فقط وجميع التوقعات المرتبطة بها؟')) return;
-  sb('matches', 'GET', null, '?result_team1=not.is.null')
-    .then(function(matches) {
-      var promises = [];
-      for (var i = 0; i < matches.length; i++) {
-        var mid = matches[i].id;
-        delete lockedMatches[mid];
-        promises.push(fetch(SUPABASE_URL + '/rest/v1/predictions?match_id=eq.' + mid, {method:'DELETE', headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}}));
-        promises.push(fetch(SUPABASE_URL + '/rest/v1/matches?id=eq.' + mid, {method:'DELETE', headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}}));
-      }
-      return Promise.all(promises);
-    })
-    .then(function() { toast('تم حذف المباريات المنتهية'); loadAdminMatches(); loadMatches(); loadHistory(); loadCurrentPredictions(); })
-    .catch(function(e) { toast('خطأ في حذف المباريات', true); });
+    }
+    return Promise.all(promises);
+  })
+  .then(function() {
+    toast('✅ تم تسجيل النتيجة وتحديث النقاط');
+    delete lockedMatches[matchId];
+    loadAdminMatches();
+    loadMatches();
+    loadLeaderboard();
+    loadUsers();
+    loadHistory();
+    loadCurrentPredictions();
+  })
+  .catch(function(e) { toast('خطأ في حفظ النتيجة: ' + e.message, true); });
 }
 
 // =====================================================
@@ -2970,7 +3124,7 @@ function loadAdminHistory() {
       for (var i = 0; i < matches.length; i++) {
         var m = matches[i];
         html += '<div class="history-item"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;align-items:center;"><span class="title">' + getFlag(m.team1) + ' ' + m.team1 + ' 🆚 ' + m.team2 + ' ' + getFlag(m.team2) + '</span><span style="font-weight:700;">' + m.result_team1 + ' - ' + m.result_team2 + '</span>' + 
-        (currentUser.role === 'admin' ? '<button onclick="deleteHistoryMatch(\'' + m.id + '\')" class="btn btn-danger" style="padding:4px 12px;font-size:0.8rem;">🗑️ حذف</button>' : '') + '</div><div style="font-size:0.8rem;color:var(--text-secondary);">📅 ' + new Date(m.match_date).toLocaleString('ar-SA', {dateStyle:'short', timeStyle:'short'}) + '</div></div>';
+        (currentUser.role === 'admin' ? '<button onclick="deleteHistoryMatch(\'' + m.id + '\')" class="btn btn-danger btn-sm">🗑️ حذف</button>' : '') + '</div><div style="font-size:0.8rem;color:var(--text-secondary);">📅 ' + new Date(m.match_date).toLocaleString('ar-SA', {dateStyle:'short', timeStyle:'short'}) + '</div></div>';
       }
       el.innerHTML = html;
     })
@@ -2980,10 +3134,26 @@ function loadAdminHistory() {
 function deleteHistoryMatch(matchId) {
   if (currentUser.role !== 'admin') { toast('ليس لديك صلاحية', true); return; }
   if (!confirm('حذف هذه المباراة من التاريخ؟')) return;
-  fetch(SUPABASE_URL + '/rest/v1/predictions?match_id=eq.' + matchId, {method:'DELETE', headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}})
-    .then(function() { return fetch(SUPABASE_URL + '/rest/v1/matches?id=eq.' + matchId, {method:'DELETE', headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}}); })
-    .then(function() { toast('تم الحذف من التاريخ'); loadHistory(); loadAdminHistory(); loadAdminMatches(); loadMatches(); loadCurrentPredictions(); })
-    .catch(function(e) { toast('خطأ في الحذف', true); });
+  
+  fetch(SUPABASE_URL + '/rest/v1/predictions?match_id=eq.' + matchId, {
+    method: 'DELETE',
+    headers: {'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY}
+  })
+  .then(function() {
+    return fetch(SUPABASE_URL + '/rest/v1/matches?id=eq.' + matchId, {
+      method: 'DELETE',
+      headers: {'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY}
+    });
+  })
+  .then(function() {
+    toast('✅ تم الحذف من التاريخ');
+    loadHistory();
+    loadAdminHistory();
+    loadAdminMatches();
+    loadMatches();
+    loadCurrentPredictions();
+  })
+  .catch(function(e) { toast('خطأ في الحذف: ' + e.message, true); });
 }
 
 // =====================================================
@@ -3007,17 +3177,19 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
+// تحميل الثيم والتحقق من الجلسة
 loadTheme();
 
 if (!checkSession()) {
   document.getElementById('authScreen').style.display = 'block';
   document.getElementById('appScreen').style.display = 'none';
 }
-console.log('❄️ تطبيق كأس العالم 2026 - النسخة المتكاملة');
-console.log('👑 المشرف الرئيسي: admin / admin123');
-console.log('🛡️ يمكن إضافة نواب مشرف من الإعدادات');
-console.log('🎨 ثلاثة أنماط ألوان: أسود-ذهبي، أبيض-أحمر، بنفسجي-زهري');
-console.log('✅ جميع الميزات مدمجة مع خلفية الثلج');
+
+console.log('⚽ كأس العالم 2026 - 8 ثيمات - نسخة مستقرة');
+console.log('🎨 الثيمات: أسود-ذهبي، أبيض-أزرق، رمادي-أخضر، كحلي-برتقالي، بنفسجي-وردي، رمادي-أسود، أزرق-تركواز، بيج-بني');
+console.log('👑 المشرف: admin / admin123');
+console.log('🛡️ إضافة نواب مشرف من الإعدادات');
+console.log('🔒 تنبيه: تأكد من تفعيل RLS في Supabase لحماية البيانات');
 </script>
 </body>
 </html>
