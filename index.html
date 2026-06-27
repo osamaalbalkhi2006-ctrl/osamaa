@@ -3,219 +3,1763 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>توقعات كأس العالم 2026</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<title>⚽ كأس العالم 2026 - 8 ثيمات</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+</script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Tahoma',sans-serif;background:#0c1a2e;color:#fff;min-height:100vh}
-.header{background:#0f2744;padding:14px 24px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #1e5799}
-.header .logo{font-size:1.2rem;font-weight:700;color:#f0c040}
-.btn-logout{background:0 0;border:1px solid #2980b9;color:#5dade2;padding:5px 14px;border-radius:20px;cursor:pointer}
-.container{max-width:1000px;margin:20px auto;padding:0 16px}
-.card{background:#0f2744;border:1px solid #1a3a5c;border-radius:16px;padding:20px;margin-bottom:16px}
-.card-title{color:#f0c040;font-size:1.1rem;font-weight:700;margin-bottom:16px}
-
-/* تحسين وتوحيد شكل الحقول والقوائم المنسدلة */
-input,select,button{padding:12px 14px;border-radius:10px;border:1px solid #1a3a5c;background:#0c1a2e;color:#fff;font-size:.95rem;font-family:'Tahoma',sans-serif;width:100%;transition: border-color 0.2s;}
-input:focus,select:focus{outline:0;border-color:#3498db}
-
-select {
-  cursor: pointer;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%235dade2' viewBox='0 0 24 24'><path d='M7 10l5 5 5-5z'/></svg>");
-  background-repeat: no-repeat;
-  background-position: left 12px center;
-  padding-left: 35px;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
+/* ============================================
+   RESET & BASE
+   ============================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.btn-primary{background:#2980b9;color:#fff;font-weight:700;border:0;cursor:pointer}
-.btn-primary:hover{background:#3498db}
-.btn-success{background:#27ae60;color:#fff;font-weight:700;border:0;cursor:pointer}
-.btn-success:hover{background:#2ecc71}
-.btn-danger{background:#e74c3c;color:#fff;font-weight:700;border:0;cursor:pointer}
-.btn-danger:hover{background:#c0392b}
-.hidden{display:none}
-.flex{display:flex;gap:12px;flex-wrap:wrap}
-.flex .form-group{flex:1;min-width:140px}
-.form-group{margin-bottom:12px}
-.form-group label{display:block;color:#aed6f1;font-size:.85rem;margin-bottom:4px}
-.match-card{background:#0c1a2e;border:1px solid #1a3a5c;border-radius:12px;padding:16px;margin-bottom:12px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center}
-.match-teams{display:flex;align-items:center;gap:12px;font-weight:700;flex-wrap:wrap}
-.team{text-align:center;min-width:70px}
-.team-flag{font-size:1.5rem}
-.team-name{font-size:.85rem;color:#aed6f1}
-.vs{color:#7fb3d3;padding:4px 10px}
-.match-status{font-size:.7rem;padding:3px 10px;border-radius:20px;font-weight:700}
-.status-upcoming{background:#1e5799;color:#aed6f1}
-.status-finished{background:#27ae60;color:#fff}
-.status-closed{background:#e74c3c;color:#fff}
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1a3a5c;color:#fff;padding:12px 24px;border-radius:30px;font-weight:700;z-index:999;display:none}
-.toast.show{display:block}
-.spinner{display:inline-block;width:20px;height:20px;border:3px solid rgba(255,255,255,0.2);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.empty-state{text-align:center;color:#7fb3d3;padding:40px 20px}
-.empty-state div{font-size:2.5rem;margin-bottom:10px}
-.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
-.tab{padding:8px 20px;border-radius:25px;border:1px solid #1e5799;background:0 0;color:#5dade2;cursor:pointer;font-weight:700}
-.tab.active{background:#1e5799;color:#fff}
-.sub-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
-.sub-tab{padding:6px 16px;border-radius:20px;border:1px solid #1a3a5c;background:0 0;color:#5dade2;cursor:pointer}
-.sub-tab.active{background:#1e5799;color:#fff}
-.sub-section{display:none}
-.sub-section.active{display:block}
-.leaderboard-row{display:flex;align-items:center;padding:10px 16px;background:#0c1a2e;border:1px solid #1a3a5c;border-radius:12px;margin-bottom:8px;gap:14px}
-.rank{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700}
-.rank-1{background:#f0c040;color:#0c1a2e}
-.rank-2{background:#b0b8c1;color:#0c1a2e}
-.rank-3{background:#cd7f32;color:#fff}
-.rank-other{background:#1a3a5c;color:#aed6f1}
-.points{color:#f0c040;font-weight:700;font-size:1.1rem}
-.table-scroll{overflow-x:auto}
-table{width:100%;border-collapse:collapse}
-th{text-align:right;padding:10px;color:#f0c040;border-bottom:2px solid #1e5799}
-td{padding:10px;border-bottom:1px solid #1a3a5c}
-.team-tag{background:#1a3a5c;padding:4px 10px;border-radius:8px;display:inline-block;margin:2px}
-.team-tag .del{background:#e74c3c;border:0;color:#fff;border-radius:4px;padding:0 6px;cursor:pointer;margin-right:4px}
-.history-item{background:#0c1a2e;border:1px solid #1a3a5c;border-radius:12px;padding:16px;margin-bottom:12px}
-.history-item .title{font-weight:700;color:#f0c040}
-.history-item .correct{color:#2ecc71;margin-top:6px}
-.history-item .correct span{background:#1a3a5c;padding:2px 10px;border-radius:20px;margin:3px;display:inline-block;color:#fff}
-.penalty-btns{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap}
-.penalty-btns button{padding:5px 14px;border:2px solid #1a3a5c;border-radius:8px;background:0 0;color:#5dade2;cursor:pointer;width:auto}
-.penalty-btns button.selected{border-color:#f0c040;color:#f0c040}
-.prediction-item{background:#0c1a2e;border:1px solid #1a3a5c;border-radius:8px;padding:10px 14px;margin-bottom:6px;display:flex;justify-content:space-between;flex-wrap:wrap}
-.prediction-item .pname{font-weight:700;color:#5dade2}
-.prediction-item .ppred{color:#f0c040;font-weight:700}
-@media(max-width:600px){.match-card{flex-direction:column;align-items:flex-start}}
+body {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  min-height: 100vh;
+  transition: background 0.5s ease, color 0.5s ease;
+  position: relative;
+}
+
+/* ============================================
+   THEMES - 8 أنماط ألوان
+   ============================================ */
+
+/* 1) أسود فحمي + ذهبي */
+.theme-black-gold {
+  --bg-primary: #0D0D0D;
+  --bg-secondary: #1a1a1a;
+  --bg-card: rgba(26, 26, 26, 0.95);
+  --text-primary: #D4AF37;
+  --text-secondary: #e8c84a;
+  --border-color: #D4AF37;
+  --shadow-color: rgba(212, 175, 55, 0.3);
+  --gradient: linear-gradient(135deg, #0D0D0D, #1a1a1a);
+  --accent: #D4AF37;
+  --card-bg: rgba(26, 26, 26, 0.9);
+  --input-bg: #1a1a1a;
+  --header-gradient: linear-gradient(135deg, #0D0D0D, #1a1a1a);
+  --white: #1a1a1a;
+  --glass: rgba(26, 26, 26, 0.8);
+  --glass-border: rgba(212, 175, 55, 0.2);
+}
+
+/* 2) أبيض ثلجي + أزرق سماوي */
+.theme-white-blue {
+  --bg-primary: #F8FAFC;
+  --bg-secondary: #ffffff;
+  --bg-card: rgba(255, 255, 255, 0.95);
+  --text-primary: #1a2a3a;
+  --text-secondary: #4a6a8a;
+  --border-color: #3A8DFF;
+  --shadow-color: rgba(58, 141, 255, 0.2);
+  --gradient: linear-gradient(135deg, #F8FAFC, #ffffff);
+  --accent: #3A8DFF;
+  --card-bg: #ffffff;
+  --input-bg: #ffffff;
+  --header-gradient: linear-gradient(135deg, #1a4a8a, #3A8DFF);
+  --white: #ffffff;
+  --glass: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(58, 141, 255, 0.2);
+}
+
+/* 3) رمادي غامق + أخضر زمردي */
+.theme-dark-green {
+  --bg-primary: #1A1A1A;
+  --bg-secondary: #2d2d2d;
+  --bg-card: rgba(26, 26, 26, 0.95);
+  --text-primary: #2ECC71;
+  --text-secondary: #58d68d;
+  --border-color: #2ECC71;
+  --shadow-color: rgba(46, 204, 113, 0.3);
+  --gradient: linear-gradient(135deg, #1A1A1A, #2d2d2d);
+  --accent: #2ECC71;
+  --card-bg: rgba(26, 26, 26, 0.9);
+  --input-bg: #1a1a1a;
+  --header-gradient: linear-gradient(135deg, #1A1A1A, #2d2d2d);
+  --white: #1a1a1a;
+  --glass: rgba(26, 26, 26, 0.8);
+  --glass-border: rgba(46, 204, 113, 0.2);
+}
+
+/* 4) كحلي داكن + برتقالي دافئ */
+.theme-navy-orange {
+  --bg-primary: #0A1A2F;
+  --bg-secondary: #1a2a4a;
+  --bg-card: rgba(10, 26, 47, 0.95);
+  --text-primary: #FF7A00;
+  --text-secondary: #ff9944;
+  --border-color: #FF7A00;
+  --shadow-color: rgba(255, 122, 0, 0.3);
+  --gradient: linear-gradient(135deg, #0A1A2F, #1a2a4a);
+  --accent: #FF7A00;
+  --card-bg: rgba(10, 26, 47, 0.9);
+  --input-bg: #0a1a2f;
+  --header-gradient: linear-gradient(135deg, #0A1A2F, #1a2a4a);
+  --white: #0a1a2f;
+  --glass: rgba(10, 26, 47, 0.8);
+  --glass-border: rgba(255, 122, 0, 0.2);
+}
+
+/* 5) بنفسجي غامق + وردي فاتح */
+.theme-purple-pink {
+  --bg-primary: #1a0a2e;
+  --bg-secondary: #2a1a4a;
+  --bg-card: rgba(42, 26, 62, 0.95);
+  --text-primary: #FF66CC;
+  --text-secondary: #ff99dd;
+  --border-color: #FF66CC;
+  --shadow-color: rgba(255, 102, 204, 0.3);
+  --gradient: linear-gradient(135deg, #1a0a2e, #2a1a4a);
+  --accent: #FF66CC;
+  --card-bg: rgba(42, 26, 62, 0.9);
+  --input-bg: #1a0a2e;
+  --header-gradient: linear-gradient(135deg, #1a0a2e, #4B0082);
+  --white: #1a0a2e;
+  --glass: rgba(42, 26, 62, 0.8);
+  --glass-border: rgba(255, 102, 204, 0.2);
+}
+
+/* 6) رمادي فاتح + أسود */
+.theme-light-gray {
+  --bg-primary: #F2F2F2;
+  --bg-secondary: #e8e8e8;
+  --bg-card: rgba(255, 255, 255, 0.95);
+  --text-primary: #1a1a1a;
+  --text-secondary: #4a4a4a;
+  --border-color: #2d2d2d;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --gradient: linear-gradient(135deg, #F2F2F2, #e8e8e8);
+  --accent: #1a1a1a;
+  --card-bg: #ffffff;
+  --input-bg: #ffffff;
+  --header-gradient: linear-gradient(135deg, #2d2d2d, #1a1a1a);
+  --white: #ffffff;
+  --glass: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(0, 0, 0, 0.2);
+}
+
+/* 7) أزرق داكن + أخضر تركواز */
+.theme-dark-teal {
+  --bg-primary: #0B3C5D;
+  --bg-secondary: #1a4a6a;
+  --bg-card: rgba(11, 60, 93, 0.95);
+  --text-primary: #00C9A7;
+  --text-secondary: #33ddbb;
+  --border-color: #00C9A7;
+  --shadow-color: rgba(0, 201, 167, 0.3);
+  --gradient: linear-gradient(135deg, #0B3C5D, #1a4a6a);
+  --accent: #00C9A7;
+  --card-bg: rgba(11, 60, 93, 0.9);
+  --input-bg: #0b3c5d;
+  --header-gradient: linear-gradient(135deg, #0B3C5D, #1a4a6a);
+  --white: #0b3c5d;
+  --glass: rgba(11, 60, 93, 0.8);
+  --glass-border: rgba(0, 201, 167, 0.2);
+}
+
+/* 8) بيج دافئ + بني شوكولاتة */
+.theme-warm-beige {
+  --bg-primary: #F5E6CC;
+  --bg-secondary: #e8d5b8;
+  --bg-card: rgba(245, 230, 204, 0.95);
+  --text-primary: #5A3E2B;
+  --text-secondary: #7a5a44;
+  --border-color: #5A3E2B;
+  --shadow-color: rgba(90, 62, 43, 0.2);
+  --gradient: linear-gradient(135deg, #F5E6CC, #e8d5b8);
+  --accent: #5A3E2B;
+  --card-bg: #f5e6cc;
+  --input-bg: #f5e6cc;
+  --header-gradient: linear-gradient(135deg, #5A3E2B, #7a5a44);
+  --white: #f5e6cc;
+  --glass: rgba(245, 230, 204, 0.8);
+  --glass-border: rgba(90, 62, 43, 0.2);
+}
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* ============================================
+   SNOWFALL BACKGROUND
+   ============================================ */
+.snowflakes {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.snowflake {
+  position: absolute;
+  top: -20px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1.5rem;
+  animation: fall linear infinite;
+  opacity: 0.7;
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(-20px) rotate(0deg) scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(110vh) rotate(720deg) scale(0.5);
+    opacity: 0.2;
+  }
+}
+
+/* ============================================
+   THREE DOTS MENU
+   ============================================ */
+.menu-container {
+  position: relative;
+  display: inline-block;
+}
+
+.menu-trigger {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px 12px;
+  color: var(--text-primary);
+  font-size: 2rem;
+  line-height: 1;
+  transition: transform 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.menu-trigger:hover {
+  transform: scale(1.1);
+}
+
+.menu-trigger .dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-primary);
+  margin: 0 1px;
+  transition: background 0.3s ease;
+}
+
+.menu-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 8px 0;
+  min-width: 280px;
+  box-shadow: 0 8px 32px var(--shadow-color);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px) scale(0.95);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 1000;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.menu-dropdown.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+.menu-dropdown .menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+  color: var(--text-primary);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  border: none;
+  background: transparent;
+  width: 100%;
+  font-family: inherit;
+  font-size: 0.95rem;
+  text-align: right;
+}
+
+.menu-dropdown .menu-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.menu-dropdown .menu-item .icon {
+  font-size: 1.2rem;
+}
+
+.menu-dropdown .menu-divider {
+  border: none;
+  border-top: 1px solid var(--border-color);
+  margin: 6px 16px;
+  opacity: 0.3;
+}
+
+.menu-dropdown .theme-section-title {
+  padding: 6px 16px;
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  opacity: 0.7;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.theme-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 16px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  border-radius: 8px;
+  margin: 2px 8px;
+}
+
+.theme-option:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.theme-option.active-theme {
+  background: rgba(255, 255, 255, 0.08);
+  border-right: 3px solid var(--border-color);
+}
+
+.theme-option .color-preview {
+  display: flex;
+  gap: 4px;
+}
+
+.theme-option .color-preview span {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.theme-option .color-preview span:hover {
+  transform: scale(1.1);
+}
+
+/* ============================================
+   GLASS CARD
+   ============================================ */
+.glass-card {
+  background: var(--glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 8px 32px var(--shadow-color);
+  position: relative;
+  z-index: 1;
+  transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 48px var(--shadow-color);
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+.header {
+  background: var(--header-gradient);
+  padding: 16px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid var(--border-color);
+  position: relative;
+  z-index: 10;
+  box-shadow: 0 4px 20px var(--shadow-color);
+}
+
+.header .logo {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: white;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  letter-spacing: 1px;
+}
+
+.header .logo span {
+  color: var(--border-color);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.header-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: white;
+}
+
+.header-user .role-badge {
+  font-size: 0.7rem;
+  padding: 2px 10px;
+  border-radius: 30px;
+  background: var(--border-color);
+  color: var(--bg-primary);
+  font-weight: 700;
+}
+
+.btn-logout {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 6px 18px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.btn-logout:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+}
+
+/* ============================================
+   MODAL
+   ============================================ */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-overlay.active {
+  display: flex;
+}
+
+.modal-content {
+  background: var(--bg-card);
+  border: 2px solid var(--border-color);
+  border-radius: 20px;
+  padding: 32px;
+  max-width: 480px;
+  width: 90%;
+  box-shadow: 0 16px 64px var(--shadow-color);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-content h2 {
+  margin-bottom: 16px;
+  color: var(--text-primary);
+}
+
+.modal-content .close-modal {
+  float: left;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.modal-content .close-modal:hover {
+  color: var(--text-primary);
+}
+
+/* ============================================
+   CONTAINER
+   ============================================ */
+.container {
+  max-width: 1100px;
+  margin: 24px auto;
+  padding: 0 20px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================================
+   TABS
+   ============================================ */
+.tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.tab {
+  padding: 10px 24px;
+  border-radius: 30px;
+  border: 2px solid var(--border-color);
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.tab:hover {
+  background: var(--border-color);
+  color: var(--bg-primary);
+  transform: translateY(-2px);
+}
+
+.tab.active {
+  background: var(--border-color);
+  color: var(--bg-primary);
+}
+
+.sub-tabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.sub-tab {
+  padding: 8px 18px;
+  border-radius: 25px;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.sub-tab:hover {
+  background: var(--border-color);
+  color: var(--bg-primary);
+}
+
+.sub-tab.active {
+  background: var(--border-color);
+  color: var(--bg-primary);
+}
+
+.sub-section {
+  display: none;
+}
+
+.sub-section.active {
+  display: block;
+  animation: fadeSlide 0.4s ease;
+}
+
+/* ============================================
+   MATCH CARD
+   ============================================ */
+.match-card {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 12px var(--shadow-color);
+  border-right: 4px solid var(--border-color);
+  transition: all 0.3s ease;
+  border: 1px solid var(--border-color);
+}
+
+.match-card:hover {
+  box-shadow: 0 4px 20px var(--shadow-color);
+}
+
+.match-card.closed {
+  border-right-color: #ff4444;
+  background: rgba(255, 68, 68, 0.08);
+}
+
+.match-card .top {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.match-teams {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-weight: 700;
+  flex-wrap: wrap;
+}
+
+.team {
+  text-align: center;
+  min-width: 70px;
+}
+
+.team-flag {
+  font-size: 2rem;
+}
+
+.team-name {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.vs {
+  color: var(--border-color);
+  padding: 4px 12px;
+  font-weight: 900;
+  font-size: 1.1rem;
+}
+
+.match-status {
+  font-size: 0.75rem;
+  padding: 4px 14px;
+  border-radius: 30px;
+  font-weight: 700;
+  display: inline-block;
+}
+
+.status-upcoming {
+  background: rgba(255, 215, 0, 0.15);
+  color: var(--text-primary);
+}
+
+.status-finished {
+  background: rgba(0, 200, 0, 0.15);
+  color: #00c853;
+}
+
+.status-closed {
+  background: rgba(255, 68, 68, 0.15);
+  color: #ff4444;
+}
+
+.status-locked {
+  background: rgba(255, 68, 0, 0.2);
+  color: #ff6d00;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+.btn {
+  padding: 10px 24px;
+  border-radius: 30px;
+  border: 2px solid var(--border-color);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  color: var(--text-primary);
+}
+
+.btn:hover {
+  background: var(--border-color);
+  color: var(--bg-primary);
+  transform: translateY(-2px);
+}
+
+.btn-primary {
+  background: var(--border-color);
+  color: var(--bg-primary);
+}
+
+.btn-primary:hover {
+  opacity: 0.85;
+  transform: translateY(-2px);
+}
+
+.btn-success {
+  background: #00c853;
+  color: white;
+  border-color: #00c853;
+}
+
+.btn-success:hover {
+  background: #00e676;
+  border-color: #00e676;
+}
+
+.btn-danger {
+  background: #ff1744;
+  color: white;
+  border-color: #ff1744;
+}
+
+.btn-danger:hover {
+  background: #ff5252;
+  border-color: #ff5252;
+}
+
+.btn-warning {
+  background: #ff9100;
+  color: white;
+  border-color: #ff9100;
+}
+
+.btn-warning:hover {
+  background: #ffab40;
+  border-color: #ffab40;
+}
+
+.btn-lock {
+  background: #651fff;
+  color: white;
+  border-color: #651fff;
+}
+
+.btn-lock:hover {
+  background: #7c4dff;
+  border-color: #7c4dff;
+}
+
+.btn-sm {
+  padding: 4px 12px;
+  font-size: 0.8rem;
+}
+
+/* ============================================
+   INPUTS
+   ============================================ */
+input, select {
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: 2px solid var(--border-color);
+  background: var(--input-bg);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  font-family: inherit;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--border-color);
+  box-shadow: 0 0 0 4px var(--shadow-color);
+}
+
+.password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.password-wrapper input {
+  padding-left: 48px;
+}
+
+.password-toggle {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.3rem;
+  color: var(--text-secondary);
+  padding: 4px 8px;
+  transition: color 0.3s ease;
+}
+
+.password-toggle:hover {
+  color: var(--text-primary);
+}
+
+.flex {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.flex .form-group {
+  flex: 1;
+  min-width: 140px;
+}
+
+.form-group {
+  margin-bottom: 14px;
+}
+
+.form-group label {
+  display: block;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+/* ============================================
+   LEADERBOARD
+   ============================================ */
+.leaderboard-row {
+  display: flex;
+  align-items: center;
+  padding: 12px 18px;
+  background: var(--card-bg);
+  border-radius: 14px;
+  margin-bottom: 8px;
+  gap: 16px;
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+.leaderboard-row:hover {
+  transform: translateX(4px);
+  box-shadow: 0 4px 16px var(--shadow-color);
+}
+
+.rank {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 1.1rem;
+}
+
+.rank-1 {
+  background: linear-gradient(135deg, #ffd700, #ffb300);
+  color: #1a1a1a;
+}
+
+.rank-2 {
+  background: linear-gradient(135deg, #c0c0c0, #a8a8a8);
+  color: #1a1a1a;
+}
+
+.rank-3 {
+  background: linear-gradient(135deg, #cd7f32, #b8860b);
+  color: white;
+}
+
+.rank-other {
+  background: var(--border-color);
+  color: var(--bg-primary);
+}
+
+.points {
+  color: var(--text-primary);
+  font-weight: 800;
+  font-size: 1.2rem;
+}
+
+/* ============================================
+   PREDICTION AREA
+   ============================================ */
+.prediction-area {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-top: 8px;
+  border: 2px dashed var(--border-color);
+}
+
+.prediction-area .score-input {
+  width: 56px;
+  padding: 8px;
+  border: 2px solid var(--border-color);
+  border-radius: 10px;
+  background: var(--input-bg);
+  color: var(--text-primary);
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.my-prediction {
+  background: var(--border-color);
+  padding: 8px 16px;
+  border-radius: 12px;
+  color: var(--bg-primary);
+  font-weight: 700;
+  display: inline-block;
+}
+
+/* ============================================
+   TOAST
+   ============================================ */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  padding: 16px 32px;
+  border-radius: 16px;
+  font-weight: 700;
+  z-index: 999;
+  border: 2px solid var(--border-color);
+  box-shadow: 0 8px 40px var(--shadow-color);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+  pointer-events: all;
+}
+
+.toast.error {
+  border-color: #ff1744;
+}
+
+/* ============================================
+   HISTORY
+   ============================================ */
+.history-item {
+  background: var(--card-bg);
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 12px;
+  border: 1px solid var(--border-color);
+  border-left: 3px solid var(--border-color);
+}
+
+.history-item .title {
+  font-weight: 700;
+}
+
+.history-item .correct {
+  color: #00c853;
+  margin-top: 6px;
+}
+
+.history-item .correct span {
+  background: var(--border-color);
+  padding: 2px 12px;
+  border-radius: 30px;
+  margin: 3px;
+  display: inline-block;
+  color: var(--bg-primary);
+}
+
+/* ============================================
+   PREDICTION ITEMS
+   ============================================ */
+.prediction-item {
+  background: var(--card-bg);
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  border: 1px solid var(--border-color);
+}
+
+.prediction-item .pname {
+  font-weight: 700;
+}
+
+.prediction-item .ppred {
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+/* ============================================
+   EMPTY STATE & SPINNER
+   ============================================ */
+.empty-state {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: 40px 20px;
+}
+
+.empty-state div {
+  font-size: 3rem;
+  margin-bottom: 12px;
+}
+
+.spinner {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  border: 4px solid var(--border-color);
+  border-top-color: var(--text-secondary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ============================================
+   AUTH SCREEN
+   ============================================ */
+.auth-container {
+  max-width: 440px;
+  margin: 60px auto;
+  background: var(--bg-card);
+  border-radius: 20px;
+  padding: 48px 40px;
+  border: 2px solid var(--border-color);
+  box-shadow: 0 8px 48px var(--shadow-color);
+}
+
+.auth-container .auth-icon {
+  text-align: center;
+  font-size: 4rem;
+  margin-bottom: 8px;
+}
+
+.auth-container h1 {
+  text-align: center;
+  font-size: 1.8rem;
+}
+
+.auth-container p {
+  text-align: center;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+
+.auth-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.auth-tabs .tab {
+  flex: 1;
+  text-align: center;
+}
+
+.auth-msg {
+  text-align: center;
+  margin-top: 12px;
+  font-weight: 600;
+}
+
+.auth-msg.error {
+  color: #ff1744;
+}
+
+.auth-msg.success {
+  color: #00c853;
+}
+
+/* ============================================
+   COUNTDOWN STYLES
+   ============================================ */
+.countdown {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 700;
+  margin-top: 6px;
+  padding: 4px 12px;
+  border-radius: 30px;
+  display: inline-block;
+  background: rgba(255, 215, 0, 0.1);
+}
+
+.countdown.urgent {
+  color: #ff6d00;
+  background: rgba(255, 109, 0, 0.15);
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.countdown.ended {
+  color: #ff1744;
+  background: rgba(255, 23, 68, 0.1);
+}
+
+/* ============================================
+   PLAYER SUMMARY
+   ============================================ */
+.player-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 16px;
+  background: var(--card-bg);
+  border-radius: 14px;
+  border: 1px solid var(--border-color);
+}
+
+.player-summary .stat {
+  text-align: center;
+}
+
+.player-summary .stat .number {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.player-summary .stat .label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+  .header {
+    padding: 12px 16px;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .header .logo {
+    font-size: 1.1rem;
+  }
+  
+  .container {
+    padding: 0 12px;
+    margin: 16px auto;
+  }
+  
+  .glass-card {
+    padding: 16px;
+  }
+  
+  .match-card .top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .auth-container {
+    padding: 32px 20px;
+    margin: 30px 16px;
+  }
+  
+  .tabs {
+    gap: 6px;
+  }
+  
+  .tab {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+  }
+  
+  .team {
+    min-width: 50px;
+  }
+  
+  .team-flag {
+    font-size: 1.5rem;
+  }
+  
+  .team-name {
+    font-size: 0.75rem;
+  }
+  
+  .menu-dropdown {
+    left: auto;
+    right: 0;
+    min-width: 220px;
+  }
+  
+  .modal-content {
+    padding: 24px;
+    margin: 16px;
+  }
+}
+
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.team-tag {
+  background: var(--border-color);
+  color: var(--bg-primary);
+  padding: 6px 14px;
+  border-radius: 30px;
+  display: inline-block;
+  margin: 4px;
+  font-weight: 600;
+}
+
+.team-tag .del {
+  background: #ff1744;
+  border: none;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  margin-right: 6px;
+  font-size: 0.7rem;
+}
+
+.penalty-btns {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.penalty-btns button {
+  padding: 6px 16px;
+  border: 2px solid var(--border-color);
+  border-radius: 30px;
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  width: auto;
+}
+
+.penalty-btns button:hover {
+  background: var(--border-color);
+  color: var(--bg-primary);
+}
+
+.penalty-btns button.selected {
+  background: var(--border-color);
+  color: var(--bg-primary);
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  text-align: right;
+  padding: 12px;
+  color: var(--text-secondary);
+  border-bottom: 2px solid var(--border-color);
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+td {
+  padding: 12px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.lock-overlay {
+  display: inline-block;
+  background: #ff6d00;
+  color: white;
+  padding: 4px 14px;
+  border-radius: 30px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.settings-section {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.settings-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.settings-section h3 {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin-bottom: 12px;
+}
 </style>
 </head>
 <body>
 
+<!-- ============================================
+     SNOWFALL BACKGROUND
+     ============================================ -->
+<div class="snowflakes" id="snowflakes"></div>
+
+<!-- ============================================
+     MODAL FOR SETTINGS
+     ============================================ -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal-content">
+    <button class="close-modal" onclick="closeSettings()">✕</button>
+    <h2>⚙️ الإعدادات</h2>
+    <div id="settingsContent"></div>
+  </div>
+</div>
+
+<!-- ============================================
+     AUTH SCREEN
+     ============================================ -->
 <div id="authScreen">
-<div style="max-width:420px;margin:40px auto;background:#0f2744;border-radius:20px;padding:40px;border:1px solid #1a3a5c;">
-<div style="text-align:center;font-size:3.5rem;">🏆</div>
-<h1 style="text-align:center;color:#f0c040;">كأس العالم 2026</h1>
-<p style="text-align:center;color:#7fb3d3;margin-bottom: 20px;">منافسة التوقعات بين الأصدقاء</p>
-<div style="display:flex;gap:8px;margin:20px 0;">
-<button class="tab active" id="btnTabLogin" onclick="switchAuth('login')">تسجيل الدخول</button>
-<button class="tab" id="btnTabRegister" onclick="switchAuth('register')">حساب جديد</button>
-</div>
-<div id="loginForm">
-<div class="form-group"><label>اسم المستخدم</label><input id="loginUser" type="text" placeholder="ادخل اسم المستخدم"></div>
-<div class="form-group"><label>كلمة المرور</label><input id="loginPass" type="password" placeholder="ادخل كلمة المرور"></div>
-<button class="btn-primary" onclick="doLogin()" style="width:100%;">دخول</button>
-<div id="loginMsg" style="text-align:center;margin-top:12px;color:#e74c3c;"></div>
-</div>
-<div id="registerForm" class="hidden">
-<div class="form-group"><label>الاسم الكامل</label><input id="regName" type="text" placeholder="اسمك"></div>
-<div class="form-group"><label>اسم المستخدم</label><input id="regUser" type="text" placeholder="اختر اسم مستخدم"></div>
-<div class="form-group"><label>كلمة المرور</label><input id="regPass" type="password" placeholder="كلمة مرور"></div>
-<button class="btn-primary" onclick="doRegister()" style="width:100%;">انشاء الحساب</button>
-<div id="regMsg" style="text-align:center;margin-top:12px;color:#e74c3c;"></div>
-</div>
-</div>
+  <div class="auth-container">
+    <div class="auth-icon">🏆</div>
+    <h1>⚽ كأس العالم 2026</h1>
+    <p>منافسة التوقعات بين الأصدقاء</p>
+    
+    <div class="auth-tabs">
+      <button class="tab active" onclick="switchAuth('login')">تسجيل الدخول</button>
+      <button class="tab" onclick="switchAuth('register')">حساب جديد</button>
+    </div>
+    
+    <div id="loginForm">
+      <div style="display:flex;gap:10px;margin-bottom:16px;">
+        <button class="tab active" style="flex:1;" onclick="selectRole('admin')">👑 مشرف</button>
+        <button class="tab" style="flex:1;" onclick="selectRole('player')">⚽ لاعب</button>
+      </div>
+      <div class="form-group">
+        <label>اسم المستخدم</label>
+        <input id="loginUser" type="text" placeholder="ادخل اسم المستخدم">
+      </div>
+      <div class="form-group">
+        <label>كلمة المرور</label>
+        <div class="password-wrapper">
+          <input id="loginPass" type="password" placeholder="ادخل كلمة المرور">
+          <button class="password-toggle" onclick="togglePassword('loginPass', this)" type="button">👁️</button>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="doLogin()" style="width:100%;">دخول</button>
+      <div id="loginMsg" class="auth-msg"></div>
+    </div>
+    
+    <div id="registerForm" class="hidden">
+      <div class="form-group">
+        <label>الاسم الكامل</label>
+        <input id="regName" type="text" placeholder="اسمك">
+      </div>
+      <div class="form-group">
+        <label>اسم المستخدم</label>
+        <input id="regUser" type="text" placeholder="اختر اسم مستخدم">
+      </div>
+      <div class="form-group">
+        <label>كلمة المرور</label>
+        <div class="password-wrapper">
+          <input id="regPass" type="password" placeholder="كلمة مرور">
+          <button class="password-toggle" onclick="togglePassword('regPass', this)" type="button">👁️</button>
+        </div>
+      </div>
+      <button class="btn btn-success" onclick="doRegister()" style="width:100%;">انشاء الحساب</button>
+      <div id="regMsg" class="auth-msg"></div>
+    </div>
+  </div>
 </div>
 
+<!-- ============================================
+     APP SCREEN
+     ============================================ -->
 <div id="appScreen" class="hidden">
-<div class="header">
-<div class="logo">🏆 كأس العالم 2026</div>
-<div><span id="headerUser"></span> <button class="btn-logout" onclick="doLogout()">خروج</button></div>
-</div>
-<div class="container">
-<div class="tabs" id="mainTabs"></div>
-
-<div class="section" id="section-matches" style="display:block;">
-<div class="card"><div class="card-title">⚽ المباريات والتوقعات</div><div id="matchesList"><div class="empty-state"><div class="spinner"></div>جاري التحميل...</div></div></div>
-</div>
-
-<div class="section" id="section-leaderboard" style="display:none;">
-<div class="card"><div class="card-title">🏅 ترتيب اللاعبين</div><div id="leaderboardList"><div class="empty-state"><div class="spinner"></div>جاري التحميل...</div></div></div>
-</div>
-
-<div class="section" id="section-history" style="display:none;">
-<div class="card"><div class="card-title">📜 صفحة التاريخ</div><div id="historyList"><div class="empty-state"><div class="spinner"></div>جاري التحميل...</div></div></div>
-</div>
-
-<div class="section" id="section-admin" style="display:none;">
-<div class="sub-tabs" id="subTabs"></div>
-
-<div class="sub-section active" id="sub-predictions">
-<div class="card">
-<div class="card-title">📊 التوقعات الحالية</div>
-<div id="currentPredictions"><div class="empty-state"><div class="spinner"></div>جاري التحميل...</div></div>
-</div>
-</div>
-
-<div class="sub-section" id="sub-matches">
-<div class="card">
-<div class="card-title">➕ اضافة مباراة جديدة</div>
-<div class="flex">
-<div class="form-group"><label>الفريق الأول</label><select id="aTeam1"><option value="">اختر</option></select></div>
-<div class="form-group"><label>الفريق الثاني</label><select id="aTeam2"><option value="">اختر</option></select></div>
-<div class="form-group"><label>تاريخ ووقت المباراة</label><input id="aMatchDate" type="datetime-local"></div>
-<div class="form-group"><label>نوع المباراة</label><select id="aType"><option value="normal">بدون ركلات</option><option value="penalty">مع ركلات ترجيح</option></select></div>
-<div class="form-group" style="display:flex;align-items:flex-end;"><button class="btn-success" onclick="addMatch()">➕ اضافة</button></div>
-</div>
-</div>
-<div class="card"><div class="card-title">⚙️ ادارة المباريات</div><div id="adminMatches"><div class="empty-state"><div class="spinner"></div>جاري التحميل...</div></div></div>
-<div class="card" style="border-color:#e74c3c;">
-<div class="card-title" style="color:#e74c3c;">⚠️ منطقة الخطر</div>
-<div class="flex"><button class="btn-danger" onclick="deleteAllMatches()">🗑️ حذف جميع المباريات</button><button class="btn-danger" onclick="deleteFinishedMatches()" style="background:#c0392b;">🗑️ حذف المنتهية فقط</button></div>
-</div>
-</div>
-
-<div class="sub-section" id="sub-players">
-<div class="card">
-<div class="card-title">👥 ادارة اللاعبين</div>
-<div class="flex" style="margin-bottom:12px;">
-<input id="newName" placeholder="الاسم الكامل" style="flex:1;">
-<input id="newUser" placeholder="اسم المستخدم" style="flex:1;">
-<input id="newPass" type="text" placeholder="كلمة المرور" style="flex:1;">
-<button class="btn-success" onclick="addPlayer()">➕ اضافة</button>
-</div>
-<div class="table-scroll"><table><thead><tr><th>#</th><th>الاسم</th><th>اسم المستخدم</th><th>كلمة المرور</th><th>الدور</th><th>النقاط</th><th>التحكم</th></tr></thead><tbody id="usersTableBody"><tr><td colspan="7" style="text-align:center;color:#7fb3d3;">جاري التحميل...</td></tr></tbody></table></div>
-</div>
-</div>
-
-<div class="sub-section" id="sub-teams">
-<div class="card">
-<div class="card-title">🏳️ ادارة المنتخبات</div>
-<div id="teamsList" style="display:flex;flex-wrap:wrap;gap:6px;"><span style="color:#7fb3d3;">جاري التحميل...</span></div>
-</div>
-</div>
-
-<div class="sub-section" id="sub-history">
-<div class="card">
-<div class="card-title">📜 ادارة التاريخ</div>
-<div id="adminHistoryList"><div class="empty-state"><div>📜</div>جاري التحميل...</div></div>
-</div>
-</div>
-
-</div>
-</div>
+  <div class="header">
+    <div class="logo">⚽ كأس العالم <span>2026</span></div>
+    <div class="header-left">
+      <div class="header-user">
+        <span id="headerUser"></span>
+        <span class="role-badge" id="headerRole"></span>
+        <button class="btn-logout" onclick="doLogout()">🚪 خروج</button>
+      </div>
+      
+      <div class="menu-container">
+        <button class="menu-trigger" onclick="toggleMenu()">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </button>
+        <div class="menu-dropdown" id="menuDropdown">
+          <div class="theme-section-title">🎨 اختر الثيم</div>
+          
+          <div class="theme-option active-theme" onclick="changeTheme('black-gold')">
+            <div class="color-preview">
+              <span style="background:#0D0D0D;"></span>
+              <span style="background:#D4AF37;"></span>
+            </div>
+            أسود & ذهبي
+          </div>
+          
+          <div class="theme-option" onclick="changeTheme('white-blue')">
+            <div class="color-preview">
+              <span style="background:#FFFFFF;border-color:#ccc;"></span>
+              <span style="background:#3A8DFF;"></span>
+            </div>
+            أبيض & أزرق
+          </div>
+          
+          <div class="theme-option" onclick="changeTheme('dark-green')">
+            <div class="color-preview">
+              <span style="background:#1F1F1F;"></span>
+              <span style="background:#2ECC71;"></span>
+            </div>
+            رمادي & أخضر
+          </div>
+          
+          <div class="theme-option" onclick="changeTheme('navy-orange')">
+            <div class="color-preview">
+              <span style="background:#0A1A2F;"></span>
+              <span style="background:#FF7A00;"></span>
+            </div>
+            كحلي & برتقالي
+          </div>
+          
+          <div class="theme-option" onclick="changeTheme('purple-pink')">
+            <div class="color-preview">
+              <span style="background:#4B0082;"></span>
+              <span style="background:#FF66CC;"></span>
+            </div>
+            بنفسجي & وردي
+          </div>
+          
+          <div class="theme-option" onclick="changeTheme('light-gray')">
+            <div class="color-preview">
+              <span style="background:#F2F2F2;border-color:#ccc;"></span>
+              <span style="background:#000000;"></span>
+            </div>
+            رمادي & أسود
+          </div>
+          
+          <div class="theme-option" onclick="changeTheme('dark-teal')">
+            <div class="color-preview">
+              <span style="background:#0B3C5D;"></span>
+              <span style="background:#00C9A7;"></span>
+            </div>
+            أزرق & تركواز
+          </div>
+          
+          <div class="theme-option" onclick="changeTheme('warm-beige')">
+            <div class="color-preview">
+              <span style="background:#F5E6CC;border-color:#ccc;"></span>
+              <span style="background:#5A3E2B;"></span>
+            </div>
+            بيج & بني
+          </div>
+          
+          <hr class="menu-divider">
+          
+          <button class="menu-item" onclick="showSection('matches'); toggleMenu();">
+            <span class="icon">⚽</span> المباريات
+          </button>
+          <button class="menu-item" onclick="showSection('leaderboard'); toggleMenu();">
+            <span class="icon">🏅</span> الترتيب
+          </button>
+          <button class="menu-item" onclick="showSection('history'); toggleMenu();">
+            <span class="icon">📜</span> التاريخ
+          </button>
+          
+          <hr class="menu-divider">
+          
+          <button class="menu-item" onclick="openSettings(); toggleMenu();" id="settingsMenuBtn" style="display:none;">
+            <span class="icon">⚙️</span> الإعدادات
+          </button>
+          
+          <button class="menu-item" onclick="showSection('admin'); toggleMenu();" id="adminMenuBtn" style="display:none;">
+            <span class="icon">👑</span> لوحة المشرف
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="container">
+    <div id="playerSummary" style="display:none;"></div>
+    
+    <div class="tabs" id="mainTabs"></div>
+    
+    <div class="section" id="section-matches" style="display:block;">
+      <div class="glass-card">
+        <h2 style="margin-bottom:16px;">⚽ المباريات والتوقعات</h2>
+        <div id="matchesList"><div class="empty-state"><div class="spinner"></div>جاري التحميل...</div></div>
+      </div>
+    </div>
+    
+    <div class="section" id="section-leaderboard" style="display:none;">
+      <div class="glass-card">
+        <h2 style="margin-bottom:16px;">🏅 ترتيب اللاعبين</h2>
+        <div id="leaderboardList"><div class="empty-state"><div class="spinner"></div>جاري التحميل...</div></div>
+      </div>
+    </div>
+    
+    <div class="section" id="section-history" style="display:none;">
+      <div class="glass-card">
+        <h2 style="margin-bottom:16px;">📜 صفحة التاريخ</h2>
+        <div id="historyList"><div class="empty-state"><div class="spinner"></div>جاري التحميل...</div></div>
+      </div>
+    </div>
+    
+    <div class="section" id="section-admin" style="display:none;">
+      <div class="sub-tabs" id="subTabs"></div>
+      
+      <div class="sub-section active" id="sub-predictions">
+        <div class="glass-card">
+          <h2 style="margin-bottom:16px;">📊 التوقعات الحالية</h2>
+          <div id="currentPredictions"><div class="empty-state"><div class="spinner"></div>جاري التحميل...</div></div>
+        </div>
+      </div>
+      
+      <div class="sub-section" id="sub-matches">
+        <div class="glass-card">
+          <h2 style="margin-bottom:16px;">➕ اضافة مباراة جديدة</h2>
+          <div class="flex">
+            <div class="form-group">
+              <label>الفريق الأول</label>
+              <select id="aTeam1"><option value="">اختر</option></select>
+            </div>
+            <div class="form-group">
+              <label>الفريق الثاني</label>
+              <select id="aTeam2"><option value="">اختر</option></select>
+            </div>
+            <div class="form-group">
+              <label>تاريخ المباراة</label>
+              <input id="aDate" type="date">
+            </div>
+            <div class="form-group">
+              <label>وقت المباراة</label>
+              <input id="aTime" type="time" value="12:00">
+            </div>
+            <div class="form-group">
+              <label>نوع المباراة</label>
+              <select id="aType">
+                <option value="normal">بدون ركلات</option>
+                <option value="penalty">مع ركلات ترجيح</option>
+              </select>
+            </div>
+            <div class="form-group" style="display:flex;align-items:flex-end;">
+              <button class="btn btn-success" onclick="addMatch()">➕ اضافة</button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="glass-card" style="margin-top:16px;">
+          <h2 style="margin-bottom:16px;">⚙️ ادارة المباريات</h2>
+          <div id="adminMatches"><div class="empty-state"><div class="spinner"></div>جاري التحميل...</div></div>
+        </div>
+        
+        <div class="glass-card" style="margin-top:16px;border-color:#ff1744;">
+          <h2 style="color:#ff1744;margin-bottom:16px;">⚠️ منطقة الخطر</h2>
+          <div class="flex">
+            <button class="btn btn-danger" onclick="deleteAllMatches()">🗑️ حذف جميع المباريات</button>
+            <button class="btn btn-danger" onclick="deleteFinishedMatches()">🗑️ حذف المنتهية فقط</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="sub-section" id="sub-players">
+        <div class="glass-card">
+          <h2 style="margin-bottom:16px;">👥 ادارة اللاعبين</h2>
+          <div class="flex" style="margin-bottom:16px;">
+            <input id="newName" placeholder="الاسم الكامل" style="flex:1;">
+            <input id="newUser" placeholder="اسم المستخدم" style="flex:1;">
+            <input id="newPass" type="text" placeholder="كلمة المرور" style="flex:1;">
+            <button class="btn btn-success" onclick="addPlayer()">➕ اضافة</button>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr><th>#</th><th>الاسم</th><th>اسم المستخدم</th><th>الدور</th><th>النقاط</th><th>التحكم</th></tr>
+              </thead>
+              <tbody id="usersTableBody"><tr><td colspan="6" style="text-align:center;color:var(--text-secondary);">جاري التحميل...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+      <div class="sub-section" id="sub-teams">
+        <div class="glass-card">
+          <h2 style="margin-bottom:16px;">🏳️ ادارة المنتخبات</h2>
+          <div id="teamsList" style="display:flex;flex-wrap:wrap;gap:8px;"><span style="color:var(--text-secondary);">جاري التحميل...</span></div>
+        </div>
+      </div>
+      
+      <div class="sub-section" id="sub-history">
+        <div class="glass-card">
+          <h2 style="margin-bottom:16px;">📜 ادارة التاريخ</h2>
+          <div id="adminHistoryList"><div class="empty-state"><div>📜</div>جاري التحميل...</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div id="toast" class="toast"></div>
 
 <script>
+// =====================================================
+//  CONFIG - تنبيه أمني: هذا المفتاح للاستخدام في الواجهة الأمامية فقط
+//  يجب تفعيل RLS في Supabase لحماية البيانات
+// =====================================================
 var SUPABASE_URL = 'https://azjvyntnnertgcmvsfmq.supabase.co';
 var SUPABASE_KEY = 'sb_publishable_FQT6pUUgos4vOgeAqjdQng_stG_DiAi';
 
+// =====================================================
+//  TEAMS LIST
+// =====================================================
 var ALL_TEAMS = [
-{name:'استراليا',flag:'🇦🇺'},{name:'ايران',flag:'🇮ران'},{name:'اليابان',flag:'🇯🇵'},{name:'الاردن',flag:'🇯🇴'},{name:'كوريا الجنوبية',flag:'🇰🇷'},{name:'اوزبكستان',flag:'🇺🇿'},{name:'قطر',flag:'🇶🇦'},{name:'السعودية',flag:'🇸🇦'},{name:'العراق',flag:'🇮🇶'},
+{name:'استراليا',flag:'🇦🇺'},{name:'ايران',flag:'🇮🇷'},{name:'اليابان',flag:'🇯🇵'},{name:'الاردن',flag:'🇯🇴'},{name:'كوريا الجنوبية',flag:'🇰🇷'},{name:'اوزبكستان',flag:'🇺🇿'},{name:'قطر',flag:'🇶🇦'},{name:'السعودية',flag:'🇸🇦'},{name:'العراق',flag:'🇮🇶'},
 {name:'الجزائر',flag:'🇩🇿'},{name:'الراس الاخضر',flag:'🇨🇻'},{name:'مصر',flag:'🇪🇬'},{name:'غانا',flag:'🇬🇭'},{name:'المغرب',flag:'🇲🇦'},{name:'تونس',flag:'🇹🇳'},{name:'ساحل العاج',flag:'🇨🇮'},{name:'السنغال',flag:'🇸🇳'},{name:'جنوب افريقيا',flag:'🇿🇦'},{name:'الكونغو',flag:'🇨🇩'},
-{name:'النمسا',flag:'🇦🇹'},{name:'بلجيكا',flag:'🇧🇪'},{name:'كرواتيا',flag:'🇭🇷'},{name:'انجلترا',flag:'🏴󠁧󠁢󠁥الن󠁧󠁢󠁳󠁣󠁴󠁿'},{name:'فرنسا',flag:'🇫🇷'},{name:'المانيا',flag:'🇩🇪'},{name:'هولندا',flag:'🇳🇱'},{name:'النرويج',flag:'🇳🇴'},{name:'البرتغال',flag:'🇵🇹'},{name:'اسكتلندا',flag:'🏴󠁧󠁢󠁳󠁣󠁴󠁿'},{name:'اسبانيا',flag:'🇪🇸'},{name:'سويسرا',flag:'🇨🇭'},{name:'تركيا',flag:'🇹🇷'},{name:'السويد',flag:'🇸🇪'},{name:'البوسنة',flag:'🇧🇦'},{name:'التشيك',flag:'🇨🇿'},
+{name:'النمسا',flag:'🇦🇹'},{name:'بلجيكا',flag:'🇧🇪'},{name:'كرواتيا',flag:'🇭🇷'},{name:'انجلترا',flag:'🏴󠁧󠁢󠁥󠁮󠁧󠁿'},{name:'فرنسا',flag:'🇫🇷'},{name:'المانيا',flag:'🇩🇪'},{name:'هولندا',flag:'🇳🇱'},{name:'النرويج',flag:'🇳🇴'},{name:'البرتغال',flag:'🇵🇹'},{name:'اسكتلندا',flag:'🏴󠁧󠁢󠁳󠁣󠁴󠁿'},{name:'اسبانيا',flag:'🇪🇸'},{name:'سويسرا',flag:'🇨🇭'},{name:'تركيا',flag:'🇹🇷'},{name:'السويد',flag:'🇸🇪'},{name:'البوسنة',flag:'🇧🇦'},{name:'التشيك',flag:'🇨🇿'},
 {name:'كندا',flag:'🇨🇦'},{name:'المكسيك',flag:'🇲🇽'},{name:'الولايات المتحدة',flag:'🇺🇸'},{name:'بنما',flag:'🇵🇦'},{name:'هايتي',flag:'🇭🇹'},{name:'كوراساو',flag:'🇨🇼'},
 {name:'الارجنتين',flag:'🇦🇷'},{name:'البرازيل',flag:'🇧🇷'},{name:'كولومبيا',flag:'🇨🇴'},{name:'الاكوادور',flag:'🇪🇨'},{name:'اوروغواي',flag:'🇺🇾'},{name:'باراغواي',flag:'🇵🇾'},
 {name:'نيوزيلندا',flag:'🇳🇿'}
 ];
 
+// =====================================================
+//  STATE
+// =====================================================
 var currentUser = null;
-var countdowns = {};
-var selectedPenalty = {};
+var selectedRole = 'admin';
+var refreshInterval = null;
+var lockedMatches = {};
+var currentTheme = 'black-gold';
 
+// =====================================================
+//  SNOWFALL
+// =====================================================
+function createSnowflakes() {
+  var container = document.getElementById('snowflakes');
+  var flakes = ['❄', '❅', '❆', '✦'];
+  for (var i = 0; i < 30; i++) {
+    var span = document.createElement('span');
+    span.className = 'snowflake';
+    span.textContent = flakes[Math.floor(Math.random() * flakes.length)];
+    span.style.left = Math.random() * 100 + '%';
+    span.style.fontSize = (0.8 + Math.random() * 1.5) + 'rem';
+    span.style.animationDuration = (8 + Math.random() * 12) + 's';
+    span.style.animationDelay = (Math.random() * 10) + 's';
+    container.appendChild(span);
+  }
+}
+createSnowflakes();
+
+// =====================================================
+//  THEME FUNCTIONS
+// =====================================================
+function changeTheme(theme, closeMenu) {
+  currentTheme = theme;
+  var body = document.body;
+  body.className = '';
+  
+  if (theme === 'black-gold') body.classList.add('theme-black-gold');
+  else if (theme === 'white-blue') body.classList.add('theme-white-blue');
+  else if (theme === 'dark-green') body.classList.add('theme-dark-green');
+  else if (theme === 'navy-orange') body.classList.add('theme-navy-orange');
+  else if (theme === 'purple-pink') body.classList.add('theme-purple-pink');
+  else if (theme === 'light-gray') body.classList.add('theme-light-gray');
+  else if (theme === 'dark-teal') body.classList.add('theme-dark-teal');
+  else if (theme === 'warm-beige') body.classList.add('theme-warm-beige');
+  
+  document.querySelectorAll('.theme-option').forEach(function(el) {
+    el.classList.remove('active-theme');
+  });
+  var options = document.querySelectorAll('.theme-option');
+  var themeMap = {
+    'black-gold': 0, 'white-blue': 1, 'dark-green': 2, 'navy-orange': 3,
+    'purple-pink': 4, 'light-gray': 5, 'dark-teal': 6, 'warm-beige': 7
+  };
+  if (themeMap[theme] !== undefined && options[themeMap[theme]]) {
+    options[themeMap[theme]].classList.add('active-theme');
+  }
+  
+  localStorage.setItem('wc_theme', theme);
+  
+  if (closeMenu !== false) {
+    toggleMenu();
+  }
+  toast('🎨 تم تغيير المظهر');
+}
+
+function loadTheme() {
+  var saved = localStorage.getItem('wc_theme');
+  if (saved) {
+    changeTheme(saved, false);
+  } else {
+    changeTheme('black-gold', false);
+  }
+}
+
+// =====================================================
+//  THREE DOTS MENU
+// =====================================================
+function toggleMenu() {
+  var dropdown = document.getElementById('menuDropdown');
+  if (dropdown) {
+    dropdown.classList.toggle('active');
+  }
+}
+
+document.addEventListener('click', function(e) {
+  var container = document.querySelector('.menu-container');
+  if (container && !container.contains(e.target)) {
+    var dropdown = document.getElementById('menuDropdown');
+    if (dropdown) dropdown.classList.remove('active');
+  }
+});
+
+// =====================================================
+//  PASSWORD TOGGLE
+// =====================================================
+function togglePassword(inputId, btn) {
+  var input = document.getElementById(inputId);
+  if (input) {
+    if (input.type === 'password') {
+      input.type = 'text';
+      btn.textContent = '🙈';
+    } else {
+      input.type = 'password';
+      btn.textContent = '👁️';
+    }
+  }
+}
+
+// =====================================================
+//  HELPERS
+// =====================================================
 function sb(table, method, body, params) {
   method = method || 'GET';
   body = body || null;
@@ -226,22 +1770,28 @@ function sb(table, method, body, params) {
       'apikey': SUPABASE_KEY,
       'Authorization': 'Bearer ' + SUPABASE_KEY,
       'Content-Type': 'application/json',
-      'Prefer': 'return=representation'
+      'Prefer': method === 'POST' ? 'return=representation' : 'return=representation'
     }
   };
   if (body) opts.body = JSON.stringify(body);
   return fetch(SUPABASE_URL + '/rest/v1/' + table + params, opts)
     .then(function(res) {
       if (!res.ok) {
-        return res.json().then(function(err) { throw new Error(err.message || 'HTTP ' + res.status); });
+        return res.json().then(function(err) {
+          throw new Error(err.message || err.hint || 'HTTP ' + res.status);
+        });
       }
-      return res.text().then(function(text) { return text ? JSON.parse(text) : []; });
+      return res.text().then(function(text) {
+        return text ? JSON.parse(text) : [];
+      });
     });
 }
 
-function toast(msg) {
+function toast(msg, isError) {
   var t = document.getElementById('toast');
+  if (!t) return;
   t.textContent = msg;
+  t.className = 'toast' + (isError ? ' error' : '');
   t.classList.add('show');
   setTimeout(function() { t.classList.remove('show'); }, 3000);
 }
@@ -258,32 +1808,47 @@ function isClosed(date) {
   return new Date(date) <= new Date();
 }
 
+// =====================================================
+//  AUTH
+// =====================================================
 function switchAuth(tab) {
-  document.getElementById('btnTabLogin').classList.toggle('active', tab === 'login');
-  document.getElementById('btnTabRegister').classList.toggle('active', tab === 'register');
+  document.querySelectorAll('#authScreen .auth-tabs .tab').forEach(function(el) {
+    el.classList.toggle('active', el.textContent === (tab === 'login' ? 'تسجيل الدخول' : 'حساب جديد'));
+  });
   document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
   document.getElementById('registerForm').style.display = tab === 'register' ? 'block' : 'none';
 }
 
-// تم الإصلاح: البحث يتم بالمستخدم وكلمة المرور، والدور يُحدد من الحساب الفعلي في قاعدة البيانات
+function selectRole(role) {
+  selectedRole = role;
+  document.querySelectorAll('#loginForm .tab').forEach(function(el) {
+    el.classList.toggle('active', el.textContent.includes(role === 'admin' ? 'مشرف' : 'لاعب'));
+  });
+}
+
 function doLogin() {
   var username = document.getElementById('loginUser').value.trim();
   var password = document.getElementById('loginPass').value;
   var msg = document.getElementById('loginMsg');
-  if (!username || !password) { msg.textContent = 'ادخل اسم المستخدم وكلمة المرور'; return; }
+  if (!username || !password) { msg.textContent = 'ادخل اسم المستخدم وكلمة المرور'; msg.className = 'auth-msg error'; return; }
   msg.textContent = 'جاري التحقق...';
-  
+  msg.className = 'auth-msg';
   sb('users', 'GET', null, '?username=eq.' + encodeURIComponent(username))
     .then(function(users) {
-      if (users.length === 0) { msg.textContent = 'اسم المستخدم غير موجود'; return; }
-      var found = users.find(u => u.password === password);
-      if (!found) { msg.textContent = 'كلمة المرور غير صحيحة'; return; }
-      
+      if (users.length === 0) { msg.textContent = 'اسم المستخدم غير موجود'; msg.className = 'auth-msg error'; return; }
+      var found = null;
+      for (var i = 0; i < users.length; i++) {
+        if (users[i].password === password && users[i].role === selectedRole) {
+          found = users[i];
+          break;
+        }
+      }
+      if (!found) { msg.textContent = 'اسم المستخدم او كلمة المرور غير صحيحة'; msg.className = 'auth-msg error'; return; }
       currentUser = found;
       localStorage.setItem('wc_user', JSON.stringify(currentUser));
       enterApp();
     })
-    .catch(function(e) { msg.textContent = 'خطأ: ' + e.message; });
+    .catch(function(e) { msg.textContent = 'خطأ في الاتصال: ' + e.message; msg.className = 'auth-msg error'; });
 }
 
 function doRegister() {
@@ -291,44 +1856,79 @@ function doRegister() {
   var username = document.getElementById('regUser').value.trim();
   var password = document.getElementById('regPass').value;
   var msg = document.getElementById('regMsg');
-  if (!name || !username || !password) { msg.textContent = 'اكمل جميع الحقول'; return; }
-  if (password.length < 4) { msg.textContent = 'كلمة المرور قصيرة جدا'; return; }
+  if (!name || !username || !password) { msg.textContent = 'اكمل جميع الحقول'; msg.className = 'auth-msg error'; return; }
+  if (password.length < 4) { msg.textContent = 'كلمة المرور قصيرة جدا'; msg.className = 'auth-msg error'; return; }
   msg.textContent = 'جاري التسجيل...';
-  
+  msg.className = 'auth-msg';
   sb('users', 'GET', null, '?username=eq.' + encodeURIComponent(username))
     .then(function(existing) {
-      if (existing.length > 0) { msg.textContent = 'اسم المستخدم مستخدم بالفعل'; return; }
+      if (existing.length > 0) { msg.textContent = 'اسم المستخدم مستخدم بالفعل'; msg.className = 'auth-msg error'; return; }
       return sb('users', 'POST', { name: name, username: username, password: password, role: 'player', points: 0 });
     })
     .then(function(user) {
       if (user && user.length > 0) {
         currentUser = user[0];
         localStorage.setItem('wc_user', JSON.stringify(currentUser));
-        msg.style.color = '#2ecc71';
-        msg.textContent = 'تم التسجيل بنجاح!';
+        msg.textContent = '✅ تم التسجيل بنجاح!';
+        msg.className = 'auth-msg success';
         setTimeout(enterApp, 800);
       }
     })
-    .catch(function(e) { msg.style.color = '#e74c3c'; msg.textContent = 'خطأ: ' + e.message; });
+    .catch(function(e) { msg.textContent = 'خطأ: ' + e.message; msg.className = 'auth-msg error'; });
 }
 
 function enterApp() {
   document.getElementById('authScreen').style.display = 'none';
   document.getElementById('appScreen').style.display = 'block';
-  document.getElementById('headerUser').textContent = (currentUser.role === 'admin' ? '👑 ' : '⚽ ') + currentUser.name;
+  
+  var roleDisplay = currentUser.role === 'admin' ? '👑 مشرف' : 
+                    currentUser.role === 'subadmin' ? '🛡️ نائب مشرف' : '⚽ لاعب';
+  document.getElementById('headerUser').textContent = currentUser.name;
+  document.getElementById('headerRole').textContent = roleDisplay;
+  
+  var isAdmin = currentUser.role === 'admin';
+  var isSubAdmin = currentUser.role === 'subadmin';
+  var canAccessAdmin = isAdmin || isSubAdmin;
+  
+  var settingsBtn = document.getElementById('settingsMenuBtn');
+  var adminBtn = document.getElementById('adminMenuBtn');
+  if (settingsBtn) settingsBtn.style.display = canAccessAdmin ? 'flex' : 'none';
+  if (adminBtn) adminBtn.style.display = isAdmin ? 'flex' : 'none';
+  
+  if (currentUser.role === 'player') {
+    document.getElementById('playerSummary').style.display = 'block';
+    loadPlayerSummary();
+  } else {
+    document.getElementById('playerSummary').style.display = 'none';
+  }
+  
   populateTeams();
   buildTabs();
   showSection('matches');
+  loadMatches();
+  loadHistory();
+  if (canAccessAdmin) {
+    loadCurrentPredictions();
+  }
+  if (refreshInterval) clearInterval(refreshInterval);
+  refreshInterval = setInterval(function() {
+    loadMatches();
+    loadLeaderboard();
+    if (currentUser.role === 'player') {
+      loadPlayerSummary();
+    }
+    if (canAccessAdmin) {
+      loadCurrentPredictions();
+    }
+  }, 30000);
 }
 
 function doLogout() {
   currentUser = null;
   localStorage.removeItem('wc_user');
+  if (refreshInterval) { clearInterval(refreshInterval); refreshInterval = null; }
   document.getElementById('authScreen').style.display = 'block';
   document.getElementById('appScreen').style.display = 'none';
-  document.getElementById('loginUser').value = '';
-  document.getElementById('loginPass').value = '';
-  document.getElementById('loginMsg').textContent = '';
 }
 
 function checkSession() {
@@ -342,19 +1942,281 @@ function checkSession() {
   return false;
 }
 
+// =====================================================
+//  PLAYER SUMMARY
+// =====================================================
+function loadPlayerSummary() {
+  var el = document.getElementById('playerSummary');
+  if (!el || currentUser.role !== 'player') return;
+  
+  sb('matches', 'GET', null, '')
+    .then(function(matches) {
+      return sb('predictions', 'GET', null, '?user_id=eq.' + currentUser.id)
+        .then(function(predictions) {
+          return { matches: matches, predictions: predictions };
+        });
+    })
+    .then(function(data) {
+      var matches = data.matches;
+      var predictions = data.predictions;
+      var totalPredictions = predictions.length;
+      var correctPredictions = 0;
+      var pendingMatches = 0;
+      
+      for (var i = 0; i < predictions.length; i++) {
+        var pred = predictions[i];
+        for (var j = 0; j < matches.length; j++) {
+          var m = matches[j];
+          if (m.id === pred.match_id && m.result_team1 !== null && m.result_team2 !== null) {
+            if (pred.pred_team1 === m.result_team1 && pred.pred_team2 === m.result_team2) {
+              correctPredictions++;
+            }
+            break;
+          }
+        }
+      }
+      
+      for (var i = 0; i < matches.length; i++) {
+        var m = matches[i];
+        if (m.result_team1 === null && m.result_team2 === null) {
+          var hasPrediction = false;
+          for (var j = 0; j < predictions.length; j++) {
+            if (predictions[j].match_id === m.id) {
+              hasPrediction = true;
+              break;
+            }
+          }
+          if (!hasPrediction) pendingMatches++;
+        }
+      }
+      
+      var accuracy = totalPredictions > 0 ? Math.round((correctPredictions / totalPredictions) * 100) : 0;
+      
+      el.innerHTML = '<div class="player-summary">' +
+        '<div class="stat"><div class="number">' + totalPredictions + '</div><div class="label">📊 إجمالي التوقعات</div></div>' +
+        '<div class="stat"><div class="number">' + correctPredictions + '</div><div class="label">✅ صحيحة</div></div>' +
+        '<div class="stat"><div class="number">' + accuracy + '%</div><div class="label">🎯 نسبة الدقة</div></div>' +
+        '<div class="stat"><div class="number">' + pendingMatches + '</div><div class="label">⏳ مباريات لم تتوقعها</div></div>' +
+        '</div>';
+    })
+    .catch(function(e) {
+      el.innerHTML = '<div class="player-summary"><div class="stat" style="grid-column:span 4;color:var(--text-secondary);">خطأ في تحميل الملخص</div></div>';
+    });
+}
+
+// =====================================================
+//  SETTINGS FUNCTIONS
+// =====================================================
+function openSettings() {
+  var modal = document.getElementById('settingsModal');
+  var content = document.getElementById('settingsContent');
+  if (!modal || !content) return;
+  
+  var isAdmin = currentUser.role === 'admin';
+  
+  var html = '';
+  
+  html += '<div class="settings-section">';
+  html += '<h3>👤 تغيير اسم المستخدم</h3>';
+  html += '<div class="form-group">';
+  html += '<input id="settingsNewUsername" type="text" placeholder="اسم المستخدم الجديد" value="' + currentUser.username + '">';
+  html += '</div>';
+  html += '<button class="btn btn-primary" onclick="changeUsername()">تحديث اسم المستخدم</button>';
+  html += '</div>';
+  
+  html += '<div class="settings-section">';
+  html += '<h3>🔑 تغيير كلمة المرور</h3>';
+  html += '<div class="form-group">';
+  html += '<div class="password-wrapper">';
+  html += '<input id="settingsNewPassword" type="password" placeholder="كلمة المرور الجديدة">';
+  html += '<button class="password-toggle" onclick="togglePassword(\'settingsNewPassword\', this)" type="button">👁️</button>';
+  html += '</div>';
+  html += '</div>';
+  html += '<button class="btn btn-primary" onclick="changePassword()">تحديث كلمة المرور</button>';
+  html += '</div>';
+  
+  if (isAdmin) {
+    html += '<div class="settings-section">';
+    html += '<h3>🛡️ إضافة نائب مشرف</h3>';
+    html += '<p style="color:var(--text-secondary);font-size:0.85rem;margin-bottom:12px;">النائب يملك جميع صلاحيات المشرف عدا حذف وإضافة المشرفين</p>';
+    html += '<div class="flex">';
+    html += '<div class="form-group"><input id="subAdminName" type="text" placeholder="الاسم الكامل"></div>';
+    html += '<div class="form-group"><input id="subAdminUser" type="text" placeholder="اسم المستخدم"></div>';
+    html += '</div>';
+    html += '<div class="form-group">';
+    html += '<div class="password-wrapper">';
+    html += '<input id="subAdminPass" type="password" placeholder="كلمة المرور">';
+    html += '<button class="password-toggle" onclick="togglePassword(\'subAdminPass\', this)" type="button">👁️</button>';
+    html += '</div>';
+    html += '</div>';
+    html += '<button class="btn btn-success" onclick="addSubAdmin()">➕ إضافة نائب مشرف</button>';
+    html += '</div>';
+    
+    html += '<div class="settings-section">';
+    html += '<h3>📋 المشرفين والنواب</h3>';
+    html += '<div id="subAdminList">جاري التحميل...</div>';
+    html += '</div>';
+    
+    setTimeout(function() {
+      loadSubAdmins();
+    }, 100);
+  }
+  
+  content.innerHTML = html;
+  modal.classList.add('active');
+}
+
+function closeSettings() {
+  var modal = document.getElementById('settingsModal');
+  if (modal) modal.classList.remove('active');
+}
+
+function changeUsername() {
+  var newUsername = document.getElementById('settingsNewUsername');
+  if (!newUsername) { toast('ادخل اسم مستخدم جديد', true); return; }
+  var username = newUsername.value.trim();
+  if (!username) { toast('ادخل اسم مستخدم جديد', true); return; }
+  if (username === currentUser.username) { toast('نفس اسم المستخدم الحالي', true); return; }
+  
+  sb('users', 'GET', null, '?username=eq.' + encodeURIComponent(username))
+    .then(function(existing) {
+      if (existing.length > 0 && existing[0].id !== currentUser.id) {
+        toast('اسم المستخدم موجود بالفعل', true);
+        return;
+      }
+      return fetch(SUPABASE_URL + '/rest/v1/users?id=eq.' + currentUser.id, {
+        method: 'PATCH',
+        headers: {'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json'},
+        body: JSON.stringify({username: username})
+      });
+    })
+    .then(function() {
+      currentUser.username = username;
+      localStorage.setItem('wc_user', JSON.stringify(currentUser));
+      toast('✅ تم تحديث اسم المستخدم');
+      closeSettings();
+    })
+    .catch(function(e) { toast('خطأ: ' + e.message, true); });
+}
+
+function changePassword() {
+  var newPassword = document.getElementById('settingsNewPassword');
+  if (!newPassword) { toast('ادخل كلمة مرور جديدة', true); return; }
+  var password = newPassword.value.trim();
+  if (!password) { toast('ادخل كلمة مرور جديدة', true); return; }
+  if (password.length < 4) { toast('كلمة المرور قصيرة جدا (4 أحرف على الأقل)', true); return; }
+  
+  fetch(SUPABASE_URL + '/rest/v1/users?id=eq.' + currentUser.id, {
+    method: 'PATCH',
+    headers: {'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json'},
+    body: JSON.stringify({password: password})
+  })
+  .then(function() {
+    currentUser.password = password;
+    localStorage.setItem('wc_user', JSON.stringify(currentUser));
+    toast('✅ تم تحديث كلمة المرور');
+    closeSettings();
+  })
+  .catch(function(e) { toast('خطأ: ' + e.message, true); });
+}
+
+function addSubAdmin() {
+  var nameInput = document.getElementById('subAdminName');
+  var userInput = document.getElementById('subAdminUser');
+  var passInput = document.getElementById('subAdminPass');
+  
+  if (!nameInput || !userInput || !passInput) { toast('حدث خطأ في النموذج', true); return; }
+  
+  var name = nameInput.value.trim();
+  var username = userInput.value.trim();
+  var password = passInput.value.trim();
+  
+  if (!name || !username || !password) { toast('اكمل جميع الحقول', true); return; }
+  if (password.length < 4) { toast('كلمة المرور قصيرة جدا', true); return; }
+  
+  sb('users', 'GET', null, '?username=eq.' + encodeURIComponent(username))
+    .then(function(existing) {
+      if (existing.length > 0) { toast('اسم المستخدم موجود بالفعل', true); return; }
+      return sb('users', 'POST', { name: name, username: username, password: password, role: 'subadmin', points: 0 });
+    })
+    .then(function() {
+      toast('✅ تم إضافة نائب المشرف');
+      nameInput.value = '';
+      userInput.value = '';
+      passInput.value = '';
+      loadSubAdmins();
+      loadUsers();
+    })
+    .catch(function(e) { toast('خطأ: ' + e.message, true); });
+}
+
+function loadSubAdmins() {
+  var el = document.getElementById('subAdminList');
+  if (!el) return;
+  el.innerHTML = '<span style="color:var(--text-secondary);">جاري التحميل...</span>';
+  
+  sb('users', 'GET', null, '?role=in.(admin,subadmin)')
+    .then(function(users) {
+      if (users.length === 0) {
+        el.innerHTML = '<span style="color:var(--text-secondary);">لا يوجد مشرفين</span>';
+        return;
+      }
+      var html = '';
+      for (var i = 0; i < users.length; i++) {
+        var u = users[i];
+        var isMainAdmin = u.role === 'admin';
+        var isCurrent = u.id === currentUser.id;
+        html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-color);">';
+        html += '<div><strong>' + u.name + '</strong> <span style="font-size:0.7rem;color:var(--text-secondary);">@' + u.username + '</span> ';
+        html += '<span style="' + (isMainAdmin ? 'background:var(--border-color);color:var(--bg-primary);' : 'background:#651fff;color:white;') + 'padding:2px 10px;border-radius:30px;font-size:0.6rem;font-weight:600;">' + (isMainAdmin ? '👑 مشرف' : '🛡️ نائب') + '</span>';
+        html += '</div>';
+        if (currentUser.role === 'admin' && !isCurrent && !isMainAdmin) {
+          html += '<button class="btn btn-danger btn-sm" onclick="deleteSubAdmin(' + u.id + ')">🗑️</button>';
+        } else if (currentUser.role === 'admin' && !isCurrent && isMainAdmin) {
+          html += '<span style="color:var(--text-secondary);font-size:0.7rem;">لا يمكن حذف المشرف الرئيسي</span>';
+        }
+        html += '</div>';
+      }
+      el.innerHTML = html;
+    })
+    .catch(function(e) { el.innerHTML = '<span style="color:#ff1744;">خطأ في التحميل</span>'; });
+}
+
+function deleteSubAdmin(userId) {
+  if (!confirm('هل أنت متأكد من حذف هذا النائب؟')) return;
+  fetch(SUPABASE_URL + '/rest/v1/users?id=eq.' + userId, {
+    method: 'DELETE',
+    headers: {'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY}
+  })
+  .then(function() {
+    toast('✅ تم حذف النائب');
+    loadSubAdmins();
+    loadUsers();
+  })
+  .catch(function(e) { toast('خطأ: ' + e.message, true); });
+}
+
+// =====================================================
+//  NAVIGATION
+// =====================================================
 function buildTabs() {
   var tabs = [
     {id:'matches', label:'⚽ المباريات'},
     {id:'leaderboard', label:'🏅 الترتيب'},
     {id:'history', label:'📜 التاريخ'}
   ];
-  if (currentUser.role === 'admin') tabs.push({id:'admin', label:'⚙️ المشرف'});
+  var isAdmin = currentUser.role === 'admin';
+  var isSubAdmin = currentUser.role === 'subadmin';
+  if (isAdmin || isSubAdmin) tabs.push({id:'admin', label:'⚙️ المشرف'});
   
-  document.getElementById('mainTabs').innerHTML = tabs.map(t => 
-    `<button class="tab" id="mTab-${t.id}" onclick="showSection('${t.id}')">${t.label}</button>`
-  ).join('');
+  var html = '';
+  for (var i = 0; i < tabs.length; i++) {
+    html += '<button class="tab" onclick="showSection(\'' + tabs[i].id + '\')">' + tabs[i].label + '</button>';
+  }
+  var mainTabs = document.getElementById('mainTabs');
+  if (mainTabs) mainTabs.innerHTML = html;
   
-  if (currentUser.role === 'admin') {
+  if (isAdmin || isSubAdmin) {
     var subTabs = [
       {id:'sub-predictions', label:'📊 التوقعات الحالية'},
       {id:'sub-matches', label:'⚙️ المباريات'},
@@ -362,34 +2224,42 @@ function buildTabs() {
       {id:'sub-teams', label:'🏳️ المنتخبات'},
       {id:'sub-history', label:'📜 التاريخ'}
     ];
-    document.getElementById('subTabs').innerHTML = subTabs.map(st => 
-      `<button class="sub-tab" id="sTab-${st.id}" onclick="showSubSection('${st.id}')">${st.label}</button>`
-    ).join('');
+    var subHtml = '';
+    for (var i = 0; i < subTabs.length; i++) {
+      subHtml += '<button class="sub-tab active" onclick="showSubSection(\'' + subTabs[i].id + '\')">' + subTabs[i].label + '</button>';
+    }
+    var subTabsEl = document.getElementById('subTabs');
+    if (subTabsEl) subTabsEl.innerHTML = subHtml;
   }
 }
 
 function showSection(id) {
-  document.querySelectorAll('#appScreen .section').forEach(el => el.style.display = 'none');
-  document.getElementById('section-' + id).style.display = 'block';
-  
-  document.querySelectorAll('#mainTabs .tab').forEach(el => el.classList.remove('active'));
-  var currentTab = document.getElementById('mTab-' + id);
-  if(currentTab) currentTab.classList.add('active');
-
-  if (id === 'matches') loadMatches();
+  document.querySelectorAll('#appScreen .section').forEach(function(el) { el.style.display = 'none'; });
+  var section = document.getElementById('section-' + id);
+  if (section) section.style.display = 'block';
+  document.querySelectorAll('#mainTabs .tab').forEach(function(el) {
+    var label = id === 'matches' ? 'المباريات' : id === 'leaderboard' ? 'الترتيب' : id === 'history' ? 'التاريخ' : 'المشرف';
+    el.classList.toggle('active', el.textContent.includes(label));
+  });
   if (id === 'leaderboard') loadLeaderboard();
   if (id === 'history') loadHistory();
-  if (id === 'admin') showSubSection('sub-predictions');
+  if (id === 'admin') {
+    loadUsers();
+    loadAdminMatches();
+    renderTeams();
+    loadAdminHistory();
+    loadCurrentPredictions();
+  }
 }
 
 function showSubSection(id) {
-  document.querySelectorAll('.sub-section').forEach(el => el.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  
-  document.querySelectorAll('#subTabs .sub-tab').forEach(el => el.classList.remove('active'));
-  var currentSubTab = document.getElementById('sTab-' + id);
-  if(currentSubTab) currentSubTab.classList.add('active');
-
+  document.querySelectorAll('.sub-section').forEach(function(el) { el.classList.remove('active'); });
+  var section = document.getElementById(id);
+  if (section) section.classList.add('active');
+  document.querySelectorAll('.sub-tab').forEach(function(el) {
+    var label = id === 'sub-predictions' ? 'التوقعات الحالية' : id === 'sub-matches' ? 'المباريات' : id === 'sub-players' ? 'اللاعبين' : id === 'sub-teams' ? 'المنتخبات' : 'التاريخ';
+    el.classList.toggle('active', el.textContent.includes(label));
+  });
   if (id === 'sub-players') loadUsers();
   if (id === 'sub-teams') renderTeams();
   if (id === 'sub-matches') loadAdminMatches();
@@ -397,4 +2267,929 @@ function showSubSection(id) {
   if (id === 'sub-predictions') loadCurrentPredictions();
 }
 
+// =====================================================
+//  CURRENT PREDICTIONS (ADMIN)
+// =====================================================
 function loadCurrentPredictions() {
+  var el = document.getElementById('currentPredictions');
+  if (!el) return;
+  el.innerHTML = '<div class="empty-state"><div class="spinner"></div>جاري التحميل...</div>';
+  
+  sb('matches', 'GET', null, '?result_team1=is.null&order=match_date.asc')
+    .then(function(matches) {
+      if (matches.length === 0) {
+        el.innerHTML = '<div class="empty-state"><div>📊</div>لا توجد مباريات حالية</div>';
+        return;
+      }
+      var matchIds = matches.map(function(m) { return m.id; });
+      return sb('predictions', 'GET', null, '?match_id=in.(' + matchIds.join(',') + ')')
+        .then(function(preds) {
+          return { matches: matches, predictions: preds };
+        });
+    })
+    .then(function(result) {
+      if (!result) return;
+      var matches = result.matches;
+      var predictions = result.predictions;
+      var userIds = [];
+      for (var i = 0; i < predictions.length; i++) {
+        if (userIds.indexOf(predictions[i].user_id) === -1) {
+          userIds.push(predictions[i].user_id);
+        }
+      }
+      var userMap = {};
+      if (userIds.length > 0) {
+        return sb('users', 'GET', null, '?id=in.(' + userIds.join(',') + ')')
+          .then(function(users) {
+            for (var i = 0; i < users.length; i++) {
+              userMap[users[i].id] = users[i];
+            }
+            return { matches: matches, predictions: predictions, userMap: userMap };
+          });
+      }
+      return { matches: matches, predictions: predictions, userMap: userMap };
+    })
+    .then(function(result) {
+      if (!result) return;
+      var matches = result.matches;
+      var predictions = result.predictions;
+      var userMap = result.userMap || {};
+      var html = '';
+      for (var i = 0; i < matches.length; i++) {
+        var m = matches[i];
+        var matchPreds = [];
+        for (var j = 0; j < predictions.length; j++) {
+          if (predictions[j].match_id === m.id) {
+            matchPreds.push(predictions[j]);
+          }
+        }
+        var isStarted = isClosed(m.match_date);
+        var isLocked = lockedMatches[m.id] || false;
+        html += '<div class="match-card' + (isLocked ? ' closed' : '') + '" style="margin-bottom:12px;">';
+        html += '<div style="font-weight:700;font-size:1.05rem;margin-bottom:6px;">' + getFlag(m.team1) + ' ' + m.team1 + ' 🆚 ' + m.team2 + ' ' + getFlag(m.team2) + '</div>';
+        html += '<div style="color:var(--text-secondary);font-size:0.8rem;margin-bottom:8px;">📅 ' + (m.match_date ? new Date(m.match_date).toLocaleString('ar-SA', {dateStyle:'short', timeStyle:'short'}) : '') + '</div>';
+        html += '<div style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:6px;">👥 ' + matchPreds.length + ' لاعب توقعوا</div>';
+        if (isLocked) {
+          html += '<div class="lock-overlay">🔒 المباراة بدأت - التوقعات مغلقة</div>';
+        } else if (!isStarted) {
+          html += '<div style="color:#f39c12;font-size:0.9rem;font-weight:700;">🔒 التوقعات مخفية حتى بداية المباراة</div>';
+        } else {
+          if (matchPreds.length === 0) {
+            html += '<div style="color:var(--text-secondary);font-size:0.85rem;">لا توجد توقعات بعد</div>';
+          } else {
+            for (var k = 0; k < matchPreds.length; k++) {
+              var p = matchPreds[k];
+              var userName = userMap[p.user_id] ? userMap[p.user_id].name : 'مجهول';
+              var predText = p.pred_team1 + ' - ' + p.pred_team2;
+              if (p.penalty_winner) {
+                predText += ' (الفائز بركلات: ' + p.penalty_winner + ')';
+              }
+              html += '<div class="prediction-item"><span class="pname">' + userName + '</span><span class="ppred">' + predText + '</span></div>';
+            }
+          }
+        }
+        html += '</div>';
+      }
+      el.innerHTML = html;
+    })
+    .catch(function(e) {
+      el.innerHTML = '<div class="empty-state"><div>❌</div>خطأ: ' + e.message + '</div>';
+    });
+}
+
+// =====================================================
+//  TEAMS
+// =====================================================
+function populateTeams() {
+  var ids = ['aTeam1', 'aTeam2'];
+  for (var i = 0; i < ids.length; i++) {
+    var sel = document.getElementById(ids[i]);
+    if (!sel) continue;
+    var val = sel.value;
+    sel.innerHTML = '<option value="">اختر الفريق</option>';
+    for (var j = 0; j < ALL_TEAMS.length; j++) {
+      var opt = document.createElement('option');
+      opt.value = ALL_TEAMS[j].name;
+      opt.textContent = ALL_TEAMS[j].flag + ' ' + ALL_TEAMS[j].name;
+      sel.appendChild(opt);
+    }
+    if (val) sel.value = val;
+  }
+}
+
+function renderTeams() {
+  var container = document.getElementById('teamsList');
+  if (!container) return;
+  var html = '';
+  for (var i = 0; i < ALL_TEAMS.length; i++) {
+    var t = ALL_TEAMS[i];
+    html += '<span class="team-tag">' + t.flag + ' ' + t.name + ' <button class="del" onclick="deleteTeam(\'' + t.name + '\')">✕</button></span>';
+  }
+  container.innerHTML = html || '<span style="color:var(--text-secondary);">لا توجد منتخبات</span>';
+}
+
+function deleteTeam(name) {
+  if (!confirm('حذف المنتخب "' + name + '" وجميع مبارياته؟')) return;
+  sb('matches', 'GET', null, '?team1=eq.' + encodeURIComponent(name))
+    .then(function(m1) { return sb('matches', 'GET', null, '?team2=eq.' + encodeURIComponent(name)).then(function(m2) { return m1.concat(m2); }); })
+    .then(function(matches) {
+      var promises = [];
+      for (var i = 0; i < matches.length; i++) {
+        var mid = matches[i].id;
+        promises.push(fetch(SUPABASE_URL + '/rest/v1/predictions?match_id=eq.' + mid, {method:'DELETE',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}}));
+        promises.push(fetch(SUPABASE_URL + '/rest/v1/matches?id=eq.' + mid, {method:'DELETE',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}}));
+      }
+      return Promise.all(promises);
+    })
+    .then(function() {
+      var newTeams = [];
+      for (var i = 0; i < ALL_TEAMS.length; i++) {
+        if (ALL_TEAMS[i].name !== name) newTeams.push(ALL_TEAMS[i]);
+      }
+      ALL_TEAMS = newTeams;
+      renderTeams();
+      populateTeams();
+      toast('تم حذف المنتخب');
+      loadAdminMatches();
+      loadMatches();
+      loadCurrentPredictions();
+    })
+    .catch(function(e) { toast('خطأ: ' + e.message, true); });
+}
+
+// =====================================================
+//  LOCK/UNLOCK MATCH - ADMIN FUNCTIONS
+// =====================================================
+function toggleLockMatch(matchId) {
+  if (!confirm('🔒 هل تريد قفل التوقعات لهذه المباراة؟\nسيتم إخفاء أزرار التوقع من جميع اللاعبين.')) return;
+  
+  lockedMatches[matchId] = true;
+  toast('🔒 تم قفل التوقعات - المباراة بدأت');
+  loadMatches();
+  loadAdminMatches();
+  loadCurrentPredictions();
+}
+
+function toggleUnlockMatch(matchId) {
+  if (!confirm('🔓 هل تريد فتح التوقعات لهذه المباراة؟')) return;
+  
+  delete lockedMatches[matchId];
+  toast('🔓 تم فتح التوقعات');
+  loadMatches();
+  loadAdminMatches();
+  loadCurrentPredictions();
+}
+
+// =====================================================
+//  MATCHES - PREDICTION FUNCTIONS
+// =====================================================
+
+function checkExistingPrediction(matchId) {
+  return sb('predictions', 'GET', null, '?user_id=eq.' + currentUser.id + '&match_id=eq.' + matchId);
+}
+
+function renderPredictionArea(matchId) {
+  var el = document.getElementById('pred-area-' + matchId);
+  if (!el) return;
+  
+  if (currentUser.role !== 'player') {
+    el.innerHTML = '';
+    return;
+  }
+  
+  if (lockedMatches[matchId]) {
+    el.innerHTML = '<div style="color:#ff1744;font-weight:700;padding:8px;background:rgba(255,23,68,0.1);border-radius:10px;border:1px solid #ff1744;">⛔ المباراة بدأت - التوقعات مغلقة</div>';
+    return;
+  }
+  
+  checkExistingPrediction(matchId)
+    .then(function(data) {
+      if (data && data.length > 0) {
+        var pred = data[0];
+        var predText = pred.pred_team1 + ' - ' + pred.pred_team2;
+        if (pred.penalty_winner) {
+          predText += ' (الفائز بركلات: ' + pred.penalty_winner + ')';
+        }
+        el.innerHTML = '<div class="my-prediction">✅ توقعي: ' + predText + '</div>';
+        return;
+      }
+      
+      return sb('matches', 'GET', null, '?id=eq.' + matchId);
+    })
+    .then(function(matches) {
+      if (!matches) return;
+      if (matches.length === 0) {
+        el.innerHTML = '<div style="color:#ff1744;">المباراة غير موجودة</div>';
+        return;
+      }
+      
+      var m = matches[0];
+      
+      if (isClosed(m.match_date)) {
+        el.innerHTML = '<div style="color:#ff1744;font-size:0.85rem;">⛔ انتهى وقت التصويت</div>';
+        return;
+      }
+      
+      if (m.result_team1 !== null && m.result_team2 !== null) {
+        el.innerHTML = '<div style="color:var(--text-secondary);font-size:0.85rem;">انتهت المباراة</div>';
+        return;
+      }
+      
+      if (lockedMatches[matchId]) {
+        el.innerHTML = '<div style="color:#ff1744;font-weight:700;padding:8px;background:rgba(255,23,68,0.1);border-radius:10px;border:1px solid #ff1744;">⛔ المباراة بدأت - التوقعات مغلقة</div>';
+        return;
+      }
+      
+      var html = '<div class="prediction-area">';
+      html += '<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">';
+      html += '<input class="score-input" id="p1-' + m.id + '" type="number" min="0" max="20" placeholder="0">';
+      html += '<span style="font-weight:700;">-</span>';
+      html += '<input class="score-input" id="p2-' + m.id + '" type="number" min="0" max="20" placeholder="0">';
+      
+      if (m.has_penalty) {
+        html += '</div><div class="penalty-btns" id="penalty-' + m.id + '">';
+        html += '<button onclick="selectPenalty(\'' + m.id + '\',\'' + m.team1 + '\')">' + getFlag(m.team1) + ' ' + m.team1 + '</button>';
+        html += '<button onclick="selectPenalty(\'' + m.id + '\',\'' + m.team2 + '\')">' + getFlag(m.team2) + ' ' + m.team2 + '</button>';
+        html += '</div><div style="margin-top:6px;">';
+      } else {
+        html += '</div><div style="margin-top:6px;">';
+      }
+      
+      html += '<button class="btn btn-primary" onclick="submitPredictionFix(' + m.id + ')" style="padding:8px 20px;">توقع</button>';
+      html += '</div></div>';
+      
+      el.innerHTML = html;
+    })
+    .catch(function(e) {
+      el.innerHTML = '<div style="color:#ff1744;">خطأ: ' + e.message + '</div>';
+    });
+}
+
+function selectPenalty(matchId, team) {
+  var container = document.getElementById('penalty-' + matchId);
+  if (!container) return;
+  var btns = container.querySelectorAll('button');
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].classList.toggle('selected', btns[i].textContent.includes(team));
+  }
+}
+
+function submitPredictionFix(matchId) {
+  if (lockedMatches[matchId]) {
+    toast('⛔ المباراة بدأت - التوقعات مغلقة', true);
+    return;
+  }
+  
+  var p1Input = document.getElementById('p1-' + matchId);
+  var p2Input = document.getElementById('p2-' + matchId);
+  
+  if (!p1Input || !p2Input) {
+    toast('خطأ في المدخلات', true);
+    return;
+  }
+  
+  var p1 = parseInt(p1Input.value);
+  var p2 = parseInt(p2Input.value);
+  
+  if (isNaN(p1) || isNaN(p2)) {
+    toast('ادخل النتيجة المتوقعة', true);
+    return;
+  }
+  
+  if (p1 < 0 || p2 < 0) {
+    toast('النتيجة يجب أن تكون أرقاماً موجبة', true);
+    return;
+  }
+  
+  var penaltyWinner = null;
+  var penaltyContainer = document.getElementById('penalty-' + matchId);
+  if (penaltyContainer) {
+    var selected = penaltyContainer.querySelector('.selected');
+    if (selected) {
+      penaltyWinner = selected.textContent.replace(/[^\u0600-\u06FF\s]/g, '').trim();
+    }
+  }
+  
+  checkExistingPrediction(matchId)
+    .then(function(existing) {
+      if (existing && existing.length > 0) {
+        toast('لقد قمت بالتوقع مسبقاً ولا يمكن التعديل', true);
+        return;
+      }
+      return sb('matches', 'GET', null, '?id=eq.' + matchId);
+    })
+    .then(function(matches) {
+      if (!matches) return;
+      if (matches.length === 0) {
+        toast('المباراة غير موجودة', true);
+        return;
+      }
+      
+      var m = matches[0];
+      
+      if (isClosed(m.match_date)) {
+        toast('انتهى وقت التصويت', true);
+        loadMatches();
+        return;
+      }
+      
+      if (m.result_team1 !== null && m.result_team2 !== null) {
+        toast('انتهت المباراة بالفعل', true);
+        loadMatches();
+        return;
+      }
+      
+      if (lockedMatches[matchId]) {
+        toast('⛔ المباراة بدأت - التوقعات مغلقة', true);
+        loadMatches();
+        return;
+      }
+      
+      var data = {
+        user_id: currentUser.id,
+        match_id: matchId,
+        pred_team1: p1,
+        pred_team2: p2
+      };
+      
+      if (m.has_penalty && penaltyWinner) {
+        data.penalty_winner = penaltyWinner;
+      }
+      
+      return sb('predictions', 'POST', data);
+    })
+    .then(function() {
+      if (arguments.length === 0) return;
+      toast('✅ تم حفظ توقعك');
+      renderPredictionArea(matchId);
+      if (currentUser.role === 'player') {
+        loadPlayerSummary();
+      }
+      if (currentUser.role === 'admin' || currentUser.role === 'subadmin') {
+        loadCurrentPredictions();
+      }
+    })
+    .catch(function(e) {
+      if (e.message && e.message.includes('duplicate')) {
+        toast('لديك توقع سابق لهذه المباراة', true);
+      } else {
+        toast('حدث خطأ أثناء حفظ التوقع: ' + e.message, true);
+      }
+    });
+}
+
+// =====================================================
+//  MATCHES - LOAD
+// =====================================================
+function loadMatches() {
+  var el = document.getElementById('matchesList');
+  if (!el) return;
+  el.innerHTML = '<div class="empty-state"><div class="spinner"></div></div>';
+  
+  sb('matches', 'GET', null, '?order=match_date.asc')
+    .then(function(matches) {
+      if (matches.length === 0) {
+        el.innerHTML = '<div class="empty-state"><div>📅</div>لا توجد مباريات</div>';
+        return;
+      }
+      
+      var myPreds = {};
+      if (currentUser.role === 'player') {
+        return sb('predictions', 'GET', null, '?user_id=eq.' + currentUser.id)
+          .then(function(preds) {
+            for (var i = 0; i < preds.length; i++) {
+              myPreds[preds[i].match_id] = preds[i];
+            }
+            return matches;
+          });
+      }
+      return matches;
+    })
+    .then(function(matches) {
+      if (!matches) return;
+      var html = '';
+      for (var i = 0; i < matches.length; i++) {
+        html += buildMatchCard(matches[i]);
+      }
+      el.innerHTML = html;
+      
+      if (currentUser.role === 'player') {
+        setTimeout(function() {
+          var areas = document.querySelectorAll('[id^="pred-area-"]');
+          for (var i = 0; i < areas.length; i++) {
+            var id = areas[i].id.replace('pred-area-', '');
+            renderPredictionArea(id);
+          }
+        }, 300);
+      }
+    })
+    .catch(function(e) {
+      el.innerHTML = '<div class="empty-state"><div>❌</div>خطأ في تحميل المباريات: ' + e.message + '</div>';
+    });
+}
+
+function buildMatchCard(m) {
+  var dateStr = m.match_date ? new Date(m.match_date).toLocaleString('ar-SA', {dateStyle:'short', timeStyle:'short'}) : '';
+  var hasResult = m.result_team1 !== null && m.result_team2 !== null;
+  var closed = isClosed(m.match_date);
+  var isLocked = lockedMatches[m.id] || false;
+  
+  var statusText = '⏳ قادمة';
+  var statusClass = 'status-upcoming';
+  if (hasResult) { statusText = '✅ منتهية'; statusClass = 'status-finished'; }
+  else if (isLocked) { statusText = '🔒 بدأت - توقعات مغلقة'; statusClass = 'status-locked'; }
+  else if (closed) { statusText = '⛔ انتهى التصويت'; statusClass = 'status-closed'; }
+  
+  var resultBadge = hasResult ? '<div style="background:rgba(0,200,0,0.15);color:#00c853;padding:5px 12px;border-radius:8px;font-weight:700;display:inline-block;">' + m.result_team1 + ' - ' + m.result_team2 + '</div>' : '';
+  var typeText = m.has_penalty ? ' ⚽ مع ركلات' : '';
+  
+  var cardClass = 'match-card';
+  if (isLocked) cardClass += ' closed';
+  
+  var predHtml = '';
+  if (currentUser.role === 'player') {
+    if (hasResult) {
+      predHtml = '<div style="font-size:0.85rem;color:var(--text-secondary);margin-top:4px;">انتهت المباراة</div>';
+    } else if (isLocked) {
+      predHtml = '<div style="color:#ff1744;font-weight:700;margin-top:4px;padding:6px 12px;background:rgba(255,23,68,0.1);border-radius:10px;display:inline-block;border:1px solid #ff1744;">⛔ المباراة بدأت - التوقعات مغلقة</div>';
+    } else if (closed) {
+      predHtml = '<div style="font-size:0.85rem;color:#ff1744;margin-top:4px;">⛔ انتهى وقت التصويت</div>';
+    } else {
+      predHtml = '<div id="pred-area-' + m.id + '" style="margin-top:4px;"></div>';
+    }
+  }
+  
+  var lockBtn = '';
+  var isAdmin = currentUser.role === 'admin';
+  var isSubAdmin = currentUser.role === 'subadmin';
+  if ((isAdmin || isSubAdmin) && !hasResult) {
+    if (isLocked) {
+      lockBtn = '<button class="btn btn-warning" onclick="toggleUnlockMatch(' + m.id + ')" style="padding:4px 12px;font-size:0.8rem;margin-top:4px;">🔓 فتح التوقعات</button>';
+    } else {
+      lockBtn = '<button class="btn btn-lock" onclick="toggleLockMatch(' + m.id + ')" style="padding:4px 12px;font-size:0.8rem;margin-top:4px;">🔒 قفل التوقعات</button>';
+    }
+  }
+
+  return '<div class="' + cardClass + '"><div class="top"><div class="match-teams"><div class="team"><div class="team-flag">' + getFlag(m.team1) + '</div><div class="team-name">' + m.team1 + '</div></div><div class="vs">VS</div><div class="team"><div class="team-flag">' + getFlag(m.team2) + '</div><div class="team-name">' + m.team2 + '</div></div></div><div>' + typeText + '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end;margin-top:4px;">' + resultBadge + '<span class="match-status ' + statusClass + '">' + statusText + '</span></div></div></div>' + predHtml + lockBtn + '<div style="font-size:0.75rem;color:var(--text-secondary);margin-top:4px;">📅 ' + dateStr + '</div></div>';
+}
+
+// =====================================================
+//  LEADERBOARD
+// =====================================================
+function loadLeaderboard() {
+  var el = document.getElementById('leaderboardList');
+  if (!el) return;
+  el.innerHTML = '<div class="empty-state"><div class="spinner"></div></div>';
+  sb('users', 'GET', null, '?role=eq.player&order=points.desc')
+    .then(function(users) {
+      if (users.length === 0) { el.innerHTML = '<div class="empty-state"><div>👥</div>لا يوجد لاعبون</div>'; return; }
+      var html = '';
+      for (var i = 0; i < users.length; i++) {
+        var u = users[i];
+        var cls = i === 0 ? 'rank-1' : i === 1 ? 'rank-2' : i === 2 ? 'rank-3' : 'rank-other';
+        var medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1);
+        html += '<div class="leaderboard-row"><div class="rank ' + cls + '">' + medal + '</div><div class="player-name" style="flex:1;font-weight:600;">' + u.name + '</div><div class="points">' + (u.points || 0) + ' <span style="font-size:0.7rem;color:var(--text-secondary);">نقطة</span></div></div>';
+      }
+      el.innerHTML = html;
+    })
+    .catch(function(e) { el.innerHTML = '<div class="empty-state">خطأ في تحميل الترتيب</div>'; });
+}
+
+// =====================================================
+//  HISTORY
+// =====================================================
+function loadHistory() {
+  var el = document.getElementById('historyList');
+  if (!el) return;
+  el.innerHTML = '<div class="empty-state"><div class="spinner"></div></div>';
+  sb('matches', 'GET', null, '?result_team1=not.is.null&order=match_date.desc')
+    .then(function(matches) {
+      if (matches.length === 0) { el.innerHTML = '<div class="empty-state"><div>📜</div>لا توجد مباريات منتهية</div>'; return; }
+      var userPreds = {};
+      if (currentUser.role === 'player') {
+        return sb('predictions', 'GET', null, '?user_id=eq.' + currentUser.id)
+          .then(function(preds) {
+            for (var i = 0; i < preds.length; i++) {
+              userPreds[preds[i].match_id] = preds[i];
+            }
+            return matches;
+          });
+      }
+      return matches;
+    })
+    .then(function(matches) {
+      if (!matches) return;
+      var userPreds = arguments[1] || {};
+      var html = '';
+      for (var i = 0; i < matches.length; i++) {
+        var m = matches[i];
+        var userPred = userPreds[m.id];
+        var isCorrect = userPred && userPred.pred_team1 === m.result_team1 && userPred.pred_team2 === m.result_team2;
+        
+        html += '<div class="history-item"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;"><span class="title">' + getFlag(m.team1) + ' ' + m.team1 + ' 🆚 ' + m.team2 + ' ' + getFlag(m.team2) + '</span><span style="font-weight:700;">النتيجة: ' + m.result_team1 + ' - ' + m.result_team2 + '</span></div>';
+        if (m.has_penalty) { html += '<div style="color:#f39c12;font-size:0.85rem;">⚽ مع ركلات ترجيح</div>'; }
+        
+        if (userPred) {
+          var predText = userPred.pred_team1 + ' - ' + userPred.pred_team2;
+          if (userPred.penalty_winner) {
+            predText += ' (الفائز بركلات: ' + userPred.penalty_winner + ')';
+          }
+          var correctText = isCorrect ? '✅ صحيح' : '❌ خطأ';
+          var color = isCorrect ? '#00c853' : '#ff1744';
+          html += '<div style="margin-top:4px;font-size:0.9rem;">توقعي: <strong>' + predText + '</strong> <span style="color:' + color + ';">' + correctText + '</span></div>';
+        }
+        
+        html += '<div class="correct">✅ اصحاب التوقع الصحيح: ';
+        sb('predictions', 'GET', null, '?match_id=eq.' + m.id + '&points=eq.3').then(function(preds) {
+          if (preds.length === 0) { html += '<span style="color:var(--text-secondary);">لا يوجد</span>'; } else {
+            for (var j = 0; j < preds.length; j++) {
+              var uid = preds[j].user_id;
+              sb('users', 'GET', null, '?id=eq.' + uid).then(function(users) {
+                if (users.length > 0) { html += '<span>' + users[0].name + '</span>'; }
+              });
+            }
+          }
+          html += '</div>';
+        });
+        html += '<div style="margin-top:8px;font-size:0.8rem;color:var(--text-secondary);">📅 ' + new Date(m.match_date).toLocaleString('ar-SA', {dateStyle:'short', timeStyle:'short'}) + '</div></div>';
+      }
+      el.innerHTML = html;
+    })
+    .catch(function(e) { el.innerHTML = '<div class="empty-state">خطأ في تحميل التاريخ</div>'; });
+}
+
+// =====================================================
+//  ADMIN - USERS
+// =====================================================
+function loadUsers() {
+  var tbody = document.getElementById('usersTableBody');
+  if (!tbody) return;
+  tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-secondary);">جاري التحميل...</td></tr>';
+  sb('users', 'GET', null, '?order=id.asc')
+    .then(function(users) {
+      if (users.length === 0) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-secondary);">لا يوجد مستخدمون</td></tr>'; return; }
+      var html = '';
+      for (var i = 0; i < users.length; i++) {
+        var u = users[i];
+        var isAdmin = u.role === 'admin';
+        var isSubAdmin = u.role === 'subadmin';
+        var roleLabel = isAdmin ? '👑 مشرف' : isSubAdmin ? '🛡️ نائب' : '⚽ لاعب';
+        var roleStyle = isAdmin ? 'background:var(--border-color);color:var(--bg-primary);' : 
+                        isSubAdmin ? 'background:#651fff;color:white;' : 
+                        'background:var(--card-bg);color:var(--text-secondary);border:1px solid var(--border-color);';
+        var canDelete = currentUser.role === 'admin' && !isAdmin && u.id !== currentUser.id;
+        html += '<tr><td>' + (i+1) + '</td><td><strong>' + u.name + '</strong></td><td><span style="color:var(--text-secondary);">@' + u.username + '</span></td><td><span style="' + roleStyle + 'padding:2px 12px;border-radius:30px;font-size:0.7rem;font-weight:600;">' + roleLabel + '</span></td><td><strong style="color:var(--text-primary);">' + (u.points || 0) + '</strong></td><td>' + 
+        (u.role === 'player' ? '<div style="display:flex;gap:4px;flex-wrap:wrap;"><input type="number" id="pts-' + u.id + '" value="' + (u.points || 0) + '" min="0" step="1" style="width:50px;padding:4px;border:2px solid var(--border-color);border-radius:6px;background:var(--input-bg);color:var(--text-primary);text-align:center;"><button onclick="updatePoints(' + u.id + ',\'add\')" class="btn btn-success btn-sm">+3</button><button onclick="updatePoints(' + u.id + ',\'sub\')" class="btn btn-danger btn-sm">-3</button><button onclick="updatePoints(' + u.id + ',\'set\')" class="btn btn-warning btn-sm">تعيين</button>' + 
+        (canDelete ? '<button onclick="deleteUser(' + u.id + ')" class="btn btn-danger btn-sm">🗑️</button>' : '') + '</div>' : 
+        '<span style="color:var(--text-secondary);font-size:0.75rem;">' + (isAdmin ? 'المشرف الرئيسي' : 'نائب مشرف') + '</span>') + '</td></tr>';
+      }
+      tbody.innerHTML = html;
+    })
+    .catch(function(e) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#ff1744;">خطأ: ' + e.message + '</td></tr>'; });
+}
+
+function addPlayer() {
+  var name = document.getElementById('newName');
+  var username = document.getElementById('newUser');
+  var password = document.getElementById('newPass');
+  if (!name || !username || !password) { toast('حدث خطأ', true); return; }
+  
+  var nameVal = name.value.trim();
+  var usernameVal = username.value.trim();
+  var passwordVal = password.value.trim();
+  
+  if (!nameVal || !usernameVal || !passwordVal) { toast('اكمل جميع الحقول', true); return; }
+  if (passwordVal.length < 4) { toast('كلمة المرور قصيرة جدا', true); return; }
+  
+  sb('users', 'GET', null, '?username=eq.' + encodeURIComponent(usernameVal))
+    .then(function(existing) {
+      if (existing.length > 0) { toast('اسم المستخدم موجود بالفعل', true); return; }
+      return sb('users', 'POST', { name: nameVal, username: usernameVal, password: passwordVal, role: 'player', points: 0 });
+    })
+    .then(function() {
+      toast('تم اضافة اللاعب');
+      name.value = '';
+      username.value = '';
+      password.value = '';
+      loadUsers();
+      loadLeaderboard();
+    })
+    .catch(function(e) { toast('خطأ: ' + e.message, true); });
+}
+
+function deleteUser(userId) {
+  if (!confirm('حذف هذا المستخدم وجميع توقعاته؟')) return;
+  fetch(SUPABASE_URL + '/rest/v1/predictions?user_id=eq.' + userId, {method:'DELETE', headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}})
+    .then(function() { return fetch(SUPABASE_URL + '/rest/v1/users?id=eq.' + userId, {method:'DELETE', headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}}); })
+    .then(function() { toast('تم حذف المستخدم'); loadUsers(); loadLeaderboard(); })
+    .catch(function(e) { toast('خطأ: ' + e.message, true); });
+}
+
+function updatePoints(userId, action) {
+  var input = document.getElementById('pts-' + userId);
+  if (!input) return;
+  var cur = parseInt(input.value) || 0;
+  var val = cur;
+  if (action === 'add') val = cur + 3;
+  else if (action === 'sub') val = Math.max(0, cur - 3);
+  else if (action === 'set') { var v = parseInt(input.value); if (isNaN(v) || v < 0) { toast('ادخل قيمة صحيحة', true); return; } val = v; }
+  fetch(SUPABASE_URL + '/rest/v1/users?id=eq.' + userId, {method:'PATCH', headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json'}, body:JSON.stringify({points: val})})
+    .then(function() { toast('تم تحديث النقاط الى ' + val); loadUsers(); loadLeaderboard(); })
+    .catch(function(e) { toast('خطأ: ' + e.message, true); });
+}
+
+// =====================================================
+//  ADMIN - MATCHES (تم إصلاح الخطأ البرمجي)
+// =====================================================
+function addMatch() {
+  var team1 = document.getElementById('aTeam1');
+  var team2 = document.getElementById('aTeam2');
+  var dateInput = document.getElementById('aDate');
+  var timeInput = document.getElementById('aTime');
+  var type = document.getElementById('aType');
+  
+  if (!team1 || !team2 || !dateInput || !timeInput || !type) { toast('حدث خطأ', true); return; }
+  
+  var team1Val = team1.value;
+  var team2Val = team2.value;
+  var dateVal = dateInput.value;
+  var timeVal = timeInput.value;
+  var typeVal = type.value;
+  
+  if (!team1Val || !team2Val) { toast('اختر الفريقين', true); return; }
+  if (team1Val === team2Val) { toast('لا يمكن ان يكون الفريقان متطابقين', true); return; }
+  if (!dateVal) { toast('اختر تاريخ المباراة', true); return; }
+  if (!timeVal) { toast('اختر وقت المباراة', true); return; }
+  
+  sb('matches', 'GET', null, '?team1=eq.' + encodeURIComponent(team1Val) + '&team2=eq.' + encodeURIComponent(team2Val))
+    .then(function(existing) {
+      if (existing.length > 0) {
+        toast('المباراة موجودة مسبقاً', true);
+        return;
+      }
+      var matchDateTime = dateVal + 'T' + timeVal + ':00';
+      var data = {team1: team1Val, team2: team2Val, flag1: getFlag(team1Val), flag2: getFlag(team2Val), match_date: matchDateTime, has_penalty: typeVal === 'penalty'};
+      return sb('matches', 'POST', data);
+    })
+    .then(function() {
+      if (arguments.length === 0) return;
+      toast('تمت اضافة المباراة');
+      team1.value = '';
+      team2.value = '';
+      dateInput.value = '';
+      timeInput.value = '12:00';
+      loadAdminMatches();
+      loadMatches();
+      loadCurrentPredictions();
+    })
+    .catch(function(e) { toast('خطأ: ' + e.message, true); });
+}
+
+function loadAdminMatches() {
+  var el = document.getElementById('adminMatches');
+  if (!el) return;
+  el.innerHTML = '<div class="empty-state"><div class="spinner"></div></div>';
+  sb('matches', 'GET', null, '?order=match_date.asc')
+    .then(function(matches) {
+      if (matches.length === 0) { el.innerHTML = '<div class="empty-state"><div>📋</div>لا توجد مباريات</div>'; return; }
+      var html = '';
+      for (var i = 0; i < matches.length; i++) {
+        var m = matches[i];
+        var hasResult = m.result_team1 !== null && m.result_team2 !== null;
+        var dateStr = m.match_date ? new Date(m.match_date).toLocaleString('ar-SA', {dateStyle:'short', timeStyle:'short'}) : '-';
+        var typeStr = m.has_penalty ? '⚽ مع ركلات' : '⚽ عادي';
+        var isLocked = lockedMatches[m.id] || false;
+        var isAdmin = currentUser.role === 'admin';
+        
+        html += '<div class="match-card' + (isLocked ? ' closed' : '') + '"><div class="top"><div class="match-teams"><div class="team"><div class="team-flag">' + (m.flag1 || '🏳️') + '</div><div class="team-name">' + m.team1 + '</div></div><div class="vs">VS</div><div class="team"><div class="team-flag">' + (m.flag2 || '🏳️') + '</div><div class="team-name">' + m.team2 + '</div></div></div><div><div style="font-size:0.7rem;color:var(--text-secondary);">' + typeStr + '</div><div style="font-size:0.78rem;color:var(--text-secondary);">' + dateStr + '</div></div></div>' + 
+        (hasResult ? '<div style="background:rgba(0,200,0,0.15);color:#00c853;padding:5px 12px;border-radius:8px;font-weight:700;margin-top:4px;display:inline-block;">' + m.result_team1 + ' - ' + m.result_team2 + ' ✅</div>' : 
+        '<div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;align-items:center;"><input id="r1-' + m.id + '" type="number" min="0" max="20" placeholder="0" style="width:52px;padding:7px;border:2px solid var(--border-color);border-radius:8px;background:var(--input-bg);color:var(--text-primary);text-align:center;"> <span style="font-weight:700;">-</span> <input id="r2-' + m.id + '" type="number" min="0" max="20" placeholder="0" style="width:52px;padding:7px;border:2px solid var(--border-color);border-radius:8px;background:var(--input-bg);color:var(--text-primary);text-align:center;"> <button onclick="setResult(' + m.id + ')" class="btn btn-primary" style="padding:5px 12px;font-size:0.85rem;">تأكيد النتيجة</button>' +
+        (isLocked ? ' <span class="lock-overlay">🔒 مقفلة</span>' : ' <button class="btn btn-lock" onclick="toggleLockMatch(' + m.id + ')" style="padding:4px 12px;font-size:0.8rem;">🔒 قفل</button>') + 
+        (isLocked ? ' <button class="btn btn-warning" onclick="toggleUnlockMatch(' + m.id + ')" style="padding:4px 12px;font-size:0.8rem;">🔓 فتح</button>' : '') + '</div>') + 
+        '<div style="margin-top:6px;">' + (isAdmin ? '<button onclick="deleteMatch(' + m.id + ')" class="btn btn-danger btn-sm">🗑️ حذف</button>' : '') + '</div></div>';
+      }
+      el.innerHTML = html;
+    })
+    .catch(function(e) { el.innerHTML = '<div class="empty-state">خطأ في تحميل البيانات</div>'; });
+}
+
+// =====================================================
+//  ADMIN - DELETE FUNCTIONS
+// =====================================================
+function deleteMatch(matchId) {
+  if (currentUser.role !== 'admin') { toast('ليس لديك صلاحية', true); return; }
+  
+  if (!confirm('هل أنت متأكد من حذف هذه المباراة؟')) return;
+  
+  // First delete predictions, then delete match
+  fetch(SUPABASE_URL + '/rest/v1/predictions?match_id=eq.' + matchId, {
+    method: 'DELETE',
+    headers: {'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY}
+  })
+  .then(function() {
+    return fetch(SUPABASE_URL + '/rest/v1/matches?id=eq.' + matchId, {
+      method: 'DELETE',
+      headers: {'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY}
+    });
+  })
+  .then(function() {
+    delete lockedMatches[matchId];
+    toast('✅ تم حذف المباراة');
+    loadAdminMatches();
+    loadMatches();
+    loadHistory();
+    loadCurrentPredictions();
+  })
+  .catch(function(e) { toast('خطأ في الحذف: ' + e.message, true); });
+}
+
+function deleteAllMatches() {
+  if (currentUser.role !== 'admin') { toast('ليس لديك صلاحية', true); return; }
+  if (!confirm('⚠️ هل أنت متأكد من حذف جميع المباريات وجميع التوقعات المرتبطة بها؟')) return;
+  
+  lockedMatches = {};
+  
+  fetch(SUPABASE_URL + '/rest/v1/predictions?match_id=not.is.null', {
+    method: 'DELETE',
+    headers: {'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY}
+  })
+  .then(function() {
+    return fetch(SUPABASE_URL + '/rest/v1/matches?match_date=not.is.null', {
+      method: 'DELETE',
+      headers: {'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY}
+    });
+  })
+  .then(function() {
+    toast('✅ تم حذف جميع المباريات');
+    loadAdminMatches();
+    loadMatches();
+    loadHistory();
+    loadCurrentPredictions();
+  })
+  .catch(function(e) { toast('خطأ في الحذف: ' + e.message, true); });
+}
+
+function deleteFinishedMatches() {
+  if (currentUser.role !== 'admin') { toast('ليس لديك صلاحية', true); return; }
+  if (!confirm('⚠️ هل أنت متأكد من حذف المباريات المنتهية فقط؟')) return;
+  
+  sb('matches', 'GET', null, '?result_team1=not.is.null')
+    .then(function(matches) {
+      var promises = [];
+      for (var i = 0; i < matches.length; i++) {
+        var mid = matches[i].id;
+        delete lockedMatches[mid];
+        promises.push(fetch(SUPABASE_URL + '/rest/v1/predictions?match_id=eq.' + mid, {
+          method: 'DELETE',
+          headers: {'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY}
+        }));
+        promises.push(fetch(SUPABASE_URL + '/rest/v1/matches?id=eq.' + mid, {
+          method: 'DELETE',
+          headers: {'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY}
+        }));
+      }
+      return Promise.all(promises);
+    })
+    .then(function() {
+      toast('✅ تم حذف المباريات المنتهية');
+      loadAdminMatches();
+      loadMatches();
+      loadHistory();
+      loadCurrentPredictions();
+    })
+    .catch(function(e) { toast('خطأ في الحذف: ' + e.message, true); });
+}
+
+// =====================================================
+//  SET RESULT FUNCTION
+// =====================================================
+function setResult(matchId) {
+  var r1Input = document.getElementById('r1-' + matchId);
+  var r2Input = document.getElementById('r2-' + matchId);
+  if (!r1Input || !r2Input) { toast('حدث خطأ', true); return; }
+  
+  var r1 = parseInt(r1Input.value);
+  var r2 = parseInt(r2Input.value);
+  if (isNaN(r1) || isNaN(r2)) { toast('ادخل النتيجة اولا', true); return; }
+  
+  fetch(SUPABASE_URL + '/rest/v1/matches?id=eq.' + matchId, {
+    method: 'PATCH',
+    headers: {'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json'},
+    body: JSON.stringify({result_team1: r1, result_team2: r2})
+  })
+  .then(function() { return sb('predictions', 'GET', null, '?match_id=eq.' + matchId); })
+  .then(function(preds) {
+    var promises = [];
+    for (var i = 0; i < preds.length; i++) {
+      var p = preds[i];
+      var isCorrect = (p.pred_team1 === r1 && p.pred_team2 === r2);
+      if (isCorrect) {
+        promises.push(sb('users', 'GET', null, '?id=eq.' + p.user_id).then(function(u) {
+          if (u.length > 0) {
+            return fetch(SUPABASE_URL + '/rest/v1/users?id=eq.' + p.user_id, {
+              method: 'PATCH',
+              headers: {'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json'},
+              body: JSON.stringify({points: (u[0].points || 0) + 3})
+            });
+          }
+        }));
+      }
+    }
+    return Promise.all(promises);
+  })
+  .then(function() {
+    toast('✅ تم تسجيل النتيجة وتحديث النقاط');
+    delete lockedMatches[matchId];
+    loadAdminMatches();
+    loadMatches();
+    loadLeaderboard();
+    loadUsers();
+    loadHistory();
+    loadCurrentPredictions();
+  })
+  .catch(function(e) { toast('خطأ في حفظ النتيجة: ' + e.message, true); });
+}
+
+// =====================================================
+//  ADMIN - HISTORY
+// =====================================================
+function loadAdminHistory() {
+  var el = document.getElementById('adminHistoryList');
+  if (!el) return;
+  el.innerHTML = '<div class="empty-state"><div class="spinner"></div></div>';
+  sb('matches', 'GET', null, '?result_team1=not.is.null&order=match_date.desc')
+    .then(function(matches) {
+      if (matches.length === 0) { el.innerHTML = '<div class="empty-state"><div>📜</div>لا توجد مباريات منتهية</div>'; return; }
+      var html = '';
+      for (var i = 0; i < matches.length; i++) {
+        var m = matches[i];
+        html += '<div class="history-item"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;align-items:center;"><span class="title">' + getFlag(m.team1) + ' ' + m.team1 + ' 🆚 ' + m.team2 + ' ' + getFlag(m.team2) + '</span><span style="font-weight:700;">' + m.result_team1 + ' - ' + m.result_team2 + '</span>' + 
+        (currentUser.role === 'admin' ? '<button onclick="deleteHistoryMatch(\'' + m.id + '\')" class="btn btn-danger btn-sm">🗑️ حذف</button>' : '') + '</div><div style="font-size:0.8rem;color:var(--text-secondary);">📅 ' + new Date(m.match_date).toLocaleString('ar-SA', {dateStyle:'short', timeStyle:'short'}) + '</div></div>';
+      }
+      el.innerHTML = html;
+    })
+    .catch(function(e) { el.innerHTML = '<div class="empty-state">خطأ في تحميل التاريخ</div>'; });
+}
+
+function deleteHistoryMatch(matchId) {
+  if (currentUser.role !== 'admin') { toast('ليس لديك صلاحية', true); return; }
+  if (!confirm('حذف هذه المباراة من التاريخ؟')) return;
+  
+  fetch(SUPABASE_URL + '/rest/v1/predictions?match_id=eq.' + matchId, {
+    method: 'DELETE',
+    headers: {'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY}
+  })
+  .then(function() {
+    return fetch(SUPABASE_URL + '/rest/v1/matches?id=eq.' + matchId, {
+      method: 'DELETE',
+      headers: {'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY}
+    });
+  })
+  .then(function() {
+    toast('✅ تم الحذف من التاريخ');
+    loadHistory();
+    loadAdminHistory();
+    loadAdminMatches();
+    loadMatches();
+    loadCurrentPredictions();
+  })
+  .catch(function(e) { toast('خطأ في الحذف: ' + e.message, true); });
+}
+
+// =====================================================
+//  INIT
+// =====================================================
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    if (document.getElementById('loginForm') && document.getElementById('loginForm').style.display !== 'none') {
+      doLogin();
+    } else {
+      doRegister();
+    }
+  }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  var dateInput = document.getElementById('aDate');
+  if (dateInput) {
+    var today = new Date().toISOString().split('T')[0];
+    dateInput.value = today;
+  }
+});
+
+// تحميل الثيم والتحقق من الجلسة
+loadTheme();
+
+if (!checkSession()) {
+  document.getElementById('authScreen').style.display = 'block';
+  document.getElementById('appScreen').style.display = 'none';
+}
+
+console.log('⚽ كأس العالم 2026 - 8 ثيمات - نسخة مستقرة');
+console.log('🎨 الثيمات: أسود-ذهبي، أبيض-أزرق، رمادي-أخضر، كحلي-برتقالي، بنفسجي-وردي، رمادي-أسود، أزرق-تركواز، بيج-بني');
+console.log('👑 المشرف: admin / admin123');
+console.log('🛡️ إضافة نواب مشرف من الإعدادات');
+console.log('🔒 تنبيه: تأكد من تفعيل RLS في Supabase لحماية البيانات');
+</script>
+</body>
+</html>
