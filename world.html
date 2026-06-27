@@ -236,6 +236,14 @@
 
         @keyframes fadeSlide { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* toggle switch */
+        .toggle-wrap { display: flex; align-items: center; gap: 16px; margin: 12px 0; }
+        .toggle-wrap .switch { position: relative; width: 56px; height: 30px; flex-shrink: 0; background: var(--surface-raised); border-radius: 30px; border: 2px solid var(--input-border); cursor: pointer; transition: var(--transition); }
+        .toggle-wrap .switch.active { background: var(--primary); border-color: var(--primary-light); }
+        .toggle-wrap .switch .slider { position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; background: var(--text-soft); border-radius: 50%; transition: var(--transition); }
+        .toggle-wrap .switch.active .slider { left: 29px; background: #fff; }
+        .toggle-wrap .label { font-weight: 700; color: var(--text-soft); font-size: 0.95rem; }
+
         @media (max-width: 768px) {
             .header { padding: 12px 16px; }
             .logo { font-size: 1.05rem; }
@@ -251,6 +259,9 @@
             .pitch-backdrop .centre-circle { width: 280px; height: 280px; }
             .hamburger-panel { left: auto; right: 0; min-width: 190px; }
         }
+        /* رسالة خطأ العمود */
+        .column-error { background: rgba(226,85,85,0.15); border: 2px solid var(--danger); border-radius: var(--radius-sm); padding: 16px; margin: 16px 0; color: var(--danger); font-weight: 700; }
+        .column-error code { background: var(--surface); padding: 4px 8px; border-radius: 4px; direction: ltr; display: inline-block; }
     </style>
 </head>
 <body>
@@ -387,6 +398,14 @@
                 </div>
             </div>
 
+            <!-- ALL PREDICTIONS (NEW) -->
+            <div class="section" id="section-allpredictions" style="display:none;">
+                <div class="glass-card">
+                    <h2 class="card-title"><span class="bar"></span>توقعات الكل</h2>
+                    <div id="allPredictionsList"><div class="empty-state"><div class="spinner"></div>جاري التحميل...</div></div>
+                </div>
+            </div>
+
             <!-- ADMIN -->
             <div class="section" id="section-admin" style="display:none;">
                 <!-- Admin tabs -->
@@ -506,6 +525,20 @@
                                 </div>
                                 <div id="passChangeMsg" style="margin-top:8px;color:var(--primary-light);font-size:0.88rem;"></div>
                             </div>
+
+                            <!-- NEW: toggle show all predictions -->
+                            <div class="settings-block">
+                                <h3>👁️ كشف التوقعات للكل</h3>
+                                <div class="toggle-wrap">
+                                    <div id="toggleShowAll" class="switch" onclick="toggleShowAllPredictions()">
+                                        <div class="slider"></div>
+                                    </div>
+                                    <span class="label" id="toggleShowAllLabel">التوقعات مخفية</span>
+                                </div>
+                                <div style="font-size:0.8rem;color:var(--text-muted);margin-top:6px;">
+                                    عند التفعيل، سيتمكن جميع المستخدمين من رؤية توقعات بعضهم البعض في تبويب "توقعات الكل".
+                                </div>
+                            </div>
                         </div>
 
                         <!-- st-vice -->
@@ -600,6 +633,9 @@
             { name: 'اوروغواي', flag: '🇺🇾' }, { name: 'باراغواي', flag: '🇵🇾' }, { name: 'نيوزيلندا', flag: '🇳🇿' }
         ];
 
+        // ===== متغير لتتبع وجود عمود penalty_winner =====
+        var hasPenaltyColumn = false;
+
         // ============================================================
         //  HELPERS
         // ============================================================
@@ -650,19 +686,237 @@
             if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; } else { inp.type = 'password'; btn.textContent = '👁️'; }
         }
 
-        // ============================================================
-        //  THEME
-        // ============================================================
-        function applyTheme(themeName) {
-            var classes = document.body.className.split(' ').filter(function(c) { return c.indexOf('theme-') !== 0; });
-            if (themeName) { classes.push(themeName); localStorage.setItem('wc_theme', themeName); } else { localStorage.removeItem('wc_theme'); }
-            document.body.className = classes.join(' ');
+        // ===== التحقق من وجود عمود penalty_winner =====
+        function checkPenaltyColumn() {
+            return sb('matches', 'GET', null, '?select=penalty_winner&limit=1')
+                .then(function() {
+                    hasPenaltyColumn = true;
+                    return true;
+                })
+                .catch(function(e) {
+                    if (e.message && e.message.includes('column "penalty_winner" does not exist')) {
+                        hasPenaltyColumn = false;
+                        var msg = '⚠️ عمود "penalty_winner" غير موجود في جدول المباريات. يرجى إضافته باستخدام الأمر التالي في SQL Editor: <br><code>ALTER TABLE matches ADD COLUMN penalty_winner text;</code>';
+                        var el = document.createElement('div');
+                        el.className = 'column-error';
+                        el.innerHTML = msg;
+                        var adminSection = document.getElementById('section-admin');
+                        if (adminSection) {
+                            var firstCard = adminSection.querySelector('.glass-card');
+                            if (firstCard) {
+                                firstCard.parentNode.insertBefore(el, firstCard);
+                            }
+                        }
+                        toast('⚠️ العمود penalty_winner مفقود، راجع التعليمات', true);
+                    } else {
+                        hasPenaltyColumn = false;
+                    }
+                    return false;
+                });
         }
 
-        function loadSavedTheme() {
-            var saved = localStorage.getItem('wc_theme');
-            var sel = document.getElementById('themeSelect');
-            if (saved) { applyTheme(saved); if (sel) sel.value = saved; } else if (sel) sel.value = '';
+        // ===== SETTINGS TABLE (for show_all_predictions) =====
+        function ensureSettingsTable() {
+            // حاول قراءة من جدول settings
+            return sb('app_settings', 'GET', null, '?key=eq.show_all_predictions')
+                .then(function(rows) {
+                    if (rows.length === 0) {
+                        // ننشئ الصف بالقيمة false
+                        return sb('app_settings', 'POST', { key: 'show_all_predictions', value: 'false' });
+                    }
+                    return rows;
+                })
+                .catch(function(e) {
+                    // الجدول غير موجود، نحاول إنشاؤه عبر SQL (قد لا ينجح)
+                    // إذا فشل، نعرض رسالة للمشرف لإنشائه يدوياً
+                    if (currentUser && currentUser.role === 'admin') {
+                        toast('⚠️ جدول الإعدادات غير موجود، يرجى إنشاؤه يدوياً باستخدام الأمر التالي: CREATE TABLE app_settings (key text PRIMARY KEY, value text); INSERT INTO app_settings (key,value) VALUES (\'show_all_predictions\',\'false\');', true);
+                    }
+                    return Promise.reject(e);
+                });
+        }
+
+        function getSetting(key) {
+            return sb('app_settings', 'GET', null, '?key=eq.' + encodeURIComponent(key))
+                .then(function(rows) {
+                    if (rows.length > 0) return rows[0].value;
+                    else return null;
+                })
+                .catch(function() { return null; });
+        }
+
+        function setSetting(key, value) {
+            // تحديث أو إدراج
+            return sb('app_settings', 'GET', null, '?key=eq.' + encodeURIComponent(key))
+                .then(function(rows) {
+                    if (rows.length > 0) {
+                        // تحديث
+                        return fetch(SUPABASE_URL + '/rest/v1/app_settings?key=eq.' + encodeURIComponent(key), {
+                            method: 'PATCH',
+                            headers: {
+                                'apikey': SUPABASE_KEY,
+                                'Authorization': 'Bearer ' + SUPABASE_KEY,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ value: value })
+                        });
+                    } else {
+                        // إدراج
+                        return sb('app_settings', 'POST', { key: key, value: value });
+                    }
+                })
+                .then(function() {
+                    // تحديث واجهة المستخدم
+                    updateToggleUI(value === 'true');
+                })
+                .catch(function(e) {
+                    toast('خطأ في حفظ الإعداد: ' + e.message, true);
+                });
+        }
+
+        function loadShowAllSetting() {
+            getSetting('show_all_predictions')
+                .then(function(val) {
+                    var isEnabled = (val === 'true');
+                    updateToggleUI(isEnabled);
+                    // إذا كان المستخدم لاعباً، تحقق من الحالة لتحديد رؤية تبويب "توقعات الكل"
+                    if (currentUser && currentUser.role === 'player') {
+                        var section = document.getElementById('section-allpredictions');
+                        if (section) {
+                            section.style.display = isEnabled ? 'block' : 'none';
+                        }
+                    }
+                    // تحديث قائمة التبويبات الرئيسية (للاعبين)
+                    if (currentUser && currentUser.role === 'player') {
+                        buildTabs();
+                    }
+                    // إذا كان مشرفاً، نحدّث حالة الزر
+                    if (currentUser && (currentUser.role === 'admin' || currentUser.role === 'viceadmin')) {
+                        // لا نقوم بإخفاء التبويب عن المشرفين، لكن نحدّث الزر
+                    }
+                })
+                .catch(function(e) {
+                    // في حال عدم وجود الجدول، نستخدم القيمة الافتراضية false
+                    updateToggleUI(false);
+                });
+        }
+
+        function updateToggleUI(enabled) {
+            var toggle = document.getElementById('toggleShowAll');
+            var label = document.getElementById('toggleShowAllLabel');
+            if (toggle) {
+                toggle.classList.toggle('active', enabled);
+            }
+            if (label) {
+                label.textContent = enabled ? '✅ مفعّل (الكل يرى التوقعات)' : '❌ مخفّى (الكل لا يرى التوقعات)';
+            }
+        }
+
+        function toggleShowAllPredictions() {
+            if (!currentUser || currentUser.role !== 'admin') {
+                toast('هذا الإجراء متاح فقط للمشرف', true);
+                return;
+            }
+            var toggle = document.getElementById('toggleShowAll');
+            var current = toggle.classList.contains('active');
+            var newVal = !current;
+            setSetting('show_all_predictions', newVal ? 'true' : 'false')
+                .then(function() {
+                    toast(newVal ? '✅ تم تفعيل كشف التوقعات للكل' : '❌ تم إخفاء التوقعات عن الكل');
+                    // تحديث واجهة المستخدم لكل اللاعبين (سنقوم بتحديث تبويب "توقعات الكل" إذا كان مفتوحاً)
+                    if (!newVal) {
+                        // إخفاء المحتوى
+                        var list = document.getElementById('allPredictionsList');
+                        if (list) list.innerHTML = '<div class="empty-state"><div>🔒</div>التوقعات مخفية حالياً من قبل المشرف</div>';
+                    } else {
+                        // إعادة تحميل التوقعات
+                        loadAllPredictions();
+                    }
+                    // تحديث التبويبات للاعبين
+                    if (currentUser && currentUser.role === 'player') {
+                        buildTabs();
+                    }
+                })
+                .catch(function(e) {
+                    toast('فشل تغيير الإعداد: ' + e.message, true);
+                });
+        }
+
+        // ============================================================
+        //  ALL PREDICTIONS (NEW TAB)
+        // ============================================================
+        function loadAllPredictions() {
+            var el = document.getElementById('allPredictionsList');
+            if (!el) return;
+            // تحقق أولاً من الإعداد
+            getSetting('show_all_predictions')
+                .then(function(val) {
+                    if (val !== 'true') {
+                        el.innerHTML = '<div class="empty-state"><div>🔒</div>التوقعات مخفية حالياً من قبل المشرف</div>';
+                        return;
+                    }
+                    // جلب جميع المباريات غير المنتهية وتوقعاتها
+                    return sb('matches', 'GET', null, '?result_team1=is.null&order=id.asc')
+                        .then(function(matches) {
+                            if (matches.length === 0) {
+                                el.innerHTML = '<div class="empty-state"><div>📅</div>لا توجد مباريات حالية</div>';
+                                return;
+                            }
+                            var matchIds = matches.map(function(m) { return m.id; });
+                            return sb('predictions', 'GET', null, '?match_id=in.(' + matchIds.join(',') + ')')
+                                .then(function(preds) {
+                                    var userIds = [];
+                                    for (var i = 0; i < preds.length; i++) {
+                                        if (userIds.indexOf(preds[i].user_id) === -1) userIds.push(preds[i].user_id);
+                                    }
+                                    var userMap = {};
+                                    if (userIds.length > 0) {
+                                        return sb('users', 'GET', null, '?id=in.(' + userIds.join(',') + ')')
+                                            .then(function(users) {
+                                                for (var i = 0; i < users.length; i++) { userMap[users[i].id] = users[i]; }
+                                                return { matches: matches, predictions: preds, userMap: userMap };
+                                            });
+                                    }
+                                    return { matches: matches, predictions: preds, userMap: userMap };
+                                });
+                        })
+                        .then(function(result) {
+                            if (!result) return;
+                            var matches = result.matches,
+                                predictions = result.predictions,
+                                userMap = result.userMap || {};
+                            var html = '';
+                            for (var i = 0; i < matches.length; i++) {
+                                var m = matches[i];
+                                var matchPreds = predictions.filter(function(p) { return p.match_id === m.id; });
+                                var isLocked = lockedMatches[m.id] || false;
+                                html += '<div class="match-card' + (isLocked ? ' closed' : '') + '" style="margin-bottom:12px;">';
+                                html += '<div style="font-weight:700;color:var(--text);font-size:1.05rem;margin-bottom:6px;">' +
+                                    getFlag(m.team1) + ' ' + m.team1 + ' 🆚 ' + m.team2 + ' ' + getFlag(m.team2) + '</div>';
+                                if (isLocked) html += '<div class="lock-overlay">🔒 المباراة مغلقة - التوقعات غير متاحة</div>';
+                                else {
+                                    if (matchPreds.length === 0) html += '<div style="color:var(--text-muted);font-size:0.85rem;">لا توجد توقعات بعد</div>';
+                                    else {
+                                        for (var k = 0; k < matchPreds.length; k++) {
+                                            var p = matchPreds[k];
+                                            var userName = userMap[p.user_id] ? userMap[p.user_id].name : 'مجهول';
+                                            var predText = p.pred_team1 + ' - ' + p.pred_team2;
+                                            if (p.penalty_winner) { predText += ' (الفائز بركلات: ' + p.penalty_winner + ')'; }
+                                            html += '<div class="prediction-item"><span class="pname">' + userName + '</span><span class="ppred">' + predText + '</span></div>';
+                                        }
+                                    }
+                                }
+                                html += '</div>';
+                            }
+                            el.innerHTML = html;
+                        })
+                        .catch(function(e) {
+                            el.innerHTML = '<div class="empty-state"><div>❌</div>خطأ: ' + e.message + '</div>';
+                        });
+                })
+                .catch(function(e) {
+                    el.innerHTML = '<div class="empty-state"><div>❌</div>خطأ في التحقق من الإعدادات</div>';
+                });
         }
 
         // ============================================================
@@ -695,7 +949,8 @@
                     var found = null;
                     for (var i = 0; i < users.length; i++) {
                         if (users[i].password === password && (users[i].role === selectedRole || (selectedRole === 'admin' && (users[i].role === 'admin' || users[i].role === 'viceadmin')))) {
-                            found = users[i]; break;
+                            found = users[i];
+                            break;
                         }
                     }
                     if (!found) { msg.textContent = 'اسم المستخدم او كلمة المرور غير صحيحة'; msg.className = 'auth-msg error'; return; }
@@ -735,8 +990,28 @@
         function enterApp() {
             if (appEntered) return;
             appEntered = true;
-            // Ensure admin user "osama" exists
+            // التحقق من وجود العمود penalty_winner
+            checkPenaltyColumn().then(function() {
+                // متابعة التطبيق
+            });
+
+            // إنشاء حساب المشرف osama
             ensureAdminUser();
+
+            // التأكد من جدول الإعدادات (للمشرفين فقط)
+            if (currentUser && currentUser.role === 'admin') {
+                ensureSettingsTable()
+                    .then(function() {
+                        loadShowAllSetting();
+                    })
+                    .catch(function() {
+                        // إذا فشل، نستخدم القيمة الافتراضية false
+                        loadShowAllSetting();
+                    });
+            } else {
+                // للاعبين نحاول قراءة الإعداد
+                loadShowAllSetting();
+            }
 
             document.getElementById('authScreen').style.display = 'none';
             document.getElementById('appScreen').style.display = 'block';
@@ -758,12 +1033,29 @@
                 loadMatches();
                 loadLeaderboard();
                 if (currentUser.role === 'admin' || currentUser.role === 'viceadmin') loadCurrentPredictions();
+                // تحديث توقعات الكل إذا كان التبويب مفتوحاً
+                var allSection = document.getElementById('section-allpredictions');
+                if (allSection && allSection.style.display !== 'none') {
+                    loadAllPredictions();
+                }
             }, 30000);
             if (currentUser.role === 'admin') loadViceAdmins();
             loadSavedTheme();
+
+            // تحميل توقعات الكل إذا كان اللاعب و الإعداد مفعّل
+            if (currentUser.role === 'player') {
+                getSetting('show_all_predictions')
+                    .then(function(val) {
+                        if (val === 'true') {
+                            loadAllPredictions();
+                        } else {
+                            var list = document.getElementById('allPredictionsList');
+                            if (list) list.innerHTML = '<div class="empty-state"><div>🔒</div>التوقعات مخفية حالياً من قبل المشرف</div>';
+                        }
+                    });
+            }
         }
 
-        // ===== إنشاء حساب المشرف الإضافي "osama" تلقائياً =====
         function ensureAdminUser() {
             sb('users', 'GET', null, '?username=eq.osama')
                 .then(function(users) {
@@ -843,7 +1135,29 @@
                 { id: 'leaderboard', label: '🏅 الترتيب' },
                 { id: 'history', label: '📜 التاريخ' }
             ];
-            if (currentUser.role === 'admin' || currentUser.role === 'viceadmin') tabs.push({ id: 'admin', label: '⚙️ الإدارة' });
+            // إضافة تبويب توقعات الكل للاعبين فقط إذا كان الإعداد مفعّلاً
+            if (currentUser && currentUser.role === 'player') {
+                // نتحقق من الإعداد بشكل متزامن (سنستخدم قيمة مخزنة)
+                var showAll = localStorage.getItem('showAllPredictions');
+                if (showAll === 'true' || showAll === null) {
+                    // إذا كانت null، نحاول قراءتها من قاعدة البيانات
+                    if (showAll === null) {
+                        // سنقوم بتحديث التبويبات بعد تحميل الإعداد
+                        // لذا نؤجلها
+                        setTimeout(function() {
+                            buildTabs();
+                        }, 200);
+                        return;
+                    }
+                    if (showAll === 'true') {
+                        tabs.push({ id: 'allpredictions', label: '👀 توقعات الكل' });
+                    }
+                }
+            }
+            // إذا كان مشرفاً، نضيف تبويب الإدارة
+            if (currentUser && (currentUser.role === 'admin' || currentUser.role === 'viceadmin')) {
+                tabs.push({ id: 'admin', label: '⚙️ الإدارة' });
+            }
             var html = '';
             for (var i = 0; i < tabs.length; i++) {
                 html += '<button class="tab" onclick="showSection(\'' + tabs[i].id + '\')">' + tabs[i].label + '</button>';
@@ -858,11 +1172,12 @@
             var target = document.getElementById('section-' + id);
             if (target) target.style.display = 'block';
             document.querySelectorAll('#mainTabs .tab').forEach(function(el) {
-                var labelMap = { matches: 'المباريات', leaderboard: 'الترتيب', history: 'التاريخ', admin: 'الإدارة' };
+                var labelMap = { matches: 'المباريات', leaderboard: 'الترتيب', history: 'التاريخ', admin: 'الإدارة', allpredictions: 'توقعات الكل' };
                 el.classList.toggle('active', el.textContent.includes(labelMap[id] || ''));
             });
             if (id === 'leaderboard') loadLeaderboard();
             if (id === 'history') loadHistory();
+            if (id === 'allpredictions') loadAllPredictions();
             if (id === 'admin') {
                 loadUsers();
                 loadAdminMatches();
@@ -972,7 +1287,11 @@
             var statusText = '⏳ مفتوحة';
             var statusClass = 'status-upcoming';
             if (hasResult) { statusText = '✅ منتهية'; statusClass = 'status-finished'; } else if (isLocked) { statusText = '🔒 مغلقة'; statusClass = 'status-locked'; }
-            var resultBadge = hasResult ? '<div class="result-badge">' + m.result_team1 + ' - ' + m.result_team2 + (m.penalty_winner ? ' (فائز بالركلات: ' + m.penalty_winner + ')' : '') + '</div>' : '';
+            var penaltyText = '';
+            if (hasResult && m.has_penalty && m.penalty_winner) {
+                penaltyText = ' (فائز بالركلات: ' + m.penalty_winner + ')';
+            }
+            var resultBadge = hasResult ? '<div class="result-badge">' + m.result_team1 + ' - ' + m.result_team2 + penaltyText + '</div>' : '';
             var typeText = m.has_penalty ? ' ⚽ مع ركلات' : '';
             var cardClass = 'match-card' + (isLocked || hasResult ? ' closed' : '');
             var predHtml = '';
@@ -1003,7 +1322,6 @@
             if (currentUser.role === 'admin' || currentUser.role === 'viceadmin') { loadAdminMatches(); loadCurrentPredictions(); }
         }
 
-        // ===== قفل كل المباريات (غير المنتهية) =====
         function lockAllMatches() {
             if (!confirm('🔒 هل تريد قفل جميع المباريات المفتوحة (غير المنتهية)؟')) return;
             sb('matches', 'GET', null, '?result_team1=is.null')
@@ -1024,10 +1342,8 @@
                 .catch(function(e) { toast('خطأ: ' + e.message, true); });
         }
 
-        // ===== دالة للتحقق مما إذا كانت النتيجة متعادلة =====
         function isTie(p1, p2) { return p1 === p2; }
 
-        // ===== عرض منطقة التوقع مع إخفاء/إظهار أزرار الركلات حسب التعادل =====
         function renderPredictionArea(matchId) {
             var el = document.getElementById('pred-area-' + matchId);
             if (!el) return;
@@ -1059,7 +1375,6 @@
                     html += '<span style="color:var(--text-muted);font-weight:700;">-</span>';
                     html += '<input class="score-input" id="p2-' + m.id + '" type="number" min="0" max="20" placeholder="0">';
                     html += '</div>';
-                    // أزرار الركلات تظهر فقط إذا كانت المباراة بها ركلات ونتعامل معها عبر JS
                     if (m.has_penalty) {
                         html += '<div class="penalty-btns" id="penalty-' + m.id + '" style="display:none;">';
                         html += '<button onclick="selectPenalty(\'' + m.id + '\',\'' + m.team1 + '\')">' + getFlag(m.team1) + ' ' + m.team1 + '</button>';
@@ -1072,7 +1387,6 @@
                     html += '</div></div>';
                     el.innerHTML = html;
 
-                    // إضافة مستمعين لتحديث ظهور أزرار الركلات عند تغيير القيم
                     if (m.has_penalty) {
                         var p1Inp = document.getElementById('p1-' + m.id);
                         var p2Inp = document.getElementById('p2-' + m.id);
@@ -1084,14 +1398,12 @@
                                 penaltyContainer.style.display = 'flex';
                             } else {
                                 penaltyContainer.style.display = 'none';
-                                // إلغاء التحديد عند إخفائها
                                 var btns = penaltyContainer.querySelectorAll('button');
                                 for (var i = 0; i < btns.length; i++) btns[i].classList.remove('selected');
                             }
                         }
                         p1Inp.addEventListener('input', checkTie);
                         p2Inp.addEventListener('input', checkTie);
-                        // التحقق الأولي
                         checkTie();
                     }
                 })
@@ -1123,7 +1435,6 @@
 
             var penaltyWinner = null;
             var penaltyContainer = document.getElementById('penalty-' + matchId);
-            // إذا كانت المباراة بها ركلات وكانت النتيجة متعادلة، نطلب اختيار الفائز
             if (penaltyContainer && isTie(p1, p2)) {
                 var selected = penaltyContainer.querySelector('.selected');
                 if (!selected) { toast('⚠️ النتيجة متعادلة، اختر الفائز بركلات الترجيح', true); return; }
@@ -1142,7 +1453,6 @@
                     if (m.result_team1 !== null && m.result_team2 !== null) { toast('انتهت المباراة بالفعل', true); loadMatches(); return; }
                     if (lockedMatches[matchId]) { toast('⛔ المباراة مغلقة - لا يمكن التوقع', true); loadMatches(); return; }
                     var data = { user_id: currentUser.id, match_id: matchId, pred_team1: p1, pred_team2: p2 };
-                    // نرسل الفائز بالركلات فقط إذا كانت النتيجة متعادلة والمباراة بها ركلات
                     if (m.has_penalty && isTie(p1, p2) && penaltyWinner) {
                         data.penalty_winner = penaltyWinner;
                     } else {
@@ -1185,7 +1495,8 @@
                 })
                 .then(function(result) {
                     if (!result) return;
-                    var matches = result.matches, predictions = result.predictions;
+                    var matches = result.matches,
+                        predictions = result.predictions;
                     var userIds = [];
                     for (var i = 0; i < predictions.length; i++) {
                         if (userIds.indexOf(predictions[i].user_id) === -1) userIds.push(predictions[i].user_id);
@@ -1202,7 +1513,9 @@
                 })
                 .then(function(result) {
                     if (!result) return;
-                    var matches = result.matches, predictions = result.predictions, userMap = result.userMap || {};
+                    var matches = result.matches,
+                        predictions = result.predictions,
+                        userMap = result.userMap || {};
                     var html = '';
                     for (var i = 0; i < matches.length; i++) {
                         var m = matches[i];
@@ -1264,9 +1577,10 @@
                     var html = '';
                     for (var i = 0; i < matches.length; i++) {
                         var m = matches[i];
+                        var penaltyText = (m.has_penalty && m.penalty_winner) ? ' (فائز بالركلات: ' + m.penalty_winner + ')' : '';
                         html += '<div class="history-item"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;"><span class="title">' +
                             getFlag(m.team1) + ' ' + m.team1 + ' 🆚 ' + m.team2 + ' ' + getFlag(m.team2) +
-                            '</span><span style="color:var(--primary-light);font-weight:700;">النتيجة: ' + m.result_team1 + ' - ' + m.result_team2 + (m.penalty_winner ? ' (فائز بالركلات: ' + m.penalty_winner + ')' : '') + '</span></div>';
+                            '</span><span style="color:var(--primary-light);font-weight:700;">النتيجة: ' + m.result_team1 + ' - ' + m.result_team2 + penaltyText + '</span></div>';
                         if (m.has_penalty) { html += '<div style="color:var(--accent);font-size:0.85rem;">⚽ مع ركلات ترجيح</div>'; }
                         html += '<div class="correct">✅ اصحاب التوقع الصحيح: ';
                         sb('predictions', 'GET', null, '?match_id=eq.' + m.id + '&points=eq.3').then(function(preds) {
@@ -1367,7 +1681,7 @@
             sb('matches', 'GET', null, '?team1=eq.' + encodeURIComponent(team1) + '&team2=eq.' + encodeURIComponent(team2))
                 .then(function(existing) {
                     if (existing.length > 0) { toast('المباراة موجودة مسبقاً', true); return; }
-                    var data = { team1: team1, team2: team2, flag1: getFlag(team1), flag2: getFlag(team2), has_penalty: type === 'penalty', penalty_winner: null };
+                    var data = { team1: team1, team2: team2, flag1: getFlag(team1), flag2: getFlag(team2), has_penalty: type === 'penalty' };
                     return sb('matches', 'POST', data);
                 })
                 .then(function() {
@@ -1394,10 +1708,11 @@
                         var hasResult = m.result_team1 !== null && m.result_team2 !== null;
                         var typeStr = m.has_penalty ? '⚽ مع ركلات' : '⚽ عادي';
                         var isLocked = lockedMatches[m.id] || false;
+                        var penaltyWinner = m.penalty_winner || '';
                         html += '<div class="match-card' + (isLocked || hasResult ? ' closed' : '') + '"><div class="top"><div class="match-teams"><div class="team"><div class="team-flag">' +
                             (m.flag1 || '🏳️') + '</div><div class="team-name">' + m.team1 + '</div></div><div class="vs">VS</div><div class="team"><div class="team-flag">' +
                             (m.flag2 || '🏳️') + '</div><div class="team-name">' + m.team2 + '</div></div></div><div><div style="font-size:0.7rem;color:var(--text-muted);">' + typeStr + '</div></div></div>' +
-                            (hasResult ? '<div class="result-badge" style="margin-top:8px;display:inline-block;">' + m.result_team1 + ' - ' + m.result_team2 + (m.penalty_winner ? ' (فائز بالركلات: ' + m.penalty_winner + ')' : '') + ' ✅</div>' :
+                            (hasResult ? '<div class="result-badge" style="margin-top:8px;display:inline-block;">' + m.result_team1 + ' - ' + m.result_team2 + (penaltyWinner ? ' (فائز بالركلات: ' + penaltyWinner + ')' : '') + ' ✅</div>' :
                                 '<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center;"><input id="r1-' + m.id + '" type="number" min="0" max="20" placeholder="0" style="width:52px;padding:8px;border:1.5px solid var(--input-border);border-radius:8px;text-align:center;background:var(--surface);color:var(--text);font-weight:800;font-family:var(--font-display);"> <span style="color:var(--text-muted);font-weight:700;">-</span> <input id="r2-' + m.id + '" type="number" min="0" max="20" placeholder="0" style="width:52px;padding:8px;border:1.5px solid var(--input-border);border-radius:8px;text-align:center;background:var(--surface);color:var(--text);font-weight:800;font-family:var(--font-display);">' +
                                 (m.has_penalty ? ' <div style="display:inline-flex;gap:6px;align-items:center;"><span style="color:var(--text-soft);">الفائز بالركلات:</span><select id="penalty-winner-' + m.id + '" style="width:auto;padding:6px 12px;border-radius:8px;border:1.5px solid var(--input-border);background:var(--surface);color:var(--text);"><option value="">لا يوجد</option><option value="' + m.team1 + '">' + m.team1 + '</option><option value="' + m.team2 + '">' + m.team2 + '</option></select></div>' : '') +
                                 ' <button onclick="setResult(' + m.id + ')" class="btn btn-primary btn-sm">تأكيد النتيجة</button>' +
@@ -1416,18 +1731,33 @@
             var penaltyWinner = null;
             var sel = document.getElementById('penalty-winner-' + matchId);
             if (sel) { penaltyWinner = sel.value || null; }
-            // إذا كانت النتيجة غير متعادلة، نلغي الفائز بالركلات
             if (r1 !== r2) { penaltyWinner = null; }
 
-            var updateData = { result_team1: r1, result_team2: r2, penalty_winner: penaltyWinner };
+            if (penaltyWinner && !hasPenaltyColumn) {
+                toast('⚠️ العمود penalty_winner غير موجود، يرجى إضافته أولاً', true);
+                return;
+            }
+
+            var updateData = { result_team1: r1, result_team2: r2 };
+            if (penaltyWinner) {
+                updateData.penalty_winner = penaltyWinner;
+            }
+
             fetch(SUPABASE_URL + '/rest/v1/matches?id=eq.' + matchId, { method: 'PATCH', headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json' }, body: JSON.stringify(updateData) })
+                .then(function(res) {
+                    if (!res.ok) {
+                        return res.json().then(function(err) {
+                            throw new Error(err.message || 'خطأ في التحديث');
+                        });
+                    }
+                    return res.json();
+                })
                 .then(function() { return sb('predictions', 'GET', null, '?match_id=eq.' + matchId); })
                 .then(function(preds) {
                     var promises = [];
                     for (var i = 0; i < preds.length; i++) {
                         var p = preds[i];
                         var isCorrect = (p.pred_team1 === r1 && p.pred_team2 === r2);
-                        // إذا كان هناك فائز بالركلات و النتيجة متعادلة، نتحقق أيضاً من صحة توقع الفائز
                         if (isCorrect && penaltyWinner && p.penalty_winner) {
                             isCorrect = (p.penalty_winner === penaltyWinner);
                         }
@@ -1455,7 +1785,7 @@
                     loadHistory();
                     loadCurrentPredictions();
                 })
-                .catch(function(e) { toast('خطأ في حفظ النتيجة', true); });
+                .catch(function(e) { toast('خطأ في حفظ النتيجة: ' + e.message, true); });
         }
 
         function deleteMatch(matchId) {
@@ -1518,9 +1848,10 @@
                     var html = '';
                     for (var i = 0; i < matches.length; i++) {
                         var m = matches[i];
+                        var penaltyText = (m.has_penalty && m.penalty_winner) ? ' (فائز بالركلات: ' + m.penalty_winner + ')' : '';
                         html += '<div class="history-item"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;align-items:center;"><span class="title">' +
                             getFlag(m.team1) + ' ' + m.team1 + ' 🆚 ' + m.team2 + ' ' + getFlag(m.team2) +
-                            '</span><span style="color:var(--primary-light);font-weight:700;">' + m.result_team1 + ' - ' + m.result_team2 + (m.penalty_winner ? ' (فائز بالركلات: ' + m.penalty_winner + ')' : '') +
+                            '</span><span style="color:var(--primary-light);font-weight:700;">' + m.result_team1 + ' - ' + m.result_team2 + penaltyText +
                             '</span><button onclick="deleteHistoryMatch(\'' + m.id + '\')" class="btn btn-danger btn-sm">🗑️ حذف</button></div></div>';
                     }
                     el.innerHTML = html;
@@ -1692,6 +2023,8 @@
         console.log('📌 تم إزالة جميع عناصر الوقت والتاريخ');
         console.log('📌 تحسين ركلات الترجيح: تظهر أزرار الفائز فقط عند التعادل');
         console.log('📌 زر قفل كل المباريات موجود في منطقة الخطر');
+        console.log('📌 إذا ظهر خطأ penalty_winner، اتبع التعليمات لإضافة العمود');
+        console.log('📌 تم إضافة تبويب "توقعات الكل" وزر كشف التوقعات للمشرف');
     </script>
 </body>
 </html>
