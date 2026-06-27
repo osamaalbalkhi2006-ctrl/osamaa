@@ -8,21 +8,8 @@
 </script>
 <style>
 /* ============================================
-   CSS VARIABLES & RESET
+   RESET & BASE
    ============================================ */
-:root {
-  --primary: #0077b6;
-  --primary-light: #00b4d8;
-  --primary-dark: #023e8a;
-  --snow: #f0f8ff;
-  --ice: #e3f2fd;
-  --glass: rgba(255, 255, 255, 0.15);
-  --glass-border: rgba(255, 255, 255, 0.2);
-  --shadow: 0 8px 32px rgba(0, 119, 182, 0.15);
-  --radius: 20px;
-  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
 * {
   margin: 0;
   padding: 0;
@@ -31,116 +18,252 @@
 
 body {
   font-family: 'Segoe UI', Tahoma, sans-serif;
-  background: var(--snow);
-  color: #1a2a3a;
   min-height: 100vh;
+  transition: background 0.5s ease, color 0.5s ease;
   position: relative;
-  overflow-x: hidden;
 }
 
 /* ============================================
-   SNOWFALL BACKGROUND
+   THEMES
    ============================================ */
-.snowflakes {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 0;
-  overflow: hidden;
+/* Theme 1: Black & Gold */
+.theme-black-gold {
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #1a1a1a;
+  --bg-card: rgba(26, 26, 26, 0.95);
+  --text-primary: #ffd700;
+  --text-secondary: #ffed4a;
+  --border-color: #ffd700;
+  --shadow-color: rgba(255, 215, 0, 0.3);
+  --gradient: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+  --accent: #ffd700;
+  --card-bg: rgba(26, 26, 26, 0.9);
+  --input-bg: #1a1a1a;
 }
 
-.snowflake {
+/* Theme 2: White & Red */
+.theme-white-red {
+  --bg-primary: #f5f5f5;
+  --bg-secondary: #ffffff;
+  --bg-card: rgba(255, 255, 255, 0.95);
+  --text-primary: #c62828;
+  --text-secondary: #e53935;
+  --border-color: #c62828;
+  --shadow-color: rgba(198, 40, 40, 0.2);
+  --gradient: linear-gradient(135deg, #ffffff, #f5f5f5);
+  --accent: #c62828;
+  --card-bg: rgba(255, 255, 255, 0.92);
+  --input-bg: #ffffff;
+}
+
+/* Theme 3: Purple & Pink */
+.theme-purple-pink {
+  --bg-primary: #1a0a2e;
+  --bg-secondary: #2a1a3e;
+  --bg-card: rgba(42, 26, 62, 0.95);
+  --text-primary: #d4a0ff;
+  --text-secondary: #ff6bcd;
+  --border-color: #d4a0ff;
+  --shadow-color: rgba(212, 160, 255, 0.3);
+  --gradient: linear-gradient(135deg, #1a0a2e, #2a1a3e);
+  --accent: #d4a0ff;
+  --card-bg: rgba(42, 26, 62, 0.9);
+  --input-bg: #1a0a2e;
+}
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* ============================================
+   THREE DOTS MENU
+   ============================================ */
+.menu-container {
+  position: relative;
+  display: inline-block;
+}
+
+.menu-trigger {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px 12px;
+  color: var(--text-primary);
+  font-size: 2rem;
+  line-height: 1;
+  transition: transform 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.menu-trigger:hover {
+  transform: scale(1.1);
+}
+
+.menu-trigger .dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-primary);
+  margin: 0 1px;
+  transition: background 0.3s ease;
+}
+
+.menu-dropdown {
   position: absolute;
-  top: -20px;
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 1.5rem;
-  animation: fall linear infinite;
-  opacity: 0.7;
-}
-
-@keyframes fall {
-  0% {
-    transform: translateY(-20px) rotate(0deg) scale(1);
-    opacity: 0.8;
-  }
-  100% {
-    transform: translateY(110vh) rotate(720deg) scale(0.5);
-    opacity: 0.2;
-  }
-}
-
-/* ============================================
-   GLASS CARD
-   ============================================ */
-.glass-card {
-  background: var(--glass);
+  top: 100%;
+  left: 0;
+  background: var(--bg-card);
   backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius);
-  padding: 24px;
-  box-shadow: var(--shadow);
-  position: relative;
-  z-index: 1;
-  transition: var(--transition);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 8px 0;
+  min-width: 220px;
+  box-shadow: 0 8px 32px var(--shadow-color);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px) scale(0.95);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 1000;
 }
 
-.glass-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 48px rgba(0, 119, 182, 0.2);
+.menu-dropdown.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+.menu-dropdown .menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+  color: var(--text-primary);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  border: none;
+  background: transparent;
+  width: 100%;
+  font-family: inherit;
+  font-size: 0.95rem;
+  text-align: right;
+}
+
+.menu-dropdown .menu-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.menu-dropdown .menu-item .icon {
+  font-size: 1.2rem;
+}
+
+/* Theme toggle in menu */
+.theme-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 16px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  border-radius: 8px;
+}
+
+.theme-option:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.theme-option .color-preview {
+  display: flex;
+  gap: 4px;
+}
+
+.theme-option .color-preview span {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.theme-option.active-theme {
+  background: rgba(255, 255, 255, 0.08);
+  border-right: 3px solid var(--accent);
 }
 
 /* ============================================
    HEADER
    ============================================ */
 .header {
-  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
-  padding: 16px 32px;
+  background: var(--gradient);
+  padding: 14px 32px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 3px solid var(--primary-light);
+  border-bottom: 2px solid var(--border-color);
   position: relative;
   z-index: 10;
-  box-shadow: 0 4px 20px rgba(0, 119, 182, 0.3);
 }
 
 .header .logo {
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   font-weight: 800;
-  color: white;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  color: var(--text-primary);
   letter-spacing: 1px;
 }
 
 .header .logo span {
-  color: var(--primary-light);
+  color: var(--text-secondary);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }
 
 .header-user {
   display: flex;
   align-items: center;
-  gap: 16px;
-  color: white;
+  gap: 12px;
+  color: var(--text-primary);
 }
 
 .btn-logout {
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: white;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
   padding: 6px 18px;
   border-radius: 30px;
   cursor: pointer;
-  transition: var(--transition);
+  transition: all 0.3s ease;
   font-weight: 600;
 }
 
 .btn-logout:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: scale(1.05);
+  background: var(--border-color);
+  color: var(--bg-primary);
+}
+
+/* ============================================
+   GLASS CARD
+   ============================================ */
+.glass-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 8px 32px var(--shadow-color);
+  transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 48px var(--shadow-color);
 }
 
 /* ============================================
@@ -167,26 +290,24 @@ body {
 .tab {
   padding: 10px 24px;
   border-radius: 30px;
-  border: 2px solid var(--primary-light);
+  border: 2px solid var(--border-color);
   background: transparent;
-  color: var(--primary);
+  color: var(--text-primary);
   cursor: pointer;
   font-weight: 700;
-  transition: var(--transition);
+  transition: all 0.3s ease;
   font-size: 0.95rem;
 }
 
 .tab:hover {
-  background: var(--primary-light);
-  color: white;
+  background: var(--border-color);
+  color: var(--bg-primary);
   transform: translateY(-2px);
 }
 
 .tab.active {
-  background: var(--primary);
-  color: white;
-  border-color: var(--primary);
-  box-shadow: 0 4px 15px rgba(0, 119, 182, 0.3);
+  background: var(--border-color);
+  color: var(--bg-primary);
 }
 
 /* ============================================
@@ -202,24 +323,23 @@ body {
 .sub-tab {
   padding: 8px 18px;
   border-radius: 25px;
-  border: 1px solid var(--primary-light);
+  border: 1px solid var(--border-color);
   background: transparent;
-  color: var(--primary);
+  color: var(--text-primary);
   cursor: pointer;
-  transition: var(--transition);
+  transition: all 0.3s ease;
   font-weight: 600;
   font-size: 0.85rem;
 }
 
 .sub-tab:hover {
-  background: var(--primary-light);
-  color: white;
+  background: var(--border-color);
+  color: var(--bg-primary);
 }
 
 .sub-tab.active {
-  background: var(--primary);
-  color: white;
-  border-color: var(--primary);
+  background: var(--border-color);
+  color: var(--bg-primary);
 }
 
 .sub-section {
@@ -235,22 +355,23 @@ body {
    MATCH CARD
    ============================================ */
 .match-card {
-  background: white;
+  background: var(--card-bg);
   border-radius: 16px;
   padding: 20px;
   margin-bottom: 16px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-  border-right: 4px solid var(--primary-light);
-  transition: var(--transition);
+  border-right: 4px solid var(--border-color);
+  transition: all 0.3s ease;
+  border: 1px solid var(--border-color);
 }
 
 .match-card:hover {
-  box-shadow: 0 4px 20px rgba(0, 119, 182, 0.1);
+  transform: translateX(-4px);
+  box-shadow: 0 4px 20px var(--shadow-color);
 }
 
 .match-card.closed {
-  border-right-color: #e74c3c;
-  background: #fff5f5;
+  border-right-color: #ff4444;
+  background: rgba(255, 68, 68, 0.08);
 }
 
 .match-card .top {
@@ -279,11 +400,11 @@ body {
 
 .team-name {
   font-size: 0.9rem;
-  color: #4a6a7a;
+  color: var(--text-secondary);
 }
 
 .vs {
-  color: var(--primary-light);
+  color: var(--border-color);
   padding: 4px 12px;
   font-weight: 900;
   font-size: 1.1rem;
@@ -298,23 +419,23 @@ body {
 }
 
 .status-upcoming {
-  background: #e3f2fd;
-  color: var(--primary);
+  background: rgba(255, 215, 0, 0.15);
+  color: var(--text-primary);
 }
 
 .status-finished {
-  background: #c8e6c9;
-  color: #2e7d32;
+  background: rgba(0, 200, 0, 0.15);
+  color: #00c853;
 }
 
 .status-closed {
-  background: #ffebee;
-  color: #c62828;
+  background: rgba(255, 68, 68, 0.15);
+  color: #ff4444;
 }
 
 .status-locked {
-  background: #ff6f00;
-  color: white;
+  background: rgba(255, 68, 0, 0.2);
+  color: #ff6d00;
   animation: pulse 1.5s ease-in-out infinite;
 }
 
@@ -324,78 +445,86 @@ body {
 }
 
 /* ============================================
-   BUTTONS - ICE THEME
+   BUTTONS
    ============================================ */
 .btn {
   padding: 10px 24px;
   border-radius: 30px;
-  border: none;
+  border: 2px solid var(--border-color);
   font-weight: 700;
   cursor: pointer;
-  transition: var(--transition);
+  transition: all 0.3s ease;
   font-size: 0.95rem;
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  background: transparent;
+  color: var(--text-primary);
+}
+
+.btn:hover {
+  background: var(--border-color);
+  color: var(--bg-primary);
+  transform: translateY(-2px);
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--primary), var(--primary-light));
-  color: white;
-  box-shadow: 0 4px 15px rgba(0, 119, 182, 0.3);
+  background: var(--border-color);
+  color: var(--bg-primary);
 }
 
 .btn-primary:hover {
+  opacity: 0.85;
   transform: translateY(-2px);
-  box-shadow: 0 6px 25px rgba(0, 119, 182, 0.4);
 }
 
 .btn-success {
-  background: linear-gradient(135deg, #00b894, #00d2d3);
+  background: #00c853;
   color: white;
-  box-shadow: 0 4px 15px rgba(0, 206, 209, 0.3);
+  border-color: #00c853;
 }
 
 .btn-success:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 25px rgba(0, 206, 209, 0.4);
+  background: #00e676;
+  border-color: #00e676;
 }
 
 .btn-danger {
-  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  background: #ff1744;
   color: white;
-  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+  border-color: #ff1744;
 }
 
 .btn-danger:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 25px rgba(231, 76, 60, 0.4);
+  background: #ff5252;
+  border-color: #ff5252;
 }
 
 .btn-warning {
-  background: linear-gradient(135deg, #f39c12, #e67e22);
+  background: #ff9100;
   color: white;
-  box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
+  border-color: #ff9100;
 }
 
 .btn-warning:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 25px rgba(243, 156, 18, 0.4);
+  background: #ffab40;
+  border-color: #ffab40;
 }
 
 .btn-lock {
-  background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+  background: #651fff;
   color: white;
-  box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+  border-color: #651fff;
 }
 
 .btn-lock:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 25px rgba(108, 92, 231, 0.4);
+  background: #7c4dff;
+  border-color: #7c4dff;
 }
 
 .btn-lock.active {
-  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  background: #ff1744;
+  border-color: #ff1744;
 }
 
 .btn:disabled {
@@ -410,19 +539,52 @@ body {
 input, select {
   padding: 10px 16px;
   border-radius: 12px;
-  border: 2px solid #e0e8f0;
-  background: white;
-  color: #1a2a3a;
+  border: 2px solid var(--border-color);
+  background: var(--input-bg);
+  color: var(--text-primary);
   font-size: 0.95rem;
   font-family: inherit;
-  transition: var(--transition);
+  transition: all 0.3s ease;
   width: 100%;
 }
 
 input:focus, select:focus {
   outline: none;
-  border-color: var(--primary-light);
-  box-shadow: 0 0 0 4px rgba(0, 180, 216, 0.15);
+  border-color: var(--text-secondary);
+  box-shadow: 0 0 0 4px var(--shadow-color);
+}
+
+input::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.6;
+}
+
+/* Password toggle */
+.password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.password-wrapper input {
+  padding-left: 48px;
+}
+
+.password-toggle {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.3rem;
+  color: var(--text-secondary);
+  padding: 4px 8px;
+  transition: color 0.3s ease;
+}
+
+.password-toggle:hover {
+  color: var(--text-primary);
 }
 
 .flex {
@@ -442,7 +604,7 @@ input:focus, select:focus {
 
 .form-group label {
   display: block;
-  color: #4a6a7a;
+  color: var(--text-secondary);
   font-size: 0.85rem;
   font-weight: 600;
   margin-bottom: 6px;
@@ -455,17 +617,17 @@ input:focus, select:focus {
   display: flex;
   align-items: center;
   padding: 12px 18px;
-  background: white;
+  background: var(--card-bg);
   border-radius: 14px;
   margin-bottom: 8px;
   gap: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  transition: var(--transition);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
 }
 
 .leaderboard-row:hover {
   transform: translateX(4px);
-  box-shadow: 0 4px 16px rgba(0, 119, 182, 0.08);
+  box-shadow: 0 4px 16px var(--shadow-color);
 }
 
 .rank {
@@ -481,12 +643,12 @@ input:focus, select:focus {
 
 .rank-1 {
   background: linear-gradient(135deg, #ffd700, #ffb300);
-  color: #1a2a3a;
+  color: #1a1a1a;
 }
 
 .rank-2 {
   background: linear-gradient(135deg, #c0c0c0, #a8a8a8);
-  color: #1a2a3a;
+  color: #1a1a1a;
 }
 
 .rank-3 {
@@ -495,12 +657,12 @@ input:focus, select:focus {
 }
 
 .rank-other {
-  background: #e3f2fd;
-  color: var(--primary);
+  background: var(--border-color);
+  color: var(--bg-primary);
 }
 
 .points {
-  color: var(--primary);
+  color: var(--text-primary);
   font-weight: 800;
   font-size: 1.2rem;
 }
@@ -509,34 +671,34 @@ input:focus, select:focus {
    PREDICTION AREA
    ============================================ */
 .prediction-area {
-  background: #f8fbff;
+  background: var(--card-bg);
   border-radius: 12px;
   padding: 12px 16px;
   margin-top: 8px;
-  border: 2px dashed #e0e8f0;
+  border: 2px dashed var(--border-color);
 }
 
 .prediction-area .score-input {
   width: 56px;
   padding: 8px;
-  border: 2px solid #e0e8f0;
+  border: 2px solid var(--border-color);
   border-radius: 10px;
-  background: white;
-  color: #1a2a3a;
+  background: var(--input-bg);
+  color: var(--text-primary);
   text-align: center;
   font-size: 1rem;
   font-weight: 700;
 }
 
 .prediction-area .score-input:focus {
-  border-color: var(--primary-light);
+  border-color: var(--text-secondary);
 }
 
 .my-prediction {
-  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+  background: var(--border-color);
   padding: 8px 16px;
   border-radius: 12px;
-  color: var(--primary-dark);
+  color: var(--bg-primary);
   font-weight: 700;
   display: inline-block;
 }
@@ -549,14 +711,14 @@ input:focus, select:focus {
   bottom: 30px;
   left: 50%;
   transform: translateX(-50%) translateY(100px);
-  background: white;
-  color: #1a2a3a;
+  background: var(--bg-card);
+  color: var(--text-primary);
   padding: 16px 32px;
   border-radius: 16px;
   font-weight: 700;
   z-index: 999;
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
-  border-right: 4px solid var(--primary-light);
+  border: 2px solid var(--border-color);
+  box-shadow: 0 8px 40px var(--shadow-color);
   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   opacity: 0;
   pointer-events: none;
@@ -569,61 +731,60 @@ input:focus, select:focus {
 }
 
 .toast.error {
-  border-right-color: #e74c3c;
+  border-color: #ff1744;
 }
 
 /* ============================================
    HISTORY
    ============================================ */
 .history-item {
-  background: white;
+  background: var(--card-bg);
   border-radius: 14px;
   padding: 18px;
   margin-bottom: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  border-left: 3px solid var(--primary-light);
+  border: 1px solid var(--border-color);
+  border-left: 3px solid var(--border-color);
 }
 
 .history-item .title {
   font-weight: 700;
-  color: var(--primary-dark);
 }
 
 .history-item .correct {
-  color: #00b894;
+  color: #00c853;
   margin-top: 6px;
 }
 
 .history-item .correct span {
-  background: #e3f2fd;
+  background: var(--border-color);
   padding: 2px 12px;
   border-radius: 30px;
   margin: 3px;
   display: inline-block;
+  color: var(--bg-primary);
 }
 
 /* ============================================
    PREDICTION ITEMS
    ============================================ */
 .prediction-item {
-  background: white;
+  background: var(--card-bg);
   border-radius: 10px;
   padding: 10px 14px;
   margin-bottom: 6px;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--border-color);
 }
 
 .prediction-item .pname {
   font-weight: 700;
-  color: var(--primary);
 }
 
 .prediction-item .ppred {
-  color: var(--primary-dark);
   font-weight: 700;
+  color: var(--text-secondary);
 }
 
 /* ============================================
@@ -631,7 +792,7 @@ input:focus, select:focus {
    ============================================ */
 .empty-state {
   text-align: center;
-  color: #7a9aaa;
+  color: var(--text-secondary);
   padding: 40px 20px;
 }
 
@@ -644,8 +805,8 @@ input:focus, select:focus {
   display: inline-block;
   width: 28px;
   height: 28px;
-  border: 4px solid rgba(0, 119, 182, 0.15);
-  border-top-color: var(--primary-light);
+  border: 4px solid var(--border-color);
+  border-top-color: var(--text-secondary);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -660,11 +821,11 @@ input:focus, select:focus {
 .auth-container {
   max-width: 440px;
   margin: 60px auto;
-  background: white;
-  border-radius: var(--radius);
+  background: var(--bg-card);
+  border-radius: 20px;
   padding: 48px 40px;
-  box-shadow: var(--shadow);
-  border: 1px solid var(--glass-border);
+  border: 2px solid var(--border-color);
+  box-shadow: 0 8px 48px var(--shadow-color);
 }
 
 .auth-container .auth-icon {
@@ -675,13 +836,12 @@ input:focus, select:focus {
 
 .auth-container h1 {
   text-align: center;
-  color: var(--primary-dark);
   font-size: 1.8rem;
 }
 
 .auth-container p {
   text-align: center;
-  color: #7a9aaa;
+  color: var(--text-secondary);
   margin-bottom: 24px;
 }
 
@@ -703,11 +863,11 @@ input:focus, select:focus {
 }
 
 .auth-msg.error {
-  color: #e74c3c;
+  color: #ff1744;
 }
 
 .auth-msg.success {
-  color: #00b894;
+  color: #00c853;
 }
 
 /* ============================================
@@ -764,6 +924,11 @@ input:focus, select:focus {
   .team-name {
     font-size: 0.75rem;
   }
+  
+  .menu-dropdown {
+    left: auto;
+    right: 0;
+  }
 }
 
 /* ============================================
@@ -780,30 +945,21 @@ input:focus, select:focus {
   }
 }
 
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
 /* ============================================
    TEAM TAGS
    ============================================ */
 .team-tag {
-  background: #e3f2fd;
+  background: var(--border-color);
+  color: var(--bg-primary);
   padding: 6px 14px;
   border-radius: 30px;
   display: inline-block;
   margin: 4px;
   font-weight: 600;
-  color: var(--primary-dark);
 }
 
 .team-tag .del {
-  background: #e74c3c;
+  background: #ff1744;
   border: none;
   color: white;
   border-radius: 50%;
@@ -826,25 +982,24 @@ input:focus, select:focus {
 
 .penalty-btns button {
   padding: 6px 16px;
-  border: 2px solid #e0e8f0;
+  border: 2px solid var(--border-color);
   border-radius: 30px;
-  background: white;
-  color: #4a6a7a;
+  background: transparent;
+  color: var(--text-primary);
   cursor: pointer;
-  transition: var(--transition);
+  transition: all 0.3s ease;
   font-weight: 600;
   width: auto;
 }
 
 .penalty-btns button:hover {
-  border-color: var(--primary-light);
-  color: var(--primary);
+  background: var(--border-color);
+  color: var(--bg-primary);
 }
 
 .penalty-btns button.selected {
-  border-color: var(--primary);
-  background: var(--primary);
-  color: white;
+  background: var(--border-color);
+  color: var(--bg-primary);
 }
 
 /* ============================================
@@ -862,15 +1017,15 @@ table {
 th {
   text-align: right;
   padding: 12px;
-  color: var(--primary-dark);
-  border-bottom: 2px solid #e3f2fd;
+  color: var(--text-secondary);
+  border-bottom: 2px solid var(--border-color);
   font-weight: 700;
   font-size: 0.9rem;
 }
 
 td {
   padding: 12px;
-  border-bottom: 1px solid #f0f4f8;
+  border-bottom: 1px solid var(--border-color);
 }
 
 /* ============================================
@@ -878,7 +1033,7 @@ td {
    ============================================ */
 .lock-overlay {
   display: inline-block;
-  background: #ff6f00;
+  background: #ff6d00;
   color: white;
   padding: 4px 14px;
   border-radius: 30px;
@@ -886,14 +1041,13 @@ td {
   font-weight: 700;
   animation: pulse 1.5s ease-in-out infinite;
 }
+
+.hidden {
+  display: none !important;
+}
 </style>
 </head>
 <body>
-
-<!-- ============================================
-     SNOWFALL BACKGROUND
-     ============================================ -->
-<div class="snowflakes" id="snowflakes"></div>
 
 <!-- ============================================
      AUTH SCREEN
@@ -901,7 +1055,7 @@ td {
 <div id="authScreen">
   <div class="auth-container">
     <div class="auth-icon">🏆</div>
-    <h1>❄️ كأس العالم 2026</h1>
+    <h1>⚽ كأس العالم 2026</h1>
     <p>منافسة التوقعات بين الأصدقاء</p>
     
     <div class="auth-tabs">
@@ -920,7 +1074,10 @@ td {
       </div>
       <div class="form-group">
         <label>كلمة المرور</label>
-        <input id="loginPass" type="password" placeholder="ادخل كلمة المرور">
+        <div class="password-wrapper">
+          <input id="loginPass" type="password" placeholder="ادخل كلمة المرور">
+          <button class="password-toggle" onclick="togglePassword('loginPass', this)" type="button">👁️</button>
+        </div>
       </div>
       <button class="btn btn-primary" onclick="doLogin()" style="width:100%;">دخول</button>
       <div id="loginMsg" class="auth-msg"></div>
@@ -937,7 +1094,10 @@ td {
       </div>
       <div class="form-group">
         <label>كلمة المرور</label>
-        <input id="regPass" type="password" placeholder="كلمة مرور">
+        <div class="password-wrapper">
+          <input id="regPass" type="password" placeholder="كلمة مرور">
+          <button class="password-toggle" onclick="togglePassword('regPass', this)" type="button">👁️</button>
+        </div>
       </div>
       <button class="btn btn-success" onclick="doRegister()" style="width:100%;">انشاء الحساب</button>
       <div id="regMsg" class="auth-msg"></div>
@@ -950,10 +1110,46 @@ td {
      ============================================ -->
 <div id="appScreen" class="hidden">
   <div class="header">
-    <div class="logo">❄️ كأس العالم <span>2026</span></div>
-    <div class="header-user">
-      <span id="headerUser"></span>
-      <button class="btn-logout" onclick="doLogout()">🚪 خروج</button>
+    <div class="logo">⚽ كأس العالم <span>2026</span></div>
+    <div class="header-left">
+      <div class="header-user">
+        <span id="headerUser"></span>
+        <button class="btn-logout" onclick="doLogout()">🚪 خروج</button>
+      </div>
+      
+      <!-- Three Dots Menu -->
+      <div class="menu-container">
+        <button class="menu-trigger" onclick="toggleMenu()">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </button>
+        <div class="menu-dropdown" id="menuDropdown">
+          <!-- Theme options -->
+          <div class="theme-option active-theme" onclick="changeTheme('black-gold')">
+            <span>⚫</span> <span>🟡</span> أسود & ذهبي
+          </div>
+          <div class="theme-option" onclick="changeTheme('white-red')">
+            <span>⬜</span> <span>🔴</span> أبيض & أحمر
+          </div>
+          <div class="theme-option" onclick="changeTheme('purple-pink')">
+            <span>🟣</span> <span>🩷</span> بنفسجي & زهري
+          </div>
+          <hr style="border-color:var(--border-color);margin:8px 16px;">
+          <button class="menu-item" onclick="showSection('matches'); toggleMenu();">
+            <span class="icon">⚽</span> المباريات
+          </button>
+          <button class="menu-item" onclick="showSection('leaderboard'); toggleMenu();">
+            <span class="icon">🏅</span> الترتيب
+          </button>
+          <button class="menu-item" onclick="showSection('history'); toggleMenu();">
+            <span class="icon">📜</span> التاريخ
+          </button>
+          <button class="menu-item" onclick="showSection('admin'); toggleMenu();" id="adminMenuBtn" style="display:none;">
+            <span class="icon">⚙️</span> لوحة المشرف
+          </button>
+        </div>
+      </div>
     </div>
   </div>
   
@@ -963,7 +1159,7 @@ td {
     <!-- ========== MATCHES ========== -->
     <div class="section" id="section-matches" style="display:block;">
       <div class="glass-card">
-        <h2 style="color:var(--primary-dark);margin-bottom:16px;">⚽ المباريات والتوقعات</h2>
+        <h2 style="margin-bottom:16px;">⚽ المباريات والتوقعات</h2>
         <div id="matchesList"><div class="empty-state"><div class="spinner"></div>جاري التحميل...</div></div>
       </div>
     </div>
@@ -971,7 +1167,7 @@ td {
     <!-- ========== LEADERBOARD ========== -->
     <div class="section" id="section-leaderboard" style="display:none;">
       <div class="glass-card">
-        <h2 style="color:var(--primary-dark);margin-bottom:16px;">🏅 ترتيب اللاعبين</h2>
+        <h2 style="margin-bottom:16px;">🏅 ترتيب اللاعبين</h2>
         <div id="leaderboardList"><div class="empty-state"><div class="spinner"></div>جاري التحميل...</div></div>
       </div>
     </div>
@@ -979,7 +1175,7 @@ td {
     <!-- ========== HISTORY ========== -->
     <div class="section" id="section-history" style="display:none;">
       <div class="glass-card">
-        <h2 style="color:var(--primary-dark);margin-bottom:16px;">📜 صفحة التاريخ</h2>
+        <h2 style="margin-bottom:16px;">📜 صفحة التاريخ</h2>
         <div id="historyList"><div class="empty-state"><div class="spinner"></div>جاري التحميل...</div></div>
       </div>
     </div>
@@ -991,7 +1187,7 @@ td {
       <!-- Current Predictions -->
       <div class="sub-section active" id="sub-predictions">
         <div class="glass-card">
-          <h2 style="color:var(--primary-dark);margin-bottom:16px;">📊 التوقعات الحالية</h2>
+          <h2 style="margin-bottom:16px;">📊 التوقعات الحالية</h2>
           <div id="currentPredictions"><div class="empty-state"><div class="spinner"></div>جاري التحميل...</div></div>
         </div>
       </div>
@@ -999,7 +1195,7 @@ td {
       <!-- Manage Matches -->
       <div class="sub-section" id="sub-matches">
         <div class="glass-card">
-          <h2 style="color:var(--primary-dark);margin-bottom:16px;">➕ اضافة مباراة جديدة</h2>
+          <h2 style="margin-bottom:16px;">➕ اضافة مباراة جديدة</h2>
           <div class="flex">
             <div class="form-group">
               <label>الفريق الأول</label>
@@ -1023,15 +1219,15 @@ td {
         </div>
         
         <div class="glass-card" style="margin-top:16px;">
-          <h2 style="color:var(--primary-dark);margin-bottom:16px;">⚙️ ادارة المباريات</h2>
+          <h2 style="margin-bottom:16px;">⚙️ ادارة المباريات</h2>
           <div id="adminMatches"><div class="empty-state"><div class="spinner"></div>جاري التحميل...</div></div>
         </div>
         
-        <div class="glass-card" style="margin-top:16px;border-color:#ffcdd2;">
-          <h2 style="color:#c62828;margin-bottom:16px;">⚠️ منطقة الخطر</h2>
+        <div class="glass-card" style="margin-top:16px;border-color:#ff1744;">
+          <h2 style="color:#ff1744;margin-bottom:16px;">⚠️ منطقة الخطر</h2>
           <div class="flex">
             <button class="btn btn-danger" onclick="deleteAllMatches()">🗑️ حذف جميع المباريات</button>
-            <button class="btn btn-danger" onclick="deleteFinishedMatches()" style="background:#c0392b;">🗑️ حذف المنتهية فقط</button>
+            <button class="btn btn-danger" onclick="deleteFinishedMatches()">🗑️ حذف المنتهية فقط</button>
           </div>
         </div>
       </div>
@@ -1039,7 +1235,7 @@ td {
       <!-- Players -->
       <div class="sub-section" id="sub-players">
         <div class="glass-card">
-          <h2 style="color:var(--primary-dark);margin-bottom:16px;">👥 ادارة اللاعبين</h2>
+          <h2 style="margin-bottom:16px;">👥 ادارة اللاعبين</h2>
           <div class="flex" style="margin-bottom:16px;">
             <input id="newName" placeholder="الاسم الكامل" style="flex:1;">
             <input id="newUser" placeholder="اسم المستخدم" style="flex:1;">
@@ -1051,7 +1247,7 @@ td {
               <thead>
                 <tr><th>#</th><th>الاسم</th><th>اسم المستخدم</th><th>الدور</th><th>النقاط</th><th>التحكم</th></tr>
               </thead>
-              <tbody id="usersTableBody"><tr><td colspan="6" style="text-align:center;color:#7a9aaa;">جاري التحميل...</td></tr></tbody>
+              <tbody id="usersTableBody"><tr><td colspan="6" style="text-align:center;color:var(--text-secondary);">جاري التحميل...</td></tr></tbody>
             </table>
           </div>
         </div>
@@ -1060,15 +1256,15 @@ td {
       <!-- Teams -->
       <div class="sub-section" id="sub-teams">
         <div class="glass-card">
-          <h2 style="color:var(--primary-dark);margin-bottom:16px;">🏳️ ادارة المنتخبات</h2>
-          <div id="teamsList" style="display:flex;flex-wrap:wrap;gap:8px;"><span style="color:#7a9aaa;">جاري التحميل...</span></div>
+          <h2 style="margin-bottom:16px;">🏳️ ادارة المنتخبات</h2>
+          <div id="teamsList" style="display:flex;flex-wrap:wrap;gap:8px;"><span style="color:var(--text-secondary);">جاري التحميل...</span></div>
         </div>
       </div>
       
       <!-- Admin History -->
       <div class="sub-section" id="sub-history">
         <div class="glass-card">
-          <h2 style="color:var(--primary-dark);margin-bottom:16px;">📜 ادارة التاريخ</h2>
+          <h2 style="margin-bottom:16px;">📜 ادارة التاريخ</h2>
           <div id="adminHistoryList"><div class="empty-state"><div>📜</div>جاري التحميل...</div></div>
         </div>
       </div>
@@ -1107,25 +1303,71 @@ var currentUser = null;
 var selectedRole = 'admin';
 var refreshInterval = null;
 var lockedMatches = {};
+var currentTheme = 'black-gold';
 
 // =====================================================
-//  SNOWFALL
+//  THEME FUNCTIONS
 // =====================================================
-function createSnowflakes() {
-  var container = document.getElementById('snowflakes');
-  var flakes = ['❄', '❅', '❆', '✦'];
-  for (var i = 0; i < 30; i++) {
-    var span = document.createElement('span');
-    span.className = 'snowflake';
-    span.textContent = flakes[Math.floor(Math.random() * flakes.length)];
-    span.style.left = Math.random() * 100 + '%';
-    span.style.fontSize = (0.8 + Math.random() * 1.5) + 'rem';
-    span.style.animationDuration = (8 + Math.random() * 12) + 's';
-    span.style.animationDelay = (Math.random() * 10) + 's';
-    container.appendChild(span);
+function changeTheme(theme) {
+  currentTheme = theme;
+  var body = document.body;
+  body.className = '';
+  if (theme === 'black-gold') body.classList.add('theme-black-gold');
+  else if (theme === 'white-red') body.classList.add('theme-white-red');
+  else if (theme === 'purple-pink') body.classList.add('theme-purple-pink');
+  
+  // Update active theme in menu
+  document.querySelectorAll('.theme-option').forEach(function(el) {
+    el.classList.remove('active-theme');
+  });
+  var options = document.querySelectorAll('.theme-option');
+  if (theme === 'black-gold') options[0].classList.add('active-theme');
+  else if (theme === 'white-red') options[1].classList.add('active-theme');
+  else if (theme === 'purple-pink') options[2].classList.add('active-theme');
+  
+  localStorage.setItem('wc_theme', theme);
+  toggleMenu();
+  toast('🎨 تم تغيير المظهر إلى: ' + (theme === 'black-gold' ? 'أسود & ذهبي' : theme === 'white-red' ? 'أبيض & أحمر' : 'بنفسجي & زهري'));
+}
+
+function loadTheme() {
+  var saved = localStorage.getItem('wc_theme');
+  if (saved) {
+    changeTheme(saved);
+  } else {
+    changeTheme('black-gold');
   }
 }
-createSnowflakes();
+
+// =====================================================
+//  THREE DOTS MENU
+// =====================================================
+function toggleMenu() {
+  var dropdown = document.getElementById('menuDropdown');
+  dropdown.classList.toggle('active');
+}
+
+// Close menu when clicking outside
+document.addEventListener('click', function(e) {
+  var container = document.querySelector('.menu-container');
+  if (container && !container.contains(e.target)) {
+    document.getElementById('menuDropdown').classList.remove('active');
+  }
+});
+
+// =====================================================
+//  PASSWORD TOGGLE
+// =====================================================
+function togglePassword(inputId, btn) {
+  var input = document.getElementById(inputId);
+  if (input.type === 'password') {
+    input.type = 'text';
+    btn.textContent = '🙈';
+  } else {
+    input.type = 'password';
+    btn.textContent = '👁️';
+  }
+}
 
 // =====================================================
 //  HELPERS
@@ -1250,6 +1492,12 @@ function enterApp() {
   document.getElementById('authScreen').style.display = 'none';
   document.getElementById('appScreen').style.display = 'block';
   document.getElementById('headerUser').textContent = (currentUser.role === 'admin' ? '👑 ' : '⚽ ') + currentUser.name;
+  
+  // Show admin menu item if admin
+  if (currentUser.role === 'admin') {
+    document.getElementById('adminMenuBtn').style.display = 'flex';
+  }
+  
   populateTeams();
   buildTabs();
   showSection('matches');
@@ -1409,15 +1657,15 @@ function loadCurrentPredictions() {
         var isStarted = isClosed(m.match_date);
         var isLocked = lockedMatches[m.id] || false;
         html += '<div class="match-card' + (isLocked ? ' closed' : '') + '" style="margin-bottom:12px;">';
-        html += '<div style="font-weight:700;color:var(--primary-dark);font-size:1.05rem;margin-bottom:6px;">' + getFlag(m.team1) + ' ' + m.team1 + ' 🆚 ' + m.team2 + ' ' + getFlag(m.team2) + '</div>';
-        html += '<div style="color:#7a9aaa;font-size:0.8rem;margin-bottom:8px;">📅 ' + (m.match_date ? new Date(m.match_date).toLocaleString('ar-SA', {dateStyle:'short', timeStyle:'short'}) : '') + '</div>';
+        html += '<div style="font-weight:700;font-size:1.05rem;margin-bottom:6px;">' + getFlag(m.team1) + ' ' + m.team1 + ' 🆚 ' + m.team2 + ' ' + getFlag(m.team2) + '</div>';
+        html += '<div style="color:var(--text-secondary);font-size:0.8rem;margin-bottom:8px;">📅 ' + (m.match_date ? new Date(m.match_date).toLocaleString('ar-SA', {dateStyle:'short', timeStyle:'short'}) : '') + '</div>';
         if (isLocked) {
           html += '<div class="lock-overlay">🔒 المباراة بدأت - التوقعات مغلقة</div>';
         } else if (!isStarted) {
           html += '<div style="color:#f39c12;font-size:0.9rem;font-weight:700;">🔒 التوقعات مخفية حتى بداية المباراة</div>';
         } else {
           if (matchPreds.length === 0) {
-            html += '<div style="color:#7a9aaa;font-size:0.85rem;">لا توجد توقعات بعد</div>';
+            html += '<div style="color:var(--text-secondary);font-size:0.85rem;">لا توجد توقعات بعد</div>';
           } else {
             for (var k = 0; k < matchPreds.length; k++) {
               var p = matchPreds[k];
@@ -1466,7 +1714,7 @@ function renderTeams() {
     var t = ALL_TEAMS[i];
     html += '<span class="team-tag">' + t.flag + ' ' + t.name + ' <button class="del" onclick="deleteTeam(\'' + t.name + '\')">✕</button></span>';
   }
-  container.innerHTML = html || '<span style="color:#7a9aaa;">لا توجد منتخبات</span>';
+  container.innerHTML = html || '<span style="color:var(--text-secondary);">لا توجد منتخبات</span>';
 }
 
 function deleteTeam(name) {
@@ -1530,7 +1778,7 @@ function renderPredictionArea(matchId) {
   
   // Check if match is locked
   if (lockedMatches[matchId]) {
-    el.innerHTML = '<div style="color:#c62828;font-weight:700;padding:8px;background:#ffebee;border-radius:10px;">⛔ المباراة بدأت - التوقعات مغلقة</div>';
+    el.innerHTML = '<div style="color:#ff1744;font-weight:700;padding:8px;background:rgba(255,23,68,0.1);border-radius:10px;border:1px solid #ff1744;">⛔ المباراة بدأت - التوقعات مغلقة</div>';
     return;
   }
   
@@ -1551,32 +1799,32 @@ function renderPredictionArea(matchId) {
     .then(function(matches) {
       if (!matches) return;
       if (matches.length === 0) {
-        el.innerHTML = '<div style="color:#e74c3c;">المباراة غير موجودة</div>';
+        el.innerHTML = '<div style="color:#ff1744;">المباراة غير موجودة</div>';
         return;
       }
       
       var m = matches[0];
       
       if (isClosed(m.match_date)) {
-        el.innerHTML = '<div style="color:#e74c3c;font-size:0.85rem;">⛔ انتهى وقت التصويت</div>';
+        el.innerHTML = '<div style="color:#ff1744;font-size:0.85rem;">⛔ انتهى وقت التصويت</div>';
         return;
       }
       
       if (m.result_team1 !== null && m.result_team2 !== null) {
-        el.innerHTML = '<div style="color:#7a9aaa;font-size:0.85rem;">انتهت المباراة</div>';
+        el.innerHTML = '<div style="color:var(--text-secondary);font-size:0.85rem;">انتهت المباراة</div>';
         return;
       }
       
       // Check again if locked
       if (lockedMatches[matchId]) {
-        el.innerHTML = '<div style="color:#c62828;font-weight:700;padding:8px;background:#ffebee;border-radius:10px;">⛔ المباراة بدأت - التوقعات مغلقة</div>';
+        el.innerHTML = '<div style="color:#ff1744;font-weight:700;padding:8px;background:rgba(255,23,68,0.1);border-radius:10px;border:1px solid #ff1744;">⛔ المباراة بدأت - التوقعات مغلقة</div>';
         return;
       }
       
       var html = '<div class="prediction-area">';
       html += '<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">';
       html += '<input class="score-input" id="p1-' + m.id + '" type="number" min="0" max="20" placeholder="0">';
-      html += '<span style="color:var(--primary-light);font-weight:700;">-</span>';
+      html += '<span style="font-weight:700;">-</span>';
       html += '<input class="score-input" id="p2-' + m.id + '" type="number" min="0" max="20" placeholder="0">';
       
       if (m.has_penalty) {
@@ -1594,7 +1842,7 @@ function renderPredictionArea(matchId) {
       el.innerHTML = html;
     })
     .catch(function(e) {
-      el.innerHTML = '<div style="color:#e74c3c;">خطأ: ' + e.message + '</div>';
+      el.innerHTML = '<div style="color:#ff1744;">خطأ: ' + e.message + '</div>';
     });
 }
 
@@ -1770,7 +2018,7 @@ function buildMatchCard(m) {
   else if (isLocked) { statusText = '🔒 بدأت - توقعات مغلقة'; statusClass = 'status-locked'; }
   else if (closed) { statusText = '⛔ انتهى التصويت'; statusClass = 'status-closed'; }
   
-  var resultBadge = hasResult ? '<div style="background:#e8f5e9;color:#2e7d32;padding:5px 12px;border-radius:8px;font-weight:700;display:inline-block;">' + m.result_team1 + ' - ' + m.result_team2 + '</div>' : '';
+  var resultBadge = hasResult ? '<div style="background:rgba(0,200,0,0.15);color:#00c853;padding:5px 12px;border-radius:8px;font-weight:700;display:inline-block;">' + m.result_team1 + ' - ' + m.result_team2 + '</div>' : '';
   var typeText = m.has_penalty ? ' ⚽ مع ركلات' : '';
   
   var cardClass = 'match-card';
@@ -1779,17 +2027,16 @@ function buildMatchCard(m) {
   var predHtml = '';
   if (currentUser.role === 'player') {
     if (hasResult) {
-      predHtml = '<div style="font-size:0.85rem;color:#7a9aaa;margin-top:4px;">انتهت المباراة</div>';
+      predHtml = '<div style="font-size:0.85rem;color:var(--text-secondary);margin-top:4px;">انتهت المباراة</div>';
     } else if (isLocked) {
-      predHtml = '<div style="color:#c62828;font-weight:700;margin-top:4px;padding:6px 12px;background:#ffebee;border-radius:10px;display:inline-block;">⛔ المباراة بدأت - التوقعات مغلقة</div>';
+      predHtml = '<div style="color:#ff1744;font-weight:700;margin-top:4px;padding:6px 12px;background:rgba(255,23,68,0.1);border-radius:10px;display:inline-block;border:1px solid #ff1744;">⛔ المباراة بدأت - التوقعات مغلقة</div>';
     } else if (closed) {
-      predHtml = '<div style="font-size:0.85rem;color:#e74c3c;margin-top:4px;">⛔ انتهى وقت التصويت</div>';
+      predHtml = '<div style="font-size:0.85rem;color:#ff1744;margin-top:4px;">⛔ انتهى وقت التصويت</div>';
     } else {
       predHtml = '<div id="pred-area-' + m.id + '" style="margin-top:4px;"></div>';
     }
   }
   
-  // Admin lock button
   var lockBtn = '';
   if (currentUser.role === 'admin' && !hasResult && !isLocked) {
     lockBtn = '<button class="btn btn-lock" onclick="toggleLockMatch(' + m.id + ')" style="padding:4px 12px;font-size:0.8rem;margin-top:4px;">🔒 قفل التوقعات</button>';
@@ -1797,7 +2044,7 @@ function buildMatchCard(m) {
     lockBtn = '<span class="lock-overlay" style="display:inline-block;margin-top:4px;">🔒 مقفلة</span>';
   }
 
-  return '<div class="' + cardClass + '"><div class="top"><div class="match-teams"><div class="team"><div class="team-flag">' + getFlag(m.team1) + '</div><div class="team-name">' + m.team1 + '</div></div><div class="vs">VS</div><div class="team"><div class="team-flag">' + getFlag(m.team2) + '</div><div class="team-name">' + m.team2 + '</div></div></div><div>' + typeText + '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end;margin-top:4px;">' + resultBadge + '<span class="match-status ' + statusClass + '">' + statusText + '</span></div></div></div>' + predHtml + lockBtn + '<div style="font-size:0.75rem;color:#7a9aaa;margin-top:4px;">📅 ' + dateStr + '</div></div>';
+  return '<div class="' + cardClass + '"><div class="top"><div class="match-teams"><div class="team"><div class="team-flag">' + getFlag(m.team1) + '</div><div class="team-name">' + m.team1 + '</div></div><div class="vs">VS</div><div class="team"><div class="team-flag">' + getFlag(m.team2) + '</div><div class="team-name">' + m.team2 + '</div></div></div><div>' + typeText + '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end;margin-top:4px;">' + resultBadge + '<span class="match-status ' + statusClass + '">' + statusText + '</span></div></div></div>' + predHtml + lockBtn + '<div style="font-size:0.75rem;color:var(--text-secondary);margin-top:4px;">📅 ' + dateStr + '</div></div>';
 }
 
 // =====================================================
@@ -1814,7 +2061,7 @@ function loadLeaderboard() {
         var u = users[i];
         var cls = i === 0 ? 'rank-1' : i === 1 ? 'rank-2' : i === 2 ? 'rank-3' : 'rank-other';
         var medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1);
-        html += '<div class="leaderboard-row"><div class="rank ' + cls + '">' + medal + '</div><div class="player-name" style="flex:1;font-weight:600;">' + u.name + '</div><div class="points">' + (u.points || 0) + ' <span style="font-size:0.7rem;color:#7a9aaa;">نقطة</span></div></div>';
+        html += '<div class="leaderboard-row"><div class="rank ' + cls + '">' + medal + '</div><div class="player-name" style="flex:1;font-weight:600;">' + u.name + '</div><div class="points">' + (u.points || 0) + ' <span style="font-size:0.7rem;color:var(--text-secondary);">نقطة</span></div></div>';
       }
       el.innerHTML = html;
     })
@@ -1833,11 +2080,11 @@ function loadHistory() {
       var html = '';
       for (var i = 0; i < matches.length; i++) {
         var m = matches[i];
-        html += '<div class="history-item"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;"><span class="title">' + getFlag(m.team1) + ' ' + m.team1 + ' 🆚 ' + m.team2 + ' ' + getFlag(m.team2) + '</span><span style="color:var(--primary);font-weight:700;">النتيجة: ' + m.result_team1 + ' - ' + m.result_team2 + '</span></div>';
+        html += '<div class="history-item"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;"><span class="title">' + getFlag(m.team1) + ' ' + m.team1 + ' 🆚 ' + m.team2 + ' ' + getFlag(m.team2) + '</span><span style="font-weight:700;">النتيجة: ' + m.result_team1 + ' - ' + m.result_team2 + '</span></div>';
         if (m.has_penalty) { html += '<div style="color:#f39c12;font-size:0.85rem;">⚽ مع ركلات ترجيح</div>'; }
         html += '<div class="correct">✅ اصحاب التوقع الصحيح: ';
         sb('predictions', 'GET', null, '?match_id=eq.' + m.id + '&points=eq.3').then(function(preds) {
-          if (preds.length === 0) { html += '<span style="color:#7a9aaa;">لا يوجد</span>'; } else {
+          if (preds.length === 0) { html += '<span style="color:var(--text-secondary);">لا يوجد</span>'; } else {
             for (var j = 0; j < preds.length; j++) {
               var uid = preds[j].user_id;
               sb('users', 'GET', null, '?id=eq.' + uid).then(function(users) {
@@ -1847,7 +2094,7 @@ function loadHistory() {
           }
           html += '</div>';
         });
-        html += '<div style="margin-top:8px;font-size:0.8rem;color:#7a9aaa;">📅 ' + new Date(m.match_date).toLocaleString('ar-SA', {dateStyle:'short', timeStyle:'short'}) + '</div></div>';
+        html += '<div style="margin-top:8px;font-size:0.8rem;color:var(--text-secondary);">📅 ' + new Date(m.match_date).toLocaleString('ar-SA', {dateStyle:'short', timeStyle:'short'}) + '</div></div>';
       }
       el.innerHTML = html;
     })
@@ -1859,19 +2106,19 @@ function loadHistory() {
 // =====================================================
 function loadUsers() {
   var tbody = document.getElementById('usersTableBody');
-  tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#7a9aaa;">جاري التحميل...</td></tr>';
+  tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-secondary);">جاري التحميل...</td></tr>';
   sb('users', 'GET', null, '?order=id.asc')
     .then(function(users) {
-      if (users.length === 0) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#7a9aaa;">لا يوجد مستخدمون</td></tr>'; return; }
+      if (users.length === 0) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-secondary);">لا يوجد مستخدمون</td></tr>'; return; }
       var html = '';
       for (var i = 0; i < users.length; i++) {
         var u = users[i];
         var isAdmin = u.role === 'admin';
-        html += '<tr><td>' + (i+1) + '</td><td><strong>' + u.name + '</strong></td><td><span style="color:var(--primary);">@' + u.username + '</span></td><td><span style="' + (isAdmin ? 'background:var(--primary);color:white;padding:2px 12px;border-radius:30px;font-size:0.7rem;font-weight:600;' : 'background:#e3f2fd;color:var(--primary);padding:2px 12px;border-radius:30px;font-size:0.7rem;font-weight:600;') + '">' + (isAdmin ? '👑 مشرف' : '⚽ لاعب') + '</span></td><td><strong style="color:var(--primary);">' + (u.points || 0) + '</strong></td><td>' + (!isAdmin ? '<div style="display:flex;gap:4px;flex-wrap:wrap;"><input type="number" id="pts-' + u.id + '" value="' + (u.points || 0) + '" min="0" step="1" style="width:50px;padding:4px;border:2px solid #e0e8f0;border-radius:6px;text-align:center;"><button onclick="updatePoints(' + u.id + ',\'add\')" class="btn btn-success" style="padding:2px 8px;font-size:0.7rem;">+3</button><button onclick="updatePoints(' + u.id + ',\'sub\')" class="btn btn-danger" style="padding:2px 8px;font-size:0.7rem;">-3</button><button onclick="updatePoints(' + u.id + ',\'set\')" class="btn btn-warning" style="padding:2px 8px;font-size:0.7rem;">تعيين</button><button onclick="deleteUser(' + u.id + ')" class="btn btn-danger" style="padding:2px 8px;font-size:0.7rem;">🗑️</button></div>' : '<span style="color:#7a9aaa;font-size:0.75rem;">لا يمكن التعديل</span>') + '</td></tr>';
+        html += '<tr><td>' + (i+1) + '</td><td><strong>' + u.name + '</strong></td><td><span style="color:var(--text-secondary);">@' + u.username + '</span></td><td><span style="' + (isAdmin ? 'background:var(--border-color);color:var(--bg-primary);padding:2px 12px;border-radius:30px;font-size:0.7rem;font-weight:600;' : 'background:var(--card-bg);color:var(--text-secondary);padding:2px 12px;border-radius:30px;font-size:0.7rem;font-weight:600;border:1px solid var(--border-color);') + '">' + (isAdmin ? '👑 مشرف' : '⚽ لاعب') + '</span></td><td><strong style="color:var(--text-primary);">' + (u.points || 0) + '</strong></td><td>' + (!isAdmin ? '<div style="display:flex;gap:4px;flex-wrap:wrap;"><input type="number" id="pts-' + u.id + '" value="' + (u.points || 0) + '" min="0" step="1" style="width:50px;padding:4px;border:2px solid var(--border-color);border-radius:6px;background:var(--input-bg);color:var(--text-primary);text-align:center;"><button onclick="updatePoints(' + u.id + ',\'add\')" class="btn btn-success" style="padding:2px 8px;font-size:0.7rem;">+3</button><button onclick="updatePoints(' + u.id + ',\'sub\')" class="btn btn-danger" style="padding:2px 8px;font-size:0.7rem;">-3</button><button onclick="updatePoints(' + u.id + ',\'set\')" class="btn btn-warning" style="padding:2px 8px;font-size:0.7rem;">تعيين</button><button onclick="deleteUser(' + u.id + ')" class="btn btn-danger" style="padding:2px 8px;font-size:0.7rem;">🗑️</button></div>' : '<span style="color:var(--text-secondary);font-size:0.75rem;">لا يمكن التعديل</span>') + '</td></tr>';
       }
       tbody.innerHTML = html;
     })
-    .catch(function(e) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#e74c3c;">خطأ: ' + e.message + '</td></tr>'; });
+    .catch(function(e) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#ff1744;">خطأ: ' + e.message + '</td></tr>'; });
 }
 
 function addPlayer() {
@@ -1965,9 +2212,9 @@ function loadAdminMatches() {
         var typeStr = m.has_penalty ? '⚽ مع ركلات' : '⚽ عادي';
         var isLocked = lockedMatches[m.id] || false;
         
-        html += '<div class="match-card' + (isLocked ? ' closed' : '') + '"><div class="top"><div class="match-teams"><div class="team"><div class="team-flag">' + (m.flag1 || '🏳️') + '</div><div class="team-name">' + m.team1 + '</div></div><div class="vs">VS</div><div class="team"><div class="team-flag">' + (m.flag2 || '🏳️') + '</div><div class="team-name">' + m.team2 + '</div></div></div><div><div style="font-size:0.7rem;color:#7a9aaa;">' + typeStr + '</div><div style="font-size:0.78rem;color:#7a9aaa;">' + dateStr + '</div></div></div>' + 
-        (hasResult ? '<div style="background:#e8f5e9;color:#2e7d32;padding:5px 12px;border-radius:8px;font-weight:700;margin-top:4px;display:inline-block;">' + m.result_team1 + ' - ' + m.result_team2 + ' ✅</div>' : 
-        '<div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;align-items:center;"><input id="r1-' + m.id + '" type="number" min="0" max="20" placeholder="0" style="width:52px;padding:7px;border:2px solid #e0e8f0;border-radius:8px;text-align:center;"> <span style="color:var(--primary-light);font-weight:700;">-</span> <input id="r2-' + m.id + '" type="number" min="0" max="20" placeholder="0" style="width:52px;padding:7px;border:2px solid #e0e8f0;border-radius:8px;text-align:center;"> <button onclick="setResult(' + m.id + ')" class="btn btn-primary" style="padding:5px 12px;font-size:0.85rem;">تأكيد النتيجة</button>' +
+        html += '<div class="match-card' + (isLocked ? ' closed' : '') + '"><div class="top"><div class="match-teams"><div class="team"><div class="team-flag">' + (m.flag1 || '🏳️') + '</div><div class="team-name">' + m.team1 + '</div></div><div class="vs">VS</div><div class="team"><div class="team-flag">' + (m.flag2 || '🏳️') + '</div><div class="team-name">' + m.team2 + '</div></div></div><div><div style="font-size:0.7rem;color:var(--text-secondary);">' + typeStr + '</div><div style="font-size:0.78rem;color:var(--text-secondary);">' + dateStr + '</div></div></div>' + 
+        (hasResult ? '<div style="background:rgba(0,200,0,0.15);color:#00c853;padding:5px 12px;border-radius:8px;font-weight:700;margin-top:4px;display:inline-block;">' + m.result_team1 + ' - ' + m.result_team2 + ' ✅</div>' : 
+        '<div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;align-items:center;"><input id="r1-' + m.id + '" type="number" min="0" max="20" placeholder="0" style="width:52px;padding:7px;border:2px solid var(--border-color);border-radius:8px;background:var(--input-bg);color:var(--text-primary);text-align:center;"> <span style="font-weight:700;">-</span> <input id="r2-' + m.id + '" type="number" min="0" max="20" placeholder="0" style="width:52px;padding:7px;border:2px solid var(--border-color);border-radius:8px;background:var(--input-bg);color:var(--text-primary);text-align:center;"> <button onclick="setResult(' + m.id + ')" class="btn btn-primary" style="padding:5px 12px;font-size:0.85rem;">تأكيد النتيجة</button>' +
         (isLocked ? ' <span class="lock-overlay">🔒 مقفلة</span>' : ' <button class="btn btn-lock" onclick="toggleLockMatch(' + m.id + ')" style="padding:4px 12px;font-size:0.8rem;">🔒 قفل</button>') + '</div>') + 
         '<div style="margin-top:6px;"><button onclick="deleteMatch(' + m.id + ')" class="btn btn-danger" style="padding:4px 12px;font-size:0.8rem;">🗑️ حذف</button></div></div>';
       }
@@ -2074,7 +2321,7 @@ function loadAdminHistory() {
       var html = '';
       for (var i = 0; i < matches.length; i++) {
         var m = matches[i];
-        html += '<div class="history-item"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;align-items:center;"><span class="title">' + getFlag(m.team1) + ' ' + m.team1 + ' 🆚 ' + m.team2 + ' ' + getFlag(m.team2) + '</span><span style="color:var(--primary);font-weight:700;">' + m.result_team1 + ' - ' + m.result_team2 + '</span><button onclick="deleteHistoryMatch(\'' + m.id + '\')" class="btn btn-danger" style="padding:4px 12px;font-size:0.8rem;">🗑️ حذف</button></div><div style="font-size:0.8rem;color:#7a9aaa;">📅 ' + new Date(m.match_date).toLocaleString('ar-SA', {dateStyle:'short', timeStyle:'short'}) + '</div></div>';
+        html += '<div class="history-item"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;align-items:center;"><span class="title">' + getFlag(m.team1) + ' ' + m.team1 + ' 🆚 ' + m.team2 + ' ' + getFlag(m.team2) + '</span><span style="font-weight:700;">' + m.result_team1 + ' - ' + m.result_team2 + '</span><button onclick="deleteHistoryMatch(\'' + m.id + '\')" class="btn btn-danger" style="padding:4px 12px;font-size:0.8rem;">🗑️ حذف</button></div><div style="font-size:0.8rem;color:var(--text-secondary);">📅 ' + new Date(m.match_date).toLocaleString('ar-SA', {dateStyle:'short', timeStyle:'short'}) + '</div></div>';
       }
       el.innerHTML = html;
     })
@@ -2099,12 +2346,18 @@ document.addEventListener('keydown', function(e) {
   }
 });
 
+// Load theme
+loadTheme();
+
 if (!checkSession()) {
   document.getElementById('authScreen').style.display = 'block';
   document.getElementById('appScreen').style.display = 'none';
 }
-console.log('❄️ تطبيق كأس العالم 2026 - النسخة المحسنة');
+console.log('⚽ تطبيق كأس العالم 2026 - النسخة المحسنة');
 console.log('👑 بيانات المشرف: admin / admin123');
+console.log('🎨 ثلاثة أنماط ألوان: أسود-ذهبي، أبيض-أحمر، بنفسجي-زهري');
+console.log('👁️ زر إظهار/إخفاء كلمة المرور');
+console.log('📌 ثلاث نقاط في الزاوية اليمنى مع قائمة منسدلة');
 </script>
 </body>
 </html>
