@@ -12,7 +12,7 @@
            BASE & VARIABLES (تعريف الثيمات)
            ============================================================ */
 
-        /* ---- الثيم الافتراضي (فلودلايت) ---- */
+        /* ===== الثيم الافتراضي (فلودلايت) ===== */
         :root {
             --bg: #0A0F1A;
             --bg-grad: radial-gradient(circle at 50% 0%, #102338 0%, #0A0F1A 55%);
@@ -44,9 +44,7 @@
             --pitch-line: rgba(255, 255, 255, 0.06);
         }
 
-        /* ---- الثيمات الـ 20 (من الكود الذي أرسلته) ---- */
-
-        /* 1. الأسود والذهبي (الافتراضي) */
+        /* ===== theme-charcoal-gold ===== */
         .theme-charcoal-gold {
             --bg: #0C0C0C;
             --bg-grad: radial-gradient(circle at 50% 0%, #1A1A1A 0%, #0C0C0C 60%);
@@ -73,517 +71,490 @@
             --pitch-line: rgba(212, 175, 55, 0.08);
         }
 
-        /* 2. أزرق ملكي */
-        .theme-royal-blue {
-            --bg: #0B1A33;
-            --bg-grad: radial-gradient(circle at 50% 0%, #12305A 0%, #0B1A33 60%);
-            --surface: #12305A;
-            --surface-soft: #1A3F75;
-            --surface-raised: #214E8A;
-            --text: #F0F6FF;
-            --text-soft: #AFC9F0;
-            --text-muted: #6A8BB0;
-            --primary: #3B82F6;
-            --primary-light: #6BA0F8;
-            --primary-dark: #1D5FC4;
-            --accent: #FBBF24;
-            --accent-dark: #D19B1A;
-            --danger: #EF4444;
-            --primary-glow: rgba(59, 130, 246, 0.2);
-            --primary-glow-hover: rgba(59, 130, 246, 0.35);
-            --accent-glow: rgba(251, 191, 36, 0.2);
-            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            --card-shadow-hover: 0 16px 44px rgba(59, 130, 246, 0.2);
-            --glass: rgba(255, 255, 255, 0.04);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --input-border: #1A3F75;
-            --pitch-line: rgba(255, 255, 255, 0.05);
+        /* ===== theme-white-sky ===== */
+        .theme-white-sky {
+            --bg: #EFF5FC;
+            --bg-grad: radial-gradient(circle at 50% 0%, #FFFFFF 0%, #EFF5FC 60%);
+            --surface: #FFFFFF;
+            --surface-soft: #F6FAFF;
+            --surface-raised: #FFFFFF;
+            --text: #142433;
+            --text-soft: #43607A;
+            --text-muted: #8098AE;
+            --primary: #1C7ED6;
+            --primary-light: #4C9AE8;
+            --primary-dark: #14619F;
+            --accent: #F2994A;
+            --accent-dark: #C97A30;
+            --danger: #E0514A;
+            --primary-glow: rgba(28, 126, 214, 0.12);
+            --primary-glow-hover: rgba(28, 126, 214, 0.2);
+            --accent-glow: rgba(242, 153, 74, 0.18);
+            --card-shadow: 0 8px 24px rgba(20, 80, 140, 0.1);
+            --card-shadow-hover: 0 14px 36px rgba(28, 126, 214, 0.18);
+            --glass: rgba(255, 255, 255, 0.5);
+            --glass-border: rgba(28, 126, 214, 0.1);
+            --input-border: #D9E6F2;
+            --pitch-line: rgba(20, 80, 140, 0.06);
         }
 
-        /* 3. أخضر غابي */
-        .theme-forest-green {
-            --bg: #0D1F12;
-            --bg-grad: radial-gradient(circle at 50% 0%, #14331C 0%, #0D1F12 60%);
-            --surface: #14331C;
-            --surface-soft: #1D4427;
-            --surface-raised: #265532;
-            --text: #EDF7EE;
-            --text-soft: #A2D1A8;
-            --text-muted: #5C8F65;
-            --primary: #22C55E;
-            --primary-light: #4ADE80;
-            --primary-dark: #16A34A;
-            --accent: #FACC15;
-            --accent-dark: #C9A80D;
-            --danger: #F87171;
-            --primary-glow: rgba(34, 197, 94, 0.2);
-            --primary-glow-hover: rgba(34, 197, 94, 0.35);
-            --accent-glow: rgba(250, 204, 21, 0.2);
+        /* ===== theme-grey-emerald ===== */
+        .theme-grey-emerald {
+            --bg: #14181A;
+            --bg-grad: radial-gradient(circle at 50% 0%, #1C2224 0%, #14181A 60%);
+            --surface: #1C2224;
+            --surface-soft: #232A2C;
+            --surface-raised: #2A3234;
+            --text: #EDF2EE;
+            --text-soft: #A9C2AE;
+            --text-muted: #6F8A75;
+            --primary: #29B673;
+            --primary-light: #4FD191;
+            --primary-dark: #1C8956;
+            --accent: #D9D34A;
+            --accent-dark: #ADA82F;
+            --danger: #E0635A;
+            --primary-glow: rgba(41, 182, 115, 0.18);
+            --primary-glow-hover: rgba(41, 182, 115, 0.3);
+            --accent-glow: rgba(217, 211, 74, 0.2);
             --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            --card-shadow-hover: 0 16px 44px rgba(34, 197, 94, 0.2);
+            --card-shadow-hover: 0 16px 44px rgba(41, 182, 115, 0.2);
             --glass: rgba(255, 255, 255, 0.03);
             --glass-border: rgba(255, 255, 255, 0.07);
-            --input-border: #1D4427;
+            --input-border: #2E3A33;
             --pitch-line: rgba(255, 255, 255, 0.05);
         }
 
-        /* 4. لافندر */
-        .theme-lavender {
-            --bg: #1E1433;
-            --bg-grad: radial-gradient(circle at 50% 0%, #2F1E4A 0%, #1E1433 60%);
-            --surface: #2F1E4A;
-            --surface-soft: #3E2860;
-            --surface-raised: #4E3278;
-            --text: #F5EFFC;
-            --text-soft: #D2B9EF;
+        /* ===== theme-navy-orange ===== */
+        .theme-navy-orange {
+            --bg: #081827;
+            --bg-grad: radial-gradient(circle at 50% 0%, #11263C 0%, #081827 60%);
+            --surface: #11263C;
+            --surface-soft: #163349;
+            --surface-raised: #1C3F58;
+            --text: #F5F1E8;
+            --text-soft: #C6B9A0;
+            --text-muted: #7E8FA0;
+            --primary: #FF7A1A;
+            --primary-light: #FF9C4D;
+            --primary-dark: #CC5F0E;
+            --accent: #FFC857;
+            --accent-dark: #D9A12F;
+            --danger: #E4564A;
+            --primary-glow: rgba(255, 122, 26, 0.18);
+            --primary-glow-hover: rgba(255, 122, 26, 0.32);
+            --accent-glow: rgba(255, 200, 87, 0.2);
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            --card-shadow-hover: 0 16px 44px rgba(255, 122, 26, 0.2);
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --input-border: #1F3C55;
+            --pitch-line: rgba(255, 255, 255, 0.05);
+        }
+
+        /* ===== theme-purple-pink ===== */
+        .theme-purple-pink {
+            --bg: #1B0B2E;
+            --bg-grad: radial-gradient(circle at 50% 0%, #2A1546 0%, #1B0B2E 60%);
+            --surface: #2A1546;
+            --surface-soft: #341B57;
+            --surface-raised: #3E2266;
+            --text: #F6EEFE;
+            --text-soft: #D2B6EF;
             --text-muted: #8F71AC;
-            --primary: #A78BFA;
-            --primary-light: #C4B5FD;
-            --primary-dark: #7C5CE0;
-            --accent: #FCD34D;
-            --accent-dark: #D1A92B;
-            --danger: #F472B6;
-            --primary-glow: rgba(167, 139, 250, 0.2);
-            --primary-glow-hover: rgba(167, 139, 250, 0.35);
-            --accent-glow: rgba(252, 211, 77, 0.2);
+            --primary: #E0479E;
+            --primary-light: #F06FB6;
+            --primary-dark: #B5347E;
+            --accent: #FFD166;
+            --accent-dark: #D9AD42;
+            --danger: #EF5A6F;
+            --primary-glow: rgba(224, 71, 158, 0.2);
+            --primary-glow-hover: rgba(224, 71, 158, 0.34);
+            --accent-glow: rgba(255, 209, 102, 0.2);
             --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            --card-shadow-hover: 0 16px 44px rgba(167, 139, 250, 0.2);
-            --glass: rgba(255, 255, 255, 0.04);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --input-border: #3E2860;
-            --pitch-line: rgba(255, 255, 255, 0.05);
-        }
-
-        /* 5. برتقالي غروب */
-        .theme-sunset-orange {
-            --bg: #2B1105;
-            --bg-grad: radial-gradient(circle at 50% 0%, #4A1E0A 0%, #2B1105 60%);
-            --surface: #4A1E0A;
-            --surface-soft: #6B2D12;
-            --surface-raised: #8C3D1A;
-            --text: #FEF2E6;
-            --text-soft: #F5C8A0;
-            --text-muted: #B28255;
-            --primary: #F97316;
-            --primary-light: #FB923C;
-            --primary-dark: #C2410C;
-            --accent: #FBBF24;
-            --accent-dark: #D19B1A;
-            --danger: #EF4444;
-            --primary-glow: rgba(249, 115, 22, 0.2);
-            --primary-glow-hover: rgba(249, 115, 22, 0.35);
-            --accent-glow: rgba(251, 191, 36, 0.2);
-            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-            --card-shadow-hover: 0 16px 44px rgba(249, 115, 22, 0.2);
+            --card-shadow-hover: 0 16px 44px rgba(224, 71, 158, 0.2);
             --glass: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.07);
-            --input-border: #6B2D12;
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --input-border: #3E2266;
             --pitch-line: rgba(255, 255, 255, 0.05);
         }
 
-        /* 6. فيروزي محيطي */
-        .theme-ocean-teal {
-            --bg: #06242E;
-            --bg-grad: radial-gradient(circle at 50% 0%, #0A3A48 0%, #06242E 60%);
-            --surface: #0A3A48;
-            --surface-soft: #0F4E60;
-            --surface-raised: #146378;
-            --text: #E6F9F5;
-            --text-soft: #9AD9D0;
-            --text-muted: #4E948A;
-            --primary: #14B8A6;
-            --primary-light: #2DD4BF;
-            --primary-dark: #0D9488;
-            --accent: #FBBF24;
-            --accent-dark: #D19B1A;
-            --danger: #F87171;
-            --primary-glow: rgba(20, 184, 166, 0.2);
-            --primary-glow-hover: rgba(20, 184, 166, 0.35);
-            --accent-glow: rgba(251, 191, 36, 0.2);
+        /* ===== theme-minimal ===== */
+        .theme-minimal {
+            --bg: #F3F3F1;
+            --bg-grad: radial-gradient(circle at 50% 0%, #FFFFFF 0%, #F3F3F1 60%);
+            --surface: #FFFFFF;
+            --surface-soft: #FAFAF8;
+            --surface-raised: #FFFFFF;
+            --text: #15161A;
+            --text-soft: #4B4D55;
+            --text-muted: #8C8E94;
+            --primary: #15161A;
+            --primary-light: #3A3C42;
+            --primary-dark: #000000;
+            --accent: #C44536;
+            --accent-dark: #9C362A;
+            --danger: #C44536;
+            --primary-glow: rgba(21, 22, 26, 0.07);
+            --primary-glow-hover: rgba(21, 22, 26, 0.13);
+            --accent-glow: rgba(196, 69, 54, 0.15);
+            --card-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+            --card-shadow-hover: 0 12px 32px rgba(0, 0, 0, 0.1);
+            --glass: rgba(255, 255, 255, 0.6);
+            --glass-border: rgba(21, 22, 26, 0.08);
+            --input-border: #DEDEDA;
+            --pitch-line: rgba(21, 22, 26, 0.06);
+        }
+
+        /* ===== theme-blue-teal ===== */
+        .theme-blue-teal {
+            --bg: #082230;
+            --bg-grad: radial-gradient(circle at 50% 0%, #0F3344 0%, #082230 60%);
+            --surface: #0F3344;
+            --surface-soft: #134055;
+            --surface-raised: #184C64;
+            --text: #EAF7F6;
+            --text-soft: #A7D6CF;
+            --text-muted: #5E8C88;
+            --primary: #15B79E;
+            --primary-light: #3FD3BA;
+            --primary-dark: #0E8B77;
+            --accent: #FFB454;
+            --accent-dark: #D9952F;
+            --danger: #E25A5A;
+            --primary-glow: rgba(21, 183, 158, 0.2);
+            --primary-glow-hover: rgba(21, 183, 158, 0.34);
+            --accent-glow: rgba(255, 180, 84, 0.2);
             --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            --card-shadow-hover: 0 16px 44px rgba(20, 184, 166, 0.2);
-            --glass: rgba(255, 255, 255, 0.04);
+            --card-shadow-hover: 0 16px 44px rgba(21, 183, 158, 0.2);
+            --glass: rgba(255, 255, 255, 0.03);
             --glass-border: rgba(255, 255, 255, 0.08);
-            --input-border: #0F4E60;
+            --input-border: #1B4A60;
             --pitch-line: rgba(255, 255, 255, 0.05);
         }
 
-        /* 7. أرجواني منتصف الليل */
-        .theme-midnight-purple {
-            --bg: #0F0820;
-            --bg-grad: radial-gradient(circle at 50% 0%, #1D1038 0%, #0F0820 60%);
-            --surface: #1D1038;
-            --surface-soft: #2B1850;
-            --surface-raised: #3A2068;
-            --text: #F3EDFC;
-            --text-soft: #C9B3ED;
-            --text-muted: #7E5D9E;
-            --primary: #8B5CF6;
-            --primary-light: #A78BFA;
-            --primary-dark: #6D28D9;
-            --accent: #FCD34D;
-            --accent-dark: #D1A92B;
-            --danger: #F472B6;
-            --primary-glow: rgba(139, 92, 246, 0.2);
-            --primary-glow-hover: rgba(139, 92, 246, 0.35);
-            --accent-glow: rgba(252, 211, 77, 0.2);
+        /* ===== theme-beige-chocolate ===== */
+        .theme-beige-chocolate {
+            --bg: #F1E6D2;
+            --bg-grad: radial-gradient(circle at 50% 0%, #FBF4E8 0%, #F1E6D2 60%);
+            --surface: #FBF4E8;
+            --surface-soft: #F5EBD8;
+            --surface-raised: #FFFDF8;
+            --text: #3A2A1C;
+            --text-soft: #6B4E36;
+            --text-muted: #9C8268;
+            --primary: #7A4B25;
+            --primary-light: #9C6736;
+            --primary-dark: #54331A;
+            --accent: #2E7D4F;
+            --accent-dark: #205A38;
+            --danger: #B5453A;
+            --primary-glow: rgba(122, 75, 37, 0.14);
+            --primary-glow-hover: rgba(122, 75, 37, 0.24);
+            --accent-glow: rgba(46, 125, 79, 0.18);
+            --card-shadow: 0 8px 24px rgba(90, 62, 30, 0.12);
+            --card-shadow-hover: 0 14px 36px rgba(122, 75, 37, 0.18);
+            --glass: rgba(255, 255, 255, 0.45);
+            --glass-border: rgba(122, 75, 37, 0.1);
+            --input-border: #E2D2B6;
+            --pitch-line: rgba(90, 62, 30, 0.06);
+        }
+
+        /* ===== theme-diamond ===== */
+        .theme-diamond {
+            --bg: #0A0A0C;
+            --bg-grad: radial-gradient(circle at 50% 0%, #1A1A1F 0%, #0A0A0C 60%);
+            --surface: #1A1A1F;
+            --surface-soft: #222228;
+            --surface-raised: #2A2A30;
+            --text: #F8F9FB;
+            --text-soft: #C9CED6;
+            --text-muted: #8A8F99;
+            --primary: #A8E0FF;
+            --primary-light: #C6EDFF;
+            --primary-dark: #6FB8D6;
+            --accent: #E0E0E0;
+            --accent-dark: #B8B8B8;
+            --danger: #E25A5A;
+            --primary-glow: rgba(168, 224, 255, 0.22);
+            --primary-glow-hover: rgba(168, 224, 255, 0.34);
+            --accent-glow: rgba(255, 255, 255, 0.18);
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+            --card-shadow-hover: 0 16px 44px rgba(168, 224, 255, 0.22);
+            --glass: rgba(255, 255, 255, 0.06);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --input-border: #2E2E33;
+            --pitch-line: rgba(255, 255, 255, 0.08);
+        }
+
+        /* ===== theme-snow ===== */
+        .theme-snow {
+            --bg: #F7FBFF;
+            --bg-grad: radial-gradient(circle at 50% 0%, #FFFFFF 0%, #F7FBFF 60%);
+            --surface: #FFFFFF;
+            --surface-soft: #F3F7FC;
+            --surface-raised: #FFFFFF;
+            --text: #1A1D22;
+            --text-soft: #4A5A6A;
+            --text-muted: #8A9AA8;
+            --primary: #A0D0FF;
+            --primary-light: #C0E4FF;
+            --primary-dark: #6A9FD6;
+            --accent: #D4E8FF;
+            --accent-dark: #A0C4E0;
+            --danger: #E25A5A;
+            --primary-glow: rgba(160, 208, 255, 0.22);
+            --primary-glow-hover: rgba(160, 208, 255, 0.34);
+            --accent-glow: rgba(212, 232, 255, 0.22);
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --card-shadow-hover: 0 16px 44px rgba(160, 208, 255, 0.2);
+            --glass: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(160, 208, 255, 0.2);
+            --input-border: #C8D8E8;
+            --pitch-line: rgba(100, 130, 160, 0.1);
+        }
+
+        /* ===== theme-ocean ===== */
+        .theme-ocean {
+            --bg: #03141F;
+            --bg-grad: radial-gradient(circle at 50% 0%, #06283B 0%, #03141F 60%);
+            --surface: #06283B;
+            --surface-soft: #09344A;
+            --surface-raised: #0C405A;
+            --text: #E6F7FF;
+            --text-soft: #A8D4E6;
+            --text-muted: #6FA3B8;
+            --primary: #1CA7EC;
+            --primary-light: #4CC2F5;
+            --primary-dark: #1479B0;
+            --accent: #00C2A8;
+            --accent-dark: #009780;
+            --danger: #E25A5A;
+            --primary-glow: rgba(28, 167, 236, 0.22);
+            --primary-glow-hover: rgba(28, 167, 236, 0.34);
+            --accent-glow: rgba(0, 194, 168, 0.22);
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+            --card-shadow-hover: 0 16px 44px rgba(28, 167, 236, 0.22);
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --input-border: #0F3D52;
+            --pitch-line: rgba(255, 255, 255, 0.06);
+        }
+
+        /* ===== theme-milkyway ===== */
+        .theme-milkyway {
+            --bg: #0A0A14;
+            --bg-grad: radial-gradient(circle at 50% 0%, #1A1A2F 0%, #0A0A14 60%);
+            --surface: #1A1A2F;
+            --surface-soft: #232342;
+            --surface-raised: #2C2C55;
+            --text: #F2F2FF;
+            --text-soft: #C8C8E6;
+            --text-muted: #8A8AB0;
+            --primary: #7A5CFF;
+            --primary-light: #9C84FF;
+            --primary-dark: #5A3FCC;
+            --accent: #FFD166;
+            --accent-dark: #D9AD42;
+            --danger: #E25A5A;
+            --primary-glow: rgba(122, 92, 255, 0.22);
+            --primary-glow-hover: rgba(122, 92, 255, 0.34);
+            --accent-glow: rgba(255, 209, 102, 0.22);
             --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-            --card-shadow-hover: 0 16px 44px rgba(139, 92, 246, 0.2);
-            --glass: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.07);
-            --input-border: #2B1850;
-            --pitch-line: rgba(255, 255, 255, 0.05);
-        }
-
-        /* 8. وردي فاتح */
-        .theme-rose-pink {
-            --bg: #1F0D17;
-            --bg-grad: radial-gradient(circle at 50% 0%, #3A1A2E 0%, #1F0D17 60%);
-            --surface: #3A1A2E;
-            --surface-soft: #542644;
-            --surface-raised: #6E325A;
-            --text: #FDE8F0;
-            --text-soft: #F5A9C8;
-            --text-muted: #B05A82;
-            --primary: #EC4899;
-            --primary-light: #F472B6;
-            --primary-dark: #BE185D;
-            --accent: #FCD34D;
-            --accent-dark: #D1A92B;
-            --danger: #EF4444;
-            --primary-glow: rgba(236, 72, 153, 0.2);
-            --primary-glow-hover: rgba(236, 72, 153, 0.35);
-            --accent-glow: rgba(252, 211, 77, 0.2);
-            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            --card-shadow-hover: 0 16px 44px rgba(236, 72, 153, 0.2);
+            --card-shadow-hover: 0 16px 44px rgba(122, 92, 255, 0.22);
             --glass: rgba(255, 255, 255, 0.04);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --input-border: #542644;
-            --pitch-line: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --input-border: #2E2E4A;
+            --pitch-line: rgba(255, 255, 255, 0.06);
         }
 
-        /* 9. أحمر قرمزي */
-        .theme-crimson-red {
-            --bg: #1F0A0A;
-            --bg-grad: radial-gradient(circle at 50% 0%, #3A1414 0%, #1F0A0A 60%);
-            --surface: #3A1414;
-            --surface-soft: #541E1E;
-            --surface-raised: #6E2828;
-            --text: #FDE8E8;
-            --text-soft: #F5A8A8;
-            --text-muted: #B05A5A;
-            --primary: #EF4444;
-            --primary-light: #F87171;
-            --primary-dark: #B91C1C;
-            --accent: #FBBF24;
-            --accent-dark: #D19B1A;
-            --danger: #EF4444;
-            --primary-glow: rgba(239, 68, 68, 0.2);
-            --primary-glow-hover: rgba(239, 68, 68, 0.35);
-            --accent-glow: rgba(251, 191, 36, 0.2);
-            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-            --card-shadow-hover: 0 16px 44px rgba(239, 68, 68, 0.2);
+        /* ===== theme-moonlight ===== */
+        .theme-moonlight {
+            --bg: #0D0F12;
+            --bg-grad: radial-gradient(circle at 50% 0%, #1C1F24 0%, #0D0F12 60%);
+            --surface: #1C1F24;
+            --surface-soft: #25292F;
+            --surface-raised: #2E333A;
+            --text: #F2F4F7;
+            --text-soft: #C4C8CC;
+            --text-muted: #8A8E93;
+            --primary: #C9D6FF;
+            --primary-light: #E0E7FF;
+            --primary-dark: #9AA7CC;
+            --accent: #A8E0FF;
+            --accent-dark: #7FB8D6;
+            --danger: #E25A5A;
+            --primary-glow: rgba(201, 214, 255, 0.22);
+            --primary-glow-hover: rgba(201, 214, 255, 0.34);
+            --accent-glow: rgba(168, 224, 255, 0.22);
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+            --card-shadow-hover: 0 16px 44px rgba(201, 214, 255, 0.22);
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --input-border: #2A2E33;
+            --pitch-line: rgba(255, 255, 255, 0.06);
+        }
+
+        /* ===== theme-saturn ===== */
+        .theme-saturn {
+            --bg: #1A120F;
+            --bg-grad: radial-gradient(circle at 50% 0%, #2A1E18 0%, #1A120F 60%);
+            --surface: #2A1E18;
+            --surface-soft: #33261F;
+            --surface-raised: #3D2F27;
+            --text: #F7EFE8;
+            --text-soft: #D6C4B8;
+            --text-muted: #A89282;
+            --primary: #C49A6C;
+            --primary-light: #D8B48A;
+            --primary-dark: #A67F55;
+            --accent: #8C5A3C;
+            --accent-dark: #6A442C;
+            --danger: #E25A5A;
+            --primary-glow: rgba(196, 154, 108, 0.22);
+            --primary-glow-hover: rgba(196, 154, 108, 0.34);
+            --accent-glow: rgba(140, 90, 60, 0.22);
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+            --card-shadow-hover: 0 16px 44px rgba(196, 154, 108, 0.22);
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --input-border: #3A2A22;
+            --pitch-line: rgba(255, 255, 255, 0.06);
+        }
+
+        /* ===== theme-onepiece ===== */
+        .theme-onepiece {
+            --bg: #00101A;
+            --bg-grad: radial-gradient(circle at 50% 0%, #00263A 0%, #00101A 60%);
+            --surface: #00263A;
+            --surface-soft: #00344A;
+            --surface-raised: #00425A;
+            --text: #F8F4E8;
+            --text-soft: #D6C9B0;
+            --text-muted: #A89C88;
+            --primary: #FFCC00;
+            --primary-light: #FFE066;
+            --primary-dark: #CC9900;
+            --accent: #FF3B3B;
+            --accent-dark: #CC2E2E;
+            --danger: #E25A5A;
+            --primary-glow: rgba(255, 204, 0, 0.22);
+            --primary-glow-hover: rgba(255, 204, 0, 0.34);
+            --accent-glow: rgba(255, 59, 59, 0.22);
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+            --card-shadow-hover: 0 16px 44px rgba(255, 204, 0, 0.22);
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --input-border: #003040;
+            --pitch-line: rgba(255, 255, 255, 0.06);
+        }
+
+        /* ===== theme-carbon-black ===== */
+        .theme-carbon-black {
+            --bg: #050505;
+            --bg-grad: radial-gradient(circle at 50% 0%, #0F0F0F 0%, #050505 60%);
+            --surface: #0F0F0F;
+            --surface-soft: #161616;
+            --surface-raised: #1E1E1E;
+            --text: #F2F2F2;
+            --text-soft: #C4C4C4;
+            --text-muted: #8A8A8A;
+            --primary: #2A2A2A;
+            --primary-light: #3C3C3C;
+            --primary-dark: #1A1A1A;
+            --accent: #FF4444;
+            --accent-dark: #CC3333;
+            --danger: #E25A5A;
+            --primary-glow: rgba(42, 42, 42, 0.22);
+            --primary-glow-hover: rgba(42, 42, 42, 0.34);
+            --accent-glow: rgba(255, 68, 68, 0.22);
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            --card-shadow-hover: 0 16px 44px rgba(42, 42, 42, 0.22);
             --glass: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.07);
-            --input-border: #541E1E;
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --input-border: #1A1A1A;
             --pitch-line: rgba(255, 255, 255, 0.05);
         }
 
-        /* 10. أخضر زيتوني */
-        .theme-olive-green {
-            --bg: #141A0B;
-            --bg-grad: radial-gradient(circle at 50% 0%, #1F2A14 0%, #141A0B 60%);
-            --surface: #1F2A14;
-            --surface-soft: #2E3D1E;
-            --surface-raised: #3D5028;
-            --text: #F2F5E8;
-            --text-soft: #C2D4A0;
-            --text-muted: #7A8F58;
-            --primary: #84CC16;
-            --primary-light: #A3E635;
-            --primary-dark: #65A30D;
-            --accent: #FCD34D;
-            --accent-dark: #D1A92B;
-            --danger: #F87171;
-            --primary-glow: rgba(132, 204, 22, 0.2);
-            --primary-glow-hover: rgba(132, 204, 22, 0.35);
-            --accent-glow: rgba(252, 211, 77, 0.2);
-            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            --card-shadow-hover: 0 16px 44px rgba(132, 204, 22, 0.2);
+        /* ===== theme-royal-blue ===== */
+        .theme-royal-blue {
+            --bg: #0A0F2A;
+            --bg-grad: radial-gradient(circle at 50% 0%, #14205A 0%, #0A0F2A 60%);
+            --surface: #14205A;
+            --surface-soft: #1A2A70;
+            --surface-raised: #203488;
+            --text: #F2F4FF;
+            --text-soft: #C4C8E6;
+            --text-muted: #8A8EB0;
+            --primary: #345DFF;
+            --primary-light: #5C7DFF;
+            --primary-dark: #243FCC;
+            --accent: #FFD166;
+            --accent-dark: #D9AD42;
+            --danger: #E25A5A;
+            --primary-glow: rgba(52, 93, 255, 0.22);
+            --primary-glow-hover: rgba(52, 93, 255, 0.34);
+            --accent-glow: rgba(255, 209, 102, 0.22);
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+            --card-shadow-hover: 0 16px 44px rgba(52, 93, 255, 0.22);
             --glass: rgba(255, 255, 255, 0.04);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --input-border: #2E3D1E;
-            --pitch-line: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --input-border: #1A2A5A;
+            --pitch-line: rgba(255, 255, 255, 0.06);
         }
 
-        /* 11. مرجاني */
-        .theme-coral {
-            --bg: #24100C;
-            --bg-grad: radial-gradient(circle at 50% 0%, #3D1C14 0%, #24100C 60%);
-            --surface: #3D1C14;
-            --surface-soft: #592A1E;
-            --surface-raised: #753828;
-            --text: #FDF0EA;
-            --text-soft: #F5B8A0;
-            --text-muted: #B27458;
-            --primary: #F97316;
-            --primary-light: #FB923C;
-            --primary-dark: #C2410C;
-            --accent: #FCD34D;
-            --accent-dark: #D1A92B;
-            --danger: #EF4444;
-            --primary-glow: rgba(249, 115, 22, 0.2);
-            --primary-glow-hover: rgba(249, 115, 22, 0.35);
-            --accent-glow: rgba(252, 211, 77, 0.2);
-            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-            --card-shadow-hover: 0 16px 44px rgba(249, 115, 22, 0.2);
-            --glass: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.07);
-            --input-border: #592A1E;
-            --pitch-line: rgba(255, 255, 255, 0.05);
-        }
-
-        /* 12. أزرق سماوي */
-        .theme-sky-blue {
-            --bg: #0A1E33;
-            --bg-grad: radial-gradient(circle at 50% 0%, #12305A 0%, #0A1E33 60%);
-            --surface: #0F2F52;
-            --surface-soft: #1A4070;
-            --surface-raised: #25518E;
-            --text: #EFF6FF;
-            --text-soft: #A8C8F0;
-            --text-muted: #5A7EA8;
-            --primary: #0EA5E9;
-            --primary-light: #38BDF8;
-            --primary-dark: #0284C7;
-            --accent: #FBBF24;
-            --accent-dark: #D19B1A;
-            --danger: #F87171;
-            --primary-glow: rgba(14, 165, 233, 0.2);
-            --primary-glow-hover: rgba(14, 165, 233, 0.35);
-            --accent-glow: rgba(251, 191, 36, 0.2);
-            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            --card-shadow-hover: 0 16px 44px rgba(14, 165, 233, 0.2);
+        /* ===== theme-forest ===== */
+        .theme-forest {
+            --bg: #0A120A;
+            --bg-grad: radial-gradient(circle at 50% 0%, #1A2F1A 0%, #0A120A 60%);
+            --surface: #1A2F1A;
+            --surface-soft: #233A23;
+            --surface-raised: #2C452C;
+            --text: #F2FFF2;
+            --text-soft: #C4E6C4;
+            --text-muted: #8AB08A;
+            --primary: #3FAF3F;
+            --primary-light: #6BD86B;
+            --primary-dark: #2F8A2F;
+            --accent: #D9D34A;
+            --accent-dark: #ADA82F;
+            --danger: #E25A5A;
+            --primary-glow: rgba(63, 175, 63, 0.22);
+            --primary-glow-hover: rgba(63, 175, 63, 0.34);
+            --accent-glow: rgba(217, 211, 74, 0.22);
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+            --card-shadow-hover: 0 16px 44px rgba(63, 175, 63, 0.22);
             --glass: rgba(255, 255, 255, 0.04);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --input-border: #1A4070;
-            --pitch-line: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --input-border: #2A3F2A;
+            --pitch-line: rgba(255, 255, 255, 0.06);
         }
 
-        /* 13. كهرماني */
-        .theme-amber {
-            --bg: #1A140A;
-            --bg-grad: radial-gradient(circle at 50% 0%, #2D2414 0%, #1A140A 60%);
-            --surface: #2D2414;
-            --surface-soft: #42351E;
-            --surface-raised: #584628;
-            --text: #FCF5E6;
-            --text-soft: #F5D8A0;
-            --text-muted: #B28C50;
-            --primary: #F59E0B;
-            --primary-light: #FBBF24;
-            --primary-dark: #B45309;
-            --accent: #FCD34D;
-            --accent-dark: #D1A92B;
-            --danger: #EF4444;
-            --primary-glow: rgba(245, 158, 11, 0.2);
-            --primary-glow-hover: rgba(245, 158, 11, 0.35);
-            --accent-glow: rgba(252, 211, 77, 0.2);
-            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-            --card-shadow-hover: 0 16px 44px rgba(245, 158, 11, 0.2);
-            --glass: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.07);
-            --input-border: #42351E;
-            --pitch-line: rgba(255, 255, 255, 0.05);
-        }
-
-        /* 14. سيان */
-        .theme-cyan {
-            --bg: #041C2A;
-            --bg-grad: radial-gradient(circle at 50% 0%, #083344 0%, #041C2A 60%);
-            --surface: #083344;
-            --surface-soft: #0E4B60;
-            --surface-raised: #14637C;
-            --text: #E6F9FC;
-            --text-soft: #8AD4E0;
-            --text-muted: #408A98;
-            --primary: #06B6D4;
-            --primary-light: #22D3EE;
-            --primary-dark: #0891B2;
-            --accent: #FCD34D;
-            --accent-dark: #D1A92B;
-            --danger: #F87171;
-            --primary-glow: rgba(6, 182, 212, 0.2);
-            --primary-glow-hover: rgba(6, 182, 212, 0.35);
-            --accent-glow: rgba(252, 211, 77, 0.2);
-            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            --card-shadow-hover: 0 16px 44px rgba(6, 182, 212, 0.2);
+        /* ===== theme-lavender ===== */
+        .theme-lavender {
+            --bg: #1A1424;
+            --bg-grad: radial-gradient(circle at 50% 0%, #2A1F3A 0%, #1A1424 60%);
+            --surface: #2A1F3A;
+            --surface-soft: #34264A;
+            --surface-raised: #3E2D5A;
+            --text: #F6F2FF;
+            --text-soft: #D6C9F0;
+            --text-muted: #A89CC0;
+            --primary: #B47CFF;
+            --primary-light: #CFA6FF;
+            --primary-dark: #8C5FCC;
+            --accent: #FFD166;
+            --accent-dark: #D9AD42;
+            --danger: #E25A5A;
+            --primary-glow: rgba(180, 124, 255, 0.22);
+            --primary-glow-hover: rgba(180, 124, 255, 0.34);
+            --accent-glow: rgba(255, 209, 102, 0.22);
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+            --card-shadow-hover: 0 16px 44px rgba(180, 124, 255, 0.22);
             --glass: rgba(255, 255, 255, 0.04);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --input-border: #0E4B60;
-            --pitch-line: rgba(255, 255, 255, 0.05);
-        }
-
-        /* 15. نيلي */
-        .theme-indigo {
-            --bg: #0C0C2E;
-            --bg-grad: radial-gradient(circle at 50% 0%, #18184A 0%, #0C0C2E 60%);
-            --surface: #18184A;
-            --surface-soft: #242468;
-            --surface-raised: #303086;
-            --text: #EEEEFC;
-            --text-soft: #B8B8ED;
-            --text-muted: #7070A8;
-            --primary: #6366F1;
-            --primary-light: #818CF8;
-            --primary-dark: #4338CA;
-            --accent: #FCD34D;
-            --accent-dark: #D1A92B;
-            --danger: #F472B6;
-            --primary-glow: rgba(99, 102, 241, 0.2);
-            --primary-glow-hover: rgba(99, 102, 241, 0.35);
-            --accent-glow: rgba(252, 211, 77, 0.2);
-            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-            --card-shadow-hover: 0 16px 44px rgba(99, 102, 241, 0.2);
-            --glass: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.07);
-            --input-border: #242468;
-            --pitch-line: rgba(255, 255, 255, 0.05);
-        }
-
-        /* 16. قرفة */
-        .theme-cinnamon {
-            --bg: #1A0E0A;
-            --bg-grad: radial-gradient(circle at 50% 0%, #2D1A12 0%, #1A0E0A 60%);
-            --surface: #2D1A12;
-            --surface-soft: #42261C;
-            --surface-raised: #583226;
-            --text: #FDF0EA;
-            --text-soft: #F5C8B0;
-            --text-muted: #B28268;
-            --primary: #D97706;
-            --primary-light: #F59E0B;
-            --primary-dark: #B45309;
-            --accent: #FCD34D;
-            --accent-dark: #D1A92B;
-            --danger: #EF4444;
-            --primary-glow: rgba(217, 119, 6, 0.2);
-            --primary-glow-hover: rgba(217, 119, 6, 0.35);
-            --accent-glow: rgba(252, 211, 77, 0.2);
-            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-            --card-shadow-hover: 0 16px 44px rgba(217, 119, 6, 0.2);
-            --glass: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.07);
-            --input-border: #42261C;
-            --pitch-line: rgba(255, 255, 255, 0.05);
-        }
-
-        /* 17. نعناعي */
-        .theme-mint {
-            --bg: #0A1A14;
-            --bg-grad: radial-gradient(circle at 50% 0%, #14332A 0%, #0A1A14 60%);
-            --surface: #14332A;
-            --surface-soft: #1E4A3E;
-            --surface-raised: #286152;
-            --text: #EAFBF2;
-            --text-soft: #9DD9C0;
-            --text-muted: #4E9480;
-            --primary: #10B981;
-            --primary-light: #34D399;
-            --primary-dark: #059669;
-            --accent: #FCD34D;
-            --accent-dark: #D1A92B;
-            --danger: #F87171;
-            --primary-glow: rgba(16, 185, 129, 0.2);
-            --primary-glow-hover: rgba(16, 185, 129, 0.35);
-            --accent-glow: rgba(252, 211, 77, 0.2);
-            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            --card-shadow-hover: 0 16px 44px rgba(16, 185, 129, 0.2);
-            --glass: rgba(255, 255, 255, 0.04);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --input-border: #1E4A3E;
-            --pitch-line: rgba(255, 255, 255, 0.05);
-        }
-
-        /* 18. برقوقي */
-        .theme-plum {
-            --bg: #1A0D1A;
-            --bg-grad: radial-gradient(circle at 50% 0%, #2E1A2E 0%, #1A0D1A 60%);
-            --surface: #2E1A2E;
-            --surface-soft: #422642;
-            --surface-raised: #563256;
-            --text: #F9EAF9;
-            --text-soft: #E0A8E0;
-            --text-muted: #A060A0;
-            --primary: #A855F7;
-            --primary-light: #C084FC;
-            --primary-dark: #7E22CE;
-            --accent: #FCD34D;
-            --accent-dark: #D1A92B;
-            --danger: #F472B6;
-            --primary-glow: rgba(168, 85, 247, 0.2);
-            --primary-glow-hover: rgba(168, 85, 247, 0.35);
-            --accent-glow: rgba(252, 211, 77, 0.2);
-            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-            --card-shadow-hover: 0 16px 44px rgba(168, 85, 247, 0.2);
-            --glass: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.07);
-            --input-border: #422642;
-            --pitch-line: rgba(255, 255, 255, 0.05);
-        }
-
-        /* 19. رملي */
-        .theme-sand {
-            --bg: #1E1812;
-            --bg-grad: radial-gradient(circle at 50% 0%, #332C22 0%, #1E1812 60%);
-            --surface: #332C22;
-            --surface-soft: #4A3F32;
-            --surface-raised: #615242;
-            --text: #F5F0E8;
-            --text-soft: #D5C8B0;
-            --text-muted: #94806A;
-            --primary: #D4A373;
-            --primary-light: #E8C49A;
-            --primary-dark: #B88550;
-            --accent: #FCD34D;
-            --accent-dark: #D1A92B;
-            --danger: #EF4444;
-            --primary-glow: rgba(212, 163, 115, 0.2);
-            --primary-glow-hover: rgba(212, 163, 115, 0.35);
-            --accent-glow: rgba(252, 211, 77, 0.2);
-            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-            --card-shadow-hover: 0 16px 44px rgba(212, 163, 115, 0.2);
-            --glass: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.07);
-            --input-border: #4A3F32;
-            --pitch-line: rgba(255, 255, 255, 0.05);
-        }
-
-        /* 20. كرزي */
-        .theme-cherry {
-            --bg: #1F0A14;
-            --bg-grad: radial-gradient(circle at 50% 0%, #3A1426 0%, #1F0A14 60%);
-            --surface: #3A1426;
-            --surface-soft: #541E38;
-            --surface-raised: #6E284A;
-            --text: #FDE8F0;
-            --text-soft: #F5A8C8;
-            --text-muted: #B05A82;
-            --primary: #E11D48;
-            --primary-light: #F43F5E;
-            --primary-dark: #9F1239;
-            --accent: #FCD34D;
-            --accent-dark: #D1A92B;
-            --danger: #EF4444;
-            --primary-glow: rgba(225, 29, 72, 0.2);
-            --primary-glow-hover: rgba(225, 29, 72, 0.35);
-            --accent-glow: rgba(252, 211, 77, 0.2);
-            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-            --card-shadow-hover: 0 16px 44px rgba(225, 29, 72, 0.2);
-            --glass: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.07);
-            --input-border: #541E38;
-            --pitch-line: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --input-border: #2E244A;
+            --pitch-line: rgba(255, 255, 255, 0.06);
         }
 
 
@@ -609,7 +580,6 @@
             min-height: 100vh;
             transition: background-color 0.3s, color 0.3s;
             padding-bottom: 80px;
-            /* للمساحة السفلية */
         }
 
         body * {
@@ -626,7 +596,6 @@
             outline-offset: 2px;
         }
 
-        /* خلفية الملعب */
         .pitch-backdrop {
             position: fixed;
             inset: 0;
@@ -923,7 +892,6 @@
             display: none;
         }
 
-        /* ---- الهيدر ---- */
         .header {
             position: sticky;
             top: 0;
@@ -1007,7 +975,6 @@
             color: var(--danger);
         }
 
-        /* ---- المحتوى الرئيسي ---- */
         .container {
             max-width: 1100px;
             margin: 20px auto;
@@ -1016,7 +983,6 @@
             z-index: 1;
         }
 
-        /* ---- البطاقات والعناصر المشتركة ---- */
         .glass-card {
             background: var(--surface);
             border: 1px solid var(--glass-border);
@@ -1740,9 +1706,6 @@
             }
         }
 
-        /* ============================================================
-           استجابة للشاشات الصغيرة
-           ============================================================ */
         @media (max-width: 768px) {
             .header {
                 padding: 10px 14px;
@@ -2098,53 +2061,34 @@
         }
 
         // ============================================================
-        //  THEME (الافتراضي: الأسود والذهبي)
+        //  THEME (قائمة الثيمات الجديدة)
         // ============================================================
         var themeCategories = [{
             name: 'داكنة',
             themes: [
                 { id: 'theme-charcoal-gold', label: 'ذهبي', bg: '#0C0C0C', primary: '#D4AF37' },
-                { id: 'theme-midnight-purple', label: 'أرجواني', bg: '#0F0820', primary: '#8B5CF6' },
-                { id: 'theme-carbon-black', label: 'كربوني', bg: '#050505', primary: '#FF4444' },
-                { id: 'theme-plum', label: 'برقوقي', bg: '#1A0D1A', primary: '#A855F7' },
-                { id: 'theme-crimson-red', label: 'قرمزي', bg: '#1F0A0A', primary: '#EF4444' },
-                { id: 'theme-cherry', label: 'كرزي', bg: '#1F0A14', primary: '#E11D48' },
-            ]
-        }, {
-            name: 'فاتحة',
-            themes: [
-                { id: 'theme-white-sky', label: 'سماوي', bg: '#EFF5FC', primary: '#1C7ED6' },
-                { id: 'theme-minimal', label: 'مينيمال', bg: '#F3F3F1', primary: '#C44536' },
-                { id: 'theme-snow', label: 'ثلجي', bg: '#F7FBFF', primary: '#A0D0FF' },
-                { id: 'theme-beige-chocolate', label: 'بيج', bg: '#F1E6D2', primary: '#7A4B25' },
-                { id: 'theme-sand', label: 'رملي', bg: '#1E1812', primary: '#D4A373' },
-            ]
-        }, {
-            name: 'زاهية',
-            themes: [
-                { id: 'theme-sunset-orange', label: 'برتقالي', bg: '#2B1105', primary: '#F97316' },
-                { id: 'theme-rose-pink', label: 'وردي', bg: '#1F0D17', primary: '#EC4899' },
-                { id: 'theme-amber', label: 'كهرماني', bg: '#1A140A', primary: '#F59E0B' },
-                { id: 'theme-coral', label: 'مرجاني', bg: '#24100C', primary: '#F97316' },
-                { id: 'theme-cyan', label: 'سيان', bg: '#041C2A', primary: '#06B6D4' },
-            ]
-        }, {
-            name: 'طبيعية',
-            themes: [
-                { id: 'theme-forest-green', label: 'أخضر غابي', bg: '#0D1F12', primary: '#22C55E' },
-                { id: 'theme-ocean-teal', label: 'فيروزي', bg: '#06242E', primary: '#14B8A6' },
-                { id: 'theme-olive-green', label: 'زيتوني', bg: '#141A0B', primary: '#84CC16' },
-                { id: 'theme-mint', label: 'نعناعي', bg: '#0A1A14', primary: '#10B981' },
-                { id: 'theme-lavender', label: 'لافندر', bg: '#1E1433', primary: '#A78BFA' },
-                { id: 'theme-cinnamon', label: 'قرفة', bg: '#1A0E0A', primary: '#D97706' },
-                { id: 'theme-royal-blue', label: 'أزرق ملكي', bg: '#0B1A33', primary: '#3B82F6' },
-                { id: 'theme-sky-blue', label: 'أزرق سماوي', bg: '#0A1E33', primary: '#0EA5E9' },
-                { id: 'theme-indigo', label: 'نيلي', bg: '#0C0C2E', primary: '#6366F1' },
+                { id: 'theme-grey-emerald', label: 'رمادي زمردي', bg: '#14181A', primary: '#29B673' },
+                { id: 'theme-navy-orange', label: 'كحلي برتقالي', bg: '#081827', primary: '#FF7A1A' },
+                { id: 'theme-purple-pink', label: 'أرجواني وردي', bg: '#1B0B2E', primary: '#E0479E' },
+                { id: 'theme-blue-teal', label: 'أزرق فيروزي', bg: '#082230', primary: '#15B79E' },
                 { id: 'theme-diamond', label: 'ماسي', bg: '#0A0A0C', primary: '#A8E0FF' },
+                { id: 'theme-ocean', label: 'محيطي', bg: '#03141F', primary: '#1CA7EC' },
                 { id: 'theme-milkyway', label: 'درب التبانة', bg: '#0A0A14', primary: '#7A5CFF' },
                 { id: 'theme-moonlight', label: 'قمري', bg: '#0D0F12', primary: '#C9D6FF' },
                 { id: 'theme-saturn', label: 'زحل', bg: '#1A120F', primary: '#C49A6C' },
                 { id: 'theme-onepiece', label: 'ون بيس', bg: '#00101A', primary: '#FFCC00' },
+                { id: 'theme-carbon-black', label: 'كربوني', bg: '#050505', primary: '#FF4444' },
+                { id: 'theme-royal-blue', label: 'أزرق ملكي', bg: '#0A0F2A', primary: '#345DFF' },
+                { id: 'theme-forest', label: 'غابي', bg: '#0A120A', primary: '#3FAF3F' },
+                { id: 'theme-lavender', label: 'لافندر', bg: '#1A1424', primary: '#B47CFF' },
+            ]
+        }, {
+            name: 'فاتحة',
+            themes: [
+                { id: 'theme-white-sky', label: 'سماء بيضاء', bg: '#EFF5FC', primary: '#1C7ED6' },
+                { id: 'theme-minimal', label: 'مينيمال', bg: '#F3F3F1', primary: '#15161A' },
+                { id: 'theme-beige-chocolate', label: 'بيج شوكولاتة', bg: '#F1E6D2', primary: '#7A4B25' },
+                { id: 'theme-snow', label: 'ثلجي', bg: '#F7FBFF', primary: '#A0D0FF' },
             ]
         }];
 
@@ -2178,14 +2122,13 @@
             var overlay = document.getElementById('themeOverlay');
             overlay.classList.toggle('open');
             if (overlay.classList.contains('open')) {
-                buildThemePanel(); // تحديث الحالة النشطة
+                buildThemePanel();
             }
         }
 
         function closeThemePanel() {
             document.getElementById('themeOverlay').classList.remove('open');
         }
-        // إغلاق عند النقر خارج اللوحة
         document.getElementById('themeOverlay').addEventListener('click', function(e) {
             if (e.target === this) closeThemePanel();
         });
@@ -2199,7 +2142,6 @@
                 localStorage.removeItem('wc_theme');
             }
             document.body.className = classes.join(' ');
-            // تحديث اللوحة
             buildThemePanel();
         }
 
@@ -2208,8 +2150,9 @@
             if (saved) {
                 applyTheme(saved);
             } else {
-                // افتراضي: الأسود والذهبي
-                applyTheme('theme-charcoal-gold');
+                // افتراضي: الثيم الافتراضي (فلودلايت) لا يضاف كلاس
+                document.body.className = '';
+                localStorage.removeItem('wc_theme');
             }
         }
 
@@ -2392,7 +2335,6 @@
                 loadAdminHistory();
                 loadCurrentPredictions();
                 if (currentUser.role === 'admin') loadViceAdmins();
-                // تفعيل أول تبويب
                 switchAdminTab('sub-predictions');
             }
         }
@@ -3301,7 +3243,7 @@
         console.log('⚽ كأس العالم 2026 - النسخة المحسّنة');
         console.log('👑 المشرف: admin / admin123');
         console.log('👑 المشرف الإضافي: osama / osamaosama');
-        console.log('🎨 20 ثيماً مقسمة إلى 4 فئات');
+        console.log('🎨 19 ثيماً جديدة مقسمة إلى فئتين');
         console.log('📱 تصميم متجاوب مع شريط تنقل سفلي');
     </script>
 </body>
